@@ -1,0 +1,11 @@
+sprite size 32x32
+Animation Length per State : 7
+
+Animations:
+    0] Idle Blue
+    1] Idle Red
+    2] Walk Blue
+    3] Walk Red
+    4] Jump Blue
+    5] Jump Red
+    6] Dying
