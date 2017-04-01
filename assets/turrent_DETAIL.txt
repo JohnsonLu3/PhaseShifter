@@ -1,0 +1,13 @@
+sprite size 32x32
+Animation Length per State : 7
+
+Animations:
+    0] Neutral Idle
+    1] Neutral Shooting
+    2] Neutral Dying        [NOT COMPLETE]
+    3] red     Idle
+    4] red     Shooting
+    5] red     Dying        [NOT COMPLETE]
+    6] blue    Idle
+    7] blue    Shooting
+    8] blue    Dying        [NOT COMPLETE]
