@@ -28,6 +28,7 @@ function create() {
 
     cursors = game.input.keyboard.createCursorKeys();
     setControls();
+
     layer = map.createLayer('mapdata');
     // create player
     player = new Player();
@@ -39,11 +40,13 @@ function update() {
     playerMovement();
 }
 
+/**
+ *  playerMovement
+ *      Update the player movements based on the
+ *      the controls that are pressed. Also players
+ *      the correct animation / facing / shift state
+ */
 function playerMovement(){
-    if(ShiftKey.isDown){
-        // call shift function
-        player.shiftState = !player.shiftState;             // TEMP CODE to test animations
-    }
 
     if(ZKey.isDown){
         // call shoot function
@@ -58,11 +61,13 @@ function playerMovement(){
 
     if(LeftKey.isDown){
         // player move left
+        updateFacing(0);
         playShiftAnimation('walk');
         player.body.velocity.x = -100;
 
     }else if(RightKey.isDown){
         // player move right
+        updateFacing(1);
         playShiftAnimation('walk');
         player.body.velocity.x = 100;
     
@@ -80,11 +85,21 @@ function playerMovement(){
  *      Shift, Z, X, LEFT, RIGHT
  */
 function setControls(){
-    ShiftKey = game.input.keyboard.addKey(Phaser.Keyboard.SHIFT);           // shift ability
-    ZKey     = game.input.keyboard.addKey(Phaser.Keyboard.Z);               // Shoot Button
-    XKey     = game.input.keyboard.addKey(Phaser.Keyboard.X);               // Jump  Button
-    LeftKey  = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);            // Walk  Left
-    RightKey = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);           // Walk  Right
+    ShiftKey = game.input.keyboard.addKey(Phaser.Keyboard.SHIFT).onDown.add(flipShiftFlag, this);           // shift ability
+    ZKey     = game.input.keyboard.addKey(Phaser.Keyboard.Z);                                               // Shoot Button
+    XKey     = game.input.keyboard.addKey(Phaser.Keyboard.X);                                               // Jump  Button
+    LeftKey  = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);                                            // Walk  Left
+    RightKey = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);                                           // Walk  Right
+}
+
+/**
+ *  
+ *  listener for fliping the shift bit in Player
+ */
+function flipShiftFlag(){
+    
+    player.shiftState = !player.shiftState;             // TEMP CODE to test animations
+    return;
 }
 
 /**
@@ -93,19 +108,36 @@ function setControls(){
  * 
  *  Takes an animation state, eg: jump, walk, idle
  *  based on the player shiftstate it plays the correct animation
+ *  
  */
 function playShiftAnimation(animationToPlay){
 
     if(animationToPlay === "die"){
         player.animations.play("die");
-        return
+        return;
     }
 
-    if(player.shiftState === 0){
+    if(player.shiftState === false){
         player.animations.play( animationToPlay + '_B' );       // Blue State
     }else{
         player.animations.play( animationToPlay + '_R' );       // Red State
     }
 
-    return
+    return;
+}
+
+/**
+ *  updateFacing
+ *      update the player's sprite's facing position
+ */
+function updateFacing(facingFlag){
+
+    if(player.facing === facingFlag){
+        // player is already facing the same direction
+    }else{
+        player.scale.x *= -1;
+        player.facing  =  facingFlag;   
+    }
+
+    return;
 }
