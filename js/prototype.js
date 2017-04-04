@@ -52,7 +52,7 @@ function playerMovement(){
         // call shoot function
     }
 
-    if(XKey.isDown && player.body.touching.down){
+    if(XKey.isDown ){
         // player jump
         playShiftAnimation('jump');
         player.body.velocity.y = -150;
@@ -73,7 +73,7 @@ function playerMovement(){
     
     }else{
         // reset velocity
-        player.animations.stop();
+        playShiftAnimation('idle');
         player.body.velocity.x = 0;
     
     }
@@ -97,7 +97,7 @@ function setControls(){
  *  listener for fliping the shift bit in Player
  */
 function flipShiftFlag(){
-    
+
     player.shiftState = !player.shiftState;             // TEMP CODE to test animations
     return;
 }
