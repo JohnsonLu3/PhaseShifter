@@ -10,10 +10,9 @@ function Player(){
     //  We need to enable physics on the player
     game.physics.arcade.enable(player);
     //  Adjust the player hit box
-    player.body.setSize(14, 24, 8, 8);
+    player.body.setSize(14, 24, 8, 6);
 
     //  Player physics properties. Give the little guy a slight bounce.
-    player.body.bounce.y = 0.2;
     player.body.gravity.y = 350;
     player.body.collideWorldBounds = true;
 

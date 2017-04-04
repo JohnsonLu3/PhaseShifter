@@ -1,4 +1,4 @@
-var game = new Phaser.Game(800, 640, Phaser.AUTO, '', { preload: preload, create: create, update: update, render: render });
+var game = new Phaser.Game(1140, 640, Phaser.AUTO, '', { preload: preload, create: create, update: update, render: render });
 var w = 2560;
 var h = 640;
 var player; 
@@ -7,6 +7,7 @@ function preload() {
     game.load.tilemap('mapdata', 'assets/levels/level0.json', null, Phaser.Tilemap.TILED_JSON);
     game.load.image('tiles', 'assets/levels/tilesheet.png');
     game.load.spritesheet('player', "assets/phaser.png", 32,32);
+    game.load.spritesheet('bullet', "assets/bullets.png", 16,16);
 }
 
 var map;
@@ -43,8 +44,8 @@ function update() {
 
 function render() {
 
-    game.debug.bodyInfo(player, 32, 32);
-    game.debug.body(player);
+    //game.debug.bodyInfo(player, 32, 32);
+    //game.debug.body(player);
 }
 
 
@@ -60,10 +61,10 @@ function playerMovement(){
         // call shoot function
     }
 
-    if(XKey.isDown ){
+    if(XKey.isDown && player.body.blocked.down){
         // player jump
         playShiftAnimation('jump');
-        player.body.velocity.y = -150;
+        player.body.velocity.y = -225;
 
     }
 
@@ -71,13 +72,13 @@ function playerMovement(){
         // player move left
         updateFacing(0);
         playShiftAnimation('walk');
-        player.body.velocity.x = -100;
+        player.body.velocity.x = -150;
 
     }else if(RightKey.isDown){
         // player move right
         updateFacing(1);
         playShiftAnimation('walk');
-        player.body.velocity.x = 100;
+        player.body.velocity.x = 150;
     
     }else{
         // reset velocity
