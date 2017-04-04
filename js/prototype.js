@@ -1,4 +1,4 @@
-var game = new Phaser.Game(800, 600, Phaser.AUTO, '', { preload: preload, create: create, update: update });
+var game = new Phaser.Game(800, 640, Phaser.AUTO, '', { preload: preload, create: create, update: update, render: render });
 var w = 2560;
 var h = 640;
 var player; 
@@ -18,27 +18,35 @@ function create() {
     // Load level from mapdata
     map = game.add.tilemap('mapdata');
     map.addTilesetImage('tilesheet', 'tiles');
+    map.setCollisionBetween(0, 40);
 
     // start physics and set up cursor
     game.physics.startSystem(Phaser.Physics.ARCADE);
     cursors = game.input.keyboard.createCursorKeys();
 
     game.physics.startSystem(Phaser.Physics.ARCADE);
-    //game.world.setBounds(0, 0, w, h);
+    game.world.setBounds(0, 0, w, h);
 
     cursors = game.input.keyboard.createCursorKeys();
     setControls();
 
-    layer = map.createLayer('mapdata');
+    layer = map.createLayer('Tile Layer 1');
     // create player
     player = new Player();
-    //game.camera.follow(player);
+    game.camera.follow(player);
 }
 
 function update() {
-    //game.physics.arcade.collide(player, layer);
+    game.physics.arcade.collide(player, layer);
     playerMovement();
 }
+
+function render() {
+
+    game.debug.bodyInfo(player, 32, 32);
+    game.debug.body(player);
+}
+
 
 /**
  *  playerMovement
@@ -90,6 +98,7 @@ function setControls(){
     XKey     = game.input.keyboard.addKey(Phaser.Keyboard.X);                                               // Jump  Button
     LeftKey  = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);                                            // Walk  Left
     RightKey = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);                                           // Walk  Right
+    EscKey   = game.input.keyboard.addKey(Phaser.Keyboard.ESC).onDown.add(pauseGame, this);                 // pause Button
 }
 
 /**
@@ -140,4 +149,20 @@ function updateFacing(facingFlag){
     }
 
     return;
+}
+
+
+/**
+ *  pauseGame
+ *      Pauses the game when ever the 
+ *      ESC key is pressed. Pressing
+ *      the key again unpause the game.
+ */
+function pauseGame(){
+    // NEED TO SHOW A PAUSE MENU WHERE YOU CAN GO BACK TO THE MAIN MAIN
+    if(game.paused === true){
+        game.paused = false;
+    }else{
+        game.paused = true;
+    }
 }
