@@ -1,7 +1,8 @@
-var game = new Phaser.Game(1140, 640, Phaser.AUTO, '', { preload: preload, create: create, update: update, render: render });
+var gameW = 1140, gameH = 640;
+var game = new Phaser.Game(gameW, gameH, Phaser.AUTO, 'game', { preload: preload, create: create, update: update, render: render });
 var w = 2560;
 var h = 640;
-var player; 
+var player;
 
 function preload() {
     game.load.tilemap('mapdata', 'assets/levels/level0.json', null, Phaser.Tilemap.TILED_JSON);
