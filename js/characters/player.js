@@ -1,7 +1,12 @@
+/**
+ * This object represents the player character.
+ * NOTE: 'player' image must be loaded!
+ */
 function Player(){
-    // The player and its settings
-    player = game.add.sprite(32, game.world.height - 300, 'player');
+    // Create player object
+    var player = game.add.sprite(32, game.world.height - 300, 'player');
 
+    // Add instance variables
     player.health = 100;         
     player.shiftState = false;       // Player shiftState    0 = Blue    1 = Red
     player.facing = 1;              // Player facing        0 = left    1 = Right
@@ -9,14 +14,14 @@ function Player(){
 
     //  We need to enable physics on the player
     game.physics.arcade.enable(player);
+
     //  Adjust the player hit box
     player.body.setSize(14, 24, 8, 6);
 
-    //  Player physics properties. Give the little guy a slight bounce.
+    //  Player physics properties
     player.body.gravity.y = 350;
     player.body.collideWorldBounds = true;
 
-    
     // Idle
     player.animations.add('idle_B', [0, 1, 2, 3, 4, 5, 6], 10, true);
     player.animations.add('idle_R', [7, 8, 9, 10, 11, 12, 13], 10, true);
