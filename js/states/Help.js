@@ -2,9 +2,9 @@
  * The game state for the help screen.
  * This is called the level states when the user clicks on the help button.
  */
-var helpState = function() {};
+var HelpState = function() {};
 
-helpState.prototype = {
+HelpState.prototype = {
     init: function() {},
     preload: function() {},
     create: function() {}

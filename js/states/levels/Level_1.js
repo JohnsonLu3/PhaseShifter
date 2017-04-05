@@ -2,8 +2,9 @@
  * The game state for level 1.
  * This is called by the levelSelectState when the user clicks on the first level icon.
  */
-
-var level_1 = {
+ 
+var Level_1 = function() {};
+Level_1.prototype = {
     init: function() {
         this.w = 2560;
         this.h = 640;
