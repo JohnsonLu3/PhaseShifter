@@ -15,7 +15,10 @@ Main.prototype = {
     preload: function() {
         // Load the JS file for the splash screen
         game.load.script('splash_script', 'js/states/Splash.js');
-        
+
+        // Load splash screen assets
+        game.load.image('gameLogo', 'assets/gameLogo.png', 500, 500);
+        game.load.image('loadingBar', 'assets/loading.png', 387, 23);
     },
     create: function() {
         // Add splashState as a game state

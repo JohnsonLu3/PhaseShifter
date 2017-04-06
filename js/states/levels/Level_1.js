@@ -18,8 +18,8 @@ Level_1.prototype = {
 
         // Load necessary JS files
         game.load.script('customSprite_script', 'js/characters/customSprite.js');
-        //game.load.script('player_script', 'js/characters/player.js');
-        game.load.script('playerSprite_script', 'js/characters/playerSprite.js');
+        game.load.script('player_script', 'js/characters/player.js');
+        //game.load.script('playerSprite_script', 'js/characters/playerSprite.js');
     },
     create: function() {
         // Change background color
@@ -40,8 +40,8 @@ Level_1.prototype = {
         this.setControls();
 
         // Create player
-        //this.player = Player();
-        this.player = new Player(game, 32, game.world.height - 300, 'player', 0, 5);
+        this.player = Player();
+        //this.player = new Player(game, 32, game.world.height - 300, 'player', 0, 5);
         game.camera.follow(this.player);
     },
 
