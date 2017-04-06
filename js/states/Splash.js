@@ -12,17 +12,23 @@ SplashState.prototype = {
     loadBGM: function () {},
     loadSFX: function () {},
     loadFonts: function () {},
-
-    // Called before preload and create
-    init: function () {},
-    // Called before create
-    preload: function () {
+    loadScripts: function() {
         // Load menu files
         game.load.script('mainMenu_script', 'js/states/MainMenu.js');
         game.load.script('controls_script', 'js/states/Controls.js');
         game.load.script('levelSelect_script', 'js/states/LevelSelect.js');
         game.load.script('gameWin_script', 'js/states/GameWin.js');
         game.load.script('gameLose_script', 'js/states/GameLose.js');
+        // Load utility files
+        game.load.script('playerUtils_script', 'js/lib/PlayerUtils.js');
+        game.load.script('gameUtils_script', 'js/lib/GameUtils.js');
+    },
+
+    // Called before preload and create
+    init: function () {},
+    // Called before create
+    preload: function () {
+        this.loadScripts();
     },
     // Called at state start
     create: function () {

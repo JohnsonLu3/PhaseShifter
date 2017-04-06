@@ -10,13 +10,16 @@ Level_1.prototype = {
         this.h = 640;
     },
     preload: function() {
+        // Load images
         game.load.tilemap('mapdata', 'assets/levels/level0.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.image('tiles', 'assets/levels/tilesheet.png');
         game.load.spritesheet('player', "assets/phaser.png", 32,32);
         game.load.spritesheet('bullet', "assets/bullets.png", 16,16);
 
         // Load necessary JS files
-        game.load.script('player_script', 'js/characters/player.js');
+        game.load.script('customSprite_script', 'js/characters/customSprite.js');
+        //game.load.script('player_script', 'js/characters/player.js');
+        game.load.script('playerSprite_script', 'js/characters/playerSprite.js');
     },
     create: function() {
         // Change background color
@@ -36,8 +39,9 @@ Level_1.prototype = {
         var cursors = game.input.keyboard.createCursorKeys();
         this.setControls();
 
-        // create player
-        this.player = Player();
+        // Create player
+        //this.player = Player();
+        this.player = new Player(game, 32, game.world.height - 300, 'player', 0, 5);
         game.camera.follow(this.player);
     },
 
@@ -61,7 +65,7 @@ Level_1.prototype = {
     },
 
     flipShiftFlag: function() {
-        this.player.shiftState = !this.player.shiftState;
+        this.player.phase = !this.player.phase;
     },
     
 
@@ -107,7 +111,7 @@ Level_1.prototype = {
      *  @param {*} animationToPlay 
      * 
      *  Takes an animation state, eg: jump, walk, idle
-     *  based on the player shiftstate it plays the correct animation
+     *  based on the player phase it plays the correct animation
      *  
      */
     playShiftAnimation: function(animationToPlay) {
@@ -117,7 +121,7 @@ Level_1.prototype = {
             return;
         }
 
-        if(this.player.shiftState === false){
+        if(this.player.phase === false){
             this.player.animations.play( animationToPlay + '_B' );       // Blue State
         } else {
             this.player.animations.play( animationToPlay + '_R' );       // Red State
