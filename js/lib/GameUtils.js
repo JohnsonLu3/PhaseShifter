@@ -1,4 +1,7 @@
-var gameUtils = {
+/**
+ * This object contains various functions that affect the game or objects in it, except the player.
+ */
+var GameUtils = {
     /**
      *  pauseGame
      *      Pauses the game when ever the 
@@ -11,6 +14,14 @@ var gameUtils = {
             game.paused = false;
         } else {
             game.paused = true;
+        }
+    },
+    /**
+     * Change the phase of all the phase objects
+     */
+    updatePhases: function() {
+        for (var i = 0 ; i <phaseObjects.length; i++) {
+            phaseObjects[i].update();
         }
     }
 }

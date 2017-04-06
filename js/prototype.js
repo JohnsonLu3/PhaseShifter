@@ -13,14 +13,15 @@ var Main = function() {};
 // Define the functions required by Phaser
 Main.prototype = {
     preload: function() {
-        // Load all the JS files
-        game.load.script('level_1_script', 'js/states/levels/Level_1.js');
+        // Load the JS file for the splash screen
+        game.load.script('splash_script', 'js/states/Splash.js');
+        
     },
     create: function() {
-        // Add level_1 as a game state
-        game.state.add('level_1_state', level_1);
-        // Start the level_1 state
-        game.state.start('level_1_state');
+        // Add splashState as a game state
+        game.state.add('splash_state', SplashState);
+        // Start the splashState state
+        game.state.start('splash_state');
     }
 }
 
