@@ -13,6 +13,7 @@ var SettingsState = {
     },
 
     create: function() {
-        GameUtils.makeScreenTitle('Settings')
+        GameUtils.makeScreenTitle('Settings');
+        GameUtils.makeBackButton('mainMenu_state');
     }
 };

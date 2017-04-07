@@ -17,6 +17,16 @@ var GameUtils = {
         game.add.text(0, 0, screenName, {fill: 'white'});
     },
 
+    makeBackButton: function(lastState) {
+        var buttonX = 75, buttonY = 75;
+        // Back button at the top left corner that will take the player to the previous game state
+        var back_button = game.add.button(buttonX, buttonY, 'smallButton',
+            function() {game.state.start(lastState)}
+        );
+        var back_text = game.add.text(buttonX, buttonY, 'Back', {fill: 'white'});
+        this.setAnchorToCenter([back_button, back_text]);
+    },
+
     /**
      *  pauseGame
      *      Pauses the game when ever the 

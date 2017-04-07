@@ -6,5 +6,8 @@ var GameLoseState = function() {};
 GameLoseState.prototype = {
     init: function() {},
     preload: function() {},
-    create: function() {}
+    create: function() {
+        GameUtils.makeBackButton('mainMenu_state');
+        GameUtils.makeScreenTitle('Game Lose');
+    }
 };

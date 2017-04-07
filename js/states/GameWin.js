@@ -6,5 +6,8 @@ var GameWinState = function() {};
 GameWinState.prototype = {
     init: function() {},
     preload: function() {},
-    create: function() {}
+    create: function() {
+        GameUtils.makeBackButton('mainMenu_state');
+        GameUtils.makeScreenTitle('Game Win');
+    }
 };

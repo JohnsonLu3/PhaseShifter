@@ -5,8 +5,11 @@
 var ControlsState = function() {};
 ControlsState.prototype = {
     init: function() {},
-    preload: function() {},
+    preload: function() {
+        
+    },
     create: function() {
         GameUtils.makeScreenTitle('Controls');
+        GameUtils.makeBackButton('mainMenu_state');
     }
 }

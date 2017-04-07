@@ -12,7 +12,7 @@ LevelSelectState.prototype = {
 
     create: function() {
         GameUtils.makeScreenTitle('Level Select');
-        
+        GameUtils.makeBackButton('mainMenu_state');
         this.addLevelStates();
         this.makeButtons();
         this.addButtons();
@@ -21,11 +21,10 @@ LevelSelectState.prototype = {
     // Manually make buttons for now
     makeButtons: function() {
         this.level_1_button = game.make.button(game.world.centerX, 300, 'largeButton', 
-        //ButtonHandlers.levelHandler(1)
-        function() {game.state.start('level_1_state')}
+            function() {game.state.start('level_1_state')}
         );
         this.level_1_text = game.make.text(game.world.centerX, 300, 'Level 1', {fill: 'white'});
-
+        // Center the game objects
         GameUtils.setAnchorToCenter([this.level_1_button, this.level_1_text]);
     },
 
