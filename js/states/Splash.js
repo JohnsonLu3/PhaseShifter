@@ -27,13 +27,10 @@ SplashState.prototype = {
         // Load menu files
         game.load.script('mainMenu_script', 'js/states/MainMenu.js');
         game.load.script('controls_script', 'js/states/Controls.js');
+        game.load.script('settings_script', 'js/states/Settings.js');
         game.load.script('levelSelect_script', 'js/states/LevelSelect.js');
         game.load.script('gameWin_script', 'js/states/GameWin.js');
         game.load.script('gameLose_script', 'js/states/GameLose.js');
-        // Load utility files
-        game.load.script('playerUtils_script', 'js/lib/PlayerUtils.js');
-        game.load.script('gameUtils_script', 'js/lib/GameUtils.js');
-        game.load.script('functions_script', 'js/lib/functions.js');
     },
 
     // Add menu game states to the game
@@ -41,22 +38,29 @@ SplashState.prototype = {
         game.state.add('mainMenu_state', MainMenuState);
         game.state.add('levelSelect_state', LevelSelectState);
         game.state.add('controls_state', ControlsState);
+        game.state.add('settings_state', SettingsState);
     },
 
     // Called before preload and create
     init: function () {
         this.loadingBar = game.make.sprite(game.world.centerX - (387 / 2), 510, 'loadingBar');
-        this.gameLogo   = game.make.sprite(game.world.centerX - 250, 0, 'gameLogo');
+        this.gameLogo   = game.make.sprite(game.world.centerX, 250, 'gameLogo');
         this.status     = game.make.text(game.world.centerX, 550, 'Loading', {fill: 'white'});
-
+        GameUtils.setAnchorToCenter([this.gameLogo, this.status]);
     },
 
     // Called before create
     preload: function () {
+        // Add assets to the screen
         game.add.existing(this.gameLogo);
         game.add.existing(this.loadingBar);
         game.add.existing(this.status);
+
+        // Set the loading bar to grow as files are loaded
         this.load.setPreloadSprite(this.loadingBar);
+
+        // Change background color
+        game.stage.backgroundColor = '#787878';
 
         // Load all assets
         this.loadScripts();
@@ -71,12 +75,12 @@ SplashState.prototype = {
         // Add menu game states
         this.addMenuStates();
         this.status.setText('Ready!');
-        
-        // Wait for 5 seconds so that the user can admire the splash screen
+
+        // Wait for a bit so that the user can admire the splash screen
         setTimeout (function() {
             // Start the MainMenuState state
             game.state.start('mainMenu_state');
-        }, 5000);
+        }, 1000);
         
     }
 };

@@ -6,5 +6,7 @@ var ControlsState = function() {};
 ControlsState.prototype = {
     init: function() {},
     preload: function() {},
-    create: function() {}
+    create: function() {
+        GameUtils.makeScreenTitle('Controls');
+    }
 }

@@ -7,5 +7,7 @@ var HelpState = function() {};
 HelpState.prototype = {
     init: function() {},
     preload: function() {},
-    create: function() {}
+    create: function() {
+        GameUtils.makeScreenTitle('Help');
+    }
 }

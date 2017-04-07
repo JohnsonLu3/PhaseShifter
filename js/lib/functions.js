@@ -15,3 +15,12 @@ function recieveDamage(turret, bullet)
     }
 }
 
+
+/**
+ * Change the phase of all the phase objects
+ */
+function updatePhases() {
+    for (var i = 0 ; i <phaseObjects.length; i++) {
+        phaseObjects[i].update();
+    }
+}
