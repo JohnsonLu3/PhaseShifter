@@ -5,7 +5,14 @@
 var HelpState = function() {};
 
 HelpState.prototype = {
-    init: function() {},
+    init: function() {
+        this.devBio1 = '';
+        this.devBio2 = '';
+        this.devBio3 = '';
+        this.playerBio = '';
+        this.enemyBio = '';
+        this.storyBio = '';
+    },
     preload: function() {},
     create: function() {
         GameUtils.makeScreenTitle('Help');

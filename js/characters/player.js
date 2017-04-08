@@ -7,9 +7,11 @@ function Player(){
     var player = game.add.sprite(32, game.world.height - 300, 'player');
 
     // Add instance variables
-    player.health = 100;         
-    player.shiftState = false;       // Player shiftState    0 = Blue    1 = Red
+    player.health = 100;   
+    player.isAlive = true;          // Is the player Alive      
+    player.shiftState = false;      // Player shiftState    0 = Blue    1 = Red
     player.facing = 1;              // Player facing        0 = left    1 = Right
+    player.jumping = false;
     player.anchor.setTo(.5,.5);
 
     //  We need to enable physics on the player
@@ -31,11 +33,24 @@ function Player(){
     player.animations.add('walk_R', [21, 22, 23, 24, 25, 26, 27], 10, false);
 
     // Jump
-    player.animations.add('jump_B', [28, 29, 30, 31, 32, 33, 34], 10, false);
-    player.animations.add('jump_R', [35, 36, 37, 38, 39, 40, 41], 10, false);
+    var jumpB = player.animations.add('jump_B', [28, 29, 30, 31, 32, 33, 34], 10, false);
+    var jumpR = player.animations.add('jump_R', [35, 36, 37, 38, 39, 40, 41], 10, false);
 
     // Die
-    player.animations.add('die', [42, 43, 44, 45, 46, 47, 48], 10, false);
+    var deathAnimation = player.animations.add('die', [42, 43, 44, 45, 46, 47, 48], 8, false);
+    
+    deathAnimation.onComplete.add(killPlayer, this);
+    jumpB.onComplete.add(setJumping, this);
+    jumpR.onComplete.add(setJumping, this);
 
     return player;
+
+    function killPlayer(){
+        game.state.start('gameLose_state');
+    }
+
+    function setJumping(){
+        player.jumping = false;
+    }
 }
+
