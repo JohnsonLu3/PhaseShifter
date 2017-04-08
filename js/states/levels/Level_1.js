@@ -2,7 +2,9 @@
  * The game state for level 1.
  * This is called by the levelSelectState when the user clicks on the first level icon.
  */
- 
+
+var healthBar = [];
+
 var Level_1 = function() {};
 Level_1.prototype = {
     init: function() {
@@ -15,6 +17,7 @@ Level_1.prototype = {
         game.load.image('tiles', 'assets/levels/tilesheet.png');
         game.load.spritesheet('player', "assets/phaser.png", 32,32);
         game.load.spritesheet('bullet', "assets/bullets.png", 16,16);
+        game.load.spritesheet('heart', "assets/battery_32x32.png", 32, 32);
 
         // Load necessary JS files
         game.load.script('customSprite_script', 'js/characters/customSprite.js');
@@ -43,11 +46,21 @@ Level_1.prototype = {
         this.player = Player();
         //this.player = new Player(game, 32, game.world.height - 300, 'player', 0, 5);
         game.camera.follow(this.player);
+
+        this.spawnLifeBar();
     },
 
     update: function() {
         game.physics.arcade.collide(this.player, this.layer);
         this.playerMovement();
+
+        if(this.player.y > 620){
+            this.player.health -= 100;
+        }
+
+        if(this.player.health <= 0){
+            this.playShiftAnimation("die");
+        }
     },
 
     render: function() {
@@ -56,12 +69,12 @@ Level_1.prototype = {
     },
 
     setControls: function() {
-        ShiftKey = game.input.keyboard.addKey(Phaser.Keyboard.SHIFT).onDown.add(this.flipShiftFlag, this);           // shift ability
+        ShiftKey = game.input.keyboard.addKey(Phaser.Keyboard.SHIFT).onDown.add(this.flipShiftFlag, this);      // shift ability
         ZKey     = game.input.keyboard.addKey(Phaser.Keyboard.Z);                                               // Shoot Button
         XKey     = game.input.keyboard.addKey(Phaser.Keyboard.X);                                               // Jump  Button
         LeftKey  = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);                                            // Walk  Left
         RightKey = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);                                           // Walk  Right
-       EscKey   = game.input.keyboard.addKey(Phaser.Keyboard.ESC).onDown.add(this.pauseGame, this);
+        EscKey   = game.input.keyboard.addKey(Phaser.Keyboard.ESC).onDown.add(this.pauseGame, this);
     },
 
     flipShiftFlag: function() {
@@ -78,6 +91,7 @@ Level_1.prototype = {
     playerMovement: function() {
         if(ZKey.isDown){
             // call shoot function
+            this.playShiftAnimation('die');
         }
 
         if(XKey.isDown && this.player.body.blocked.down) {
@@ -117,7 +131,7 @@ Level_1.prototype = {
     playShiftAnimation: function(animationToPlay) {
 
         if(animationToPlay === "die"){
-            this.player.animations.play("die");
+            this.player.animations.play('die');
             return;
         }
 
@@ -158,6 +172,16 @@ Level_1.prototype = {
             game.paused = false;
         } else {
             game.paused = true;
+        }
+    },
+
+    spawnLifeBar: function(){
+            // create health;
+        for(var x = 0; x < 5; x++){
+                heart = game.add.sprite((x*32) + 8, 16, 'heart');
+                heart.hit = false;
+                
+                healthBar.push(heart);
         }
     }
 };
