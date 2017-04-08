@@ -9,7 +9,7 @@ function Player(){
     // Add instance variables
     player.health = 100;   
     player.isAlive = true;          // Is the player Alive      
-    player.shiftState = false;       // Player shiftState    0 = Blue    1 = Red
+    player.shiftState = false;      // Player shiftState    0 = Blue    1 = Red
     player.facing = 1;              // Player facing        0 = left    1 = Right
     player.anchor.setTo(.5,.5);
 
@@ -36,13 +36,8 @@ function Player(){
     player.animations.add('jump_R', [35, 36, 37, 38, 39, 40, 41], 10, false);
 
     // Die
-    var deathAnimation = player.animations.add('die', [42, 43, 44, 45, 46, 47, 48], 10, false);
-    deathAnimation.onComplete.add(killPlayer, this);
+    player.animations.add('die', [42, 43, 44, 45, 46, 47, 48], 10, false);
+
 
     return player;
-}
-
-function killPlayer(){
-    player.isAlive = false;
-    player.kill();
 }

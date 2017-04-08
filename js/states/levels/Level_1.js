@@ -62,12 +62,15 @@ Level_1.prototype = {
         if(this.player.y > 610){                  // Player loses all their health if they touch the bottom of the screen
             this.player.health = 0;
 
+
+            for(heart in healthBar){             // kill all heart sprites in healthbar
+                healthBar[heart].kill();
+            }
         }
 
         if(this.player.health === 0 && this.player.isAlive){                     // Kill player
             this.player.isAlive = false;
             this.player.animations.play('die');
-            console.log('help');
         }
     },
 
