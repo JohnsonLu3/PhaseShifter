@@ -46,6 +46,8 @@ function Player(){
     return player;
 
     function killPlayer(){
+        game.world.width = gameW;                       // Reset game world cords
+        game.world.height = gameH;                      // because the camera messes with it
         game.state.start('gameLose_state');
     }
 

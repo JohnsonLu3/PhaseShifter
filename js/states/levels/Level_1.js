@@ -219,9 +219,6 @@ Level_1.prototype = {
         if(game.paused === true){
             var mouseX = event.x + 65;          // add weird offset
             var mouseY = event.y + 24;
-            console.log("Event  x,y : " + mouseX  + " " + mouseY );
-            console.log("camera x,y : " + game.camera.x  + " " + game.camera.y );
-            console.log("button x,y : " + menubutton.x  + " " + menubutton.y );
 
             if( mouseX + game.camera.x >  menubutton.x && mouseX + game.camera.x < menubutton.x + 150
                 && mouseY + game.camera.y >  menubutton.y - 60 && mouseY + game.camera.y < menubutton.y + 60 ){
