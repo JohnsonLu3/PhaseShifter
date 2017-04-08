@@ -202,22 +202,33 @@ Level_1.prototype = {
 
         } else {
             game.paused = true;                             // pause game
-            PauseText   = game.add.text(game.camera.x + gameW/2 - 30, 20, 'Paused', { font: '30px Arial', fill: '#fff' });
+            PauseText = game.add.text(game.camera.x + gameW/2, 20, 'Paused', { font: '30px Arial', fill: '#fff' });
+            PauseText.anchor.setTo(0.5, 0.5);
+
+            menubutton = game.add.sprite(game.camera.x + gameW/2, gameH/2, 'menu');
+            menubutton.anchor.setTo(0.5, 0.5);
             
-            menubutton = game.add.sprite(gameW/2-150/2 + 16, gameH/2-60, 'menu');
-            menuText = game.add.text(menubutton.x + 8, menubutton.y + 16, 'Level Select', {font: '24px Arial', fill: 'white'});
+            menuText = game.add.text(game.camera.x + gameW/2, gameH/2, 'Level Select', {font: '24px Arial', fill: 'white'});
+            menuText.anchor.setTo(0.5, 0.5);
 
         }
     },
 
     levelSelect: function(event){
-        if( event.x >  menubutton.x && event.x < menubutton.x + 150 && event.y >  menubutton.y && event.y < menubutton.y + 60 ){
-            // CALL STATE SWITCH
-            game.paused = false;
-            game.world.width = gameW;                       // Reset game world cords
-            game.world.height = gameH;                      // because the camera messes with it
-            game.state.start('levelSelect_state');
-            
+
+        if(game.paused === true){
+            var mouseX = event.x + 65;          // add weird offset
+            var mouseY = event.y + 24;
+
+            if( mouseX + game.camera.x >  menubutton.x && mouseX + game.camera.x < menubutton.x + 150
+                && mouseY + game.camera.y >  menubutton.y - 60 && mouseY + game.camera.y < menubutton.y + 60 ){
+                // CALL STATE SWITCH
+                game.paused = false;
+                game.world.width = gameW;                       // Reset game world cords
+                game.world.height = gameH;                      // because the camera messes with it
+                game.state.start('levelSelect_state');
+                
+            }
         }
     },
 
