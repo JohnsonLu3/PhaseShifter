@@ -212,8 +212,11 @@ Level_1.prototype = {
     levelSelect: function(event){
         if( event.x >  menubutton.x && event.x < menubutton.x + 150 && event.y >  menubutton.y && event.y < menubutton.y + 60 ){
             // CALL STATE SWITCH
-            game.state.start('levelSelect_state');
             game.paused = false;
+            game.world.width = gameW;                       // Reset game world cords
+            game.world.height = gameH;                      // because the camera messes with it
+            game.state.start('levelSelect_state');
+            
         }
     },
 

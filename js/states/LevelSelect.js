@@ -20,10 +20,10 @@ LevelSelectState.prototype = {
     
     // Manually make buttons for now
     makeButtons: function() {
-        this.level_1_button = game.make.button(1140/2, 320, 'largeButton', 
+        this.level_1_button = game.make.button(game.world.centerX, 300, 'largeButton', 
             function() {game.state.start('level_1_state')}
         );
-        this.level_1_text = game.make.text(1140/2, 320, 'Level 1', {fill: 'white'});
+        this.level_1_text = game.make.text(game.world.centerX, 300, 'Level 1', {fill: 'white'});
         // Center the game objects
         GameUtils.setAnchorToCenter([this.level_1_button, this.level_1_text]);
     },
