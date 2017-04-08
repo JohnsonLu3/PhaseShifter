@@ -177,10 +177,11 @@ Level_1.prototype = {
 
     spawnLifeBar: function(){
             // create health;
-        for(var x = 0; x < 5; x++){
+        for(var x = 0; x < 10; x++){
                 heart = game.add.sprite((x*32) + 8, 16, 'heart');
                 heart.hit = false;
-                
+                heart.fixedToCamera = true;
+
                 healthBar.push(heart);
         }
     }
