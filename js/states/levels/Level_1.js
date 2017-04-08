@@ -4,17 +4,21 @@
  */
 
 var healthBar = [];
+var menuButton;                             // for the pause menu
+var menuText;
+var PauseText;
 
 var Level_1 = function() {};
 Level_1.prototype = {
     init: function() {
-        this.w = 2560;
-        this.h = 640;
+        this.w = 2560;                      // size of level W and H 
+        this.h = 640;                   
     },
     preload: function() {
         // Load images
         game.load.tilemap('mapdata', 'assets/levels/level0.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.image('tiles', 'assets/levels/tilesheet.png');
+        game.load.image('menu', 'assets/buttons/smallButton_150x60.png', 150, 60);
         game.load.spritesheet('player', "assets/phaser.png", 32,32);
         game.load.spritesheet('bullet', "assets/bullets.png", 16,16);
         game.load.spritesheet('heart', "assets/battery_32x32.png", 32, 32);
@@ -53,6 +57,9 @@ Level_1.prototype = {
         this.spawnPlatforms(46, 12 );
         this.spawnPlatforms(49, 12 );
         this.spawnPlatforms(52, 12 );
+
+        // Add lisitener for menubutton press
+        game.input.onDown.add(this.levelSelect, self);
     },
 
     update: function() {
@@ -187,9 +194,26 @@ Level_1.prototype = {
     pauseGame: function(){
         // NEED TO SHOW A PAUSE MENU WHERE YOU CAN GO BACK TO THE MAIN MAIN
         if(game.paused === true){
-            game.paused = false;
+            game.paused = false;                            // unpause game
+            game.world.remove(PauseText);
+            game.world.remove(menuText);
+            game.world.remove(menubutton);
+
         } else {
-            game.paused = true;
+            game.paused = true;                             // pause game
+            PauseText   = game.add.text(game.camera.x + gameW/2 - 30, 20, 'Paused', { font: '30px Arial', fill: '#fff' });
+            
+            menubutton = game.add.sprite(gameW/2-150/2 + 16, gameH/2-60, 'menu');
+            menuText = game.add.text(menubutton.x + 8, menubutton.y + 16, 'Level Select', {font: '24px Arial', fill: 'white'});
+
+        }
+    },
+
+    levelSelect: function(event){
+        if( event.x >  menubutton.x && event.x < menubutton.x + 150 && event.y >  menubutton.y && event.y < menubutton.y + 60 ){
+            // CALL STATE SWITCH
+            game.state.start('levelSelect_state');
+            game.paused = false;
         }
     },
 
