@@ -18,6 +18,7 @@ Level_1.prototype = {
         game.load.spritesheet('player', "assets/phaser.png", 32,32);
         game.load.spritesheet('bullet', "assets/bullets.png", 16,16);
         game.load.spritesheet('heart', "assets/battery_32x32.png", 32, 32);
+        game.load.spritesheet('platform', "assets/platform.png", 32, 16);
 
         // Load necessary JS files
         game.load.script('customSprite_script', 'js/characters/customSprite.js');
@@ -44,10 +45,14 @@ Level_1.prototype = {
 
         // Create player
         this.player = Player();
-        //this.player = new Player(game, 32, game.world.height - 300, 'player', 0, 5);
         game.camera.follow(this.player);
 
         this.spawnLifeBar();
+
+        // Spawn Platforms that can shift phases
+        this.spawnPlatforms(46, 12 );
+        this.spawnPlatforms(49, 12 );
+        this.spawnPlatforms(52, 12 );
     },
 
     update: function() {
@@ -91,7 +96,7 @@ Level_1.prototype = {
     playerMovement: function() {
         if(ZKey.isDown){
             // call shoot function
-            this.playShiftAnimation('die');
+            
         }
 
         if(XKey.isDown && this.player.body.blocked.down) {
@@ -184,6 +189,11 @@ Level_1.prototype = {
 
                 healthBar.push(heart);
         }
+    },
+
+    spawnPlatforms: function(x, y){
+        platform = game.add.sprite(x * 32, y * 32, 'platform');
+        game.physics.arcade.enable(platform);
     }
 };
 
