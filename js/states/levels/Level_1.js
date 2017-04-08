@@ -59,18 +59,21 @@ Level_1.prototype = {
         game.physics.arcade.collide(this.player, this.layer);
         this.playerMovement();
 
-        if(this.player.y > 620){
-            this.player.health -= 100;
+        if(this.player.y > 610){                  // Player loses all their health if they touch the bottom of the screen
+            this.player.health = 0;
+
         }
 
-        if(this.player.health <= 0){
-            this.playShiftAnimation("die");
+        if(this.player.health === 0 && this.player.isAlive){                     // Kill player
+            this.player.isAlive = false;
+            this.player.animations.play('die');
+            console.log('help');
         }
     },
 
     render: function() {
-        //game.debug.bodyInfo(player, 32, 32);
-        //game.debug.body(player);
+        //game.debug.bodyInfo(this.player, 32, 32);
+        //game.debug.body(this.player);
     },
 
     setControls: function() {
@@ -94,30 +97,30 @@ Level_1.prototype = {
      *      the correct animation / facing / shift state
      */
     playerMovement: function() {
-        if(ZKey.isDown){
+        if(ZKey.isDown && this.player.isAlive){
             // call shoot function
             
         }
 
-        if(XKey.isDown && this.player.body.blocked.down) {
+        if(XKey.isDown && this.player.body.blocked.down && this.player.isAlive) {
             // player jump
             this.playShiftAnimation('jump');
             this.player.body.velocity.y = -225;
         }
 
-        if(LeftKey.isDown) {
+        if(LeftKey.isDown && this.player.isAlive) {
             // player move left
             this.updateFacing(0);
             this.playShiftAnimation('walk');
             this.player.body.velocity.x = -150;
 
-        } else if(RightKey.isDown) {
+        } else if(RightKey.isDown && this.player.isAlive) {
             // player move right
             this.updateFacing(1);
             this.playShiftAnimation('walk');
             this.player.body.velocity.x = 150;
         
-        } else {
+        } else if(this.player.isAlive){
             // reset velocity
             this.playShiftAnimation('idle');
             this.player.body.velocity.x = 0;
