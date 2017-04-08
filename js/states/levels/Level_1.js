@@ -38,6 +38,7 @@ Level_1.prototype = {
         // Set up cursors
         var cursors = game.input.keyboard.createCursorKeys();
         this.setControls();
+        GameUtils.buildKeys();
 
         // Create player
         this.player = Player();
@@ -56,12 +57,12 @@ Level_1.prototype = {
     },
 
     setControls: function() {
-        ShiftKey = game.input.keyboard.addKey(Phaser.Keyboard.SHIFT).onDown.add(this.flipShiftFlag, this);           // shift ability
-        ZKey     = game.input.keyboard.addKey(Phaser.Keyboard.Z);                                               // Shoot Button
-        XKey     = game.input.keyboard.addKey(Phaser.Keyboard.X);                                               // Jump  Button
-        LeftKey  = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);                                            // Walk  Left
-        RightKey = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);                                           // Walk  Right
-       EscKey   = game.input.keyboard.addKey(Phaser.Keyboard.ESC).onDown.add(this.pauseGame, this);
+        ShiftKey = ControlKeys.phaseShiftKey.onDown.add(this.flipShiftFlag, this);//game.input.keyboard.addKey(Phaser.Keyboard.SHIFT).onDown.add(this.flipShiftFlag, this);           // shift ability
+        ZKey     = ControlKeys.shootKey;//game.input.keyboard.addKey(Phaser.Keyboard.Z);                                               // Shoot Button
+        XKey     = ControlKeys.jumpKey//game.input.keyboard.addKey(Phaser.Keyboard.X);                                               // Jump  Button
+        LeftKey  = ControlKeys.leftKey;//game.input.keyboard.addKey(Phaser.Keyboard.LEFT);                                            // Walk  Left
+        RightKey = ControlKeys.rightKey;//game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);                                           // Walk  Right
+        EscKey   = ControlKeys.pauseKey.onDown.add(this.pauseGame, this);
     },
 
     flipShiftFlag: function() {

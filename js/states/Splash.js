@@ -39,6 +39,7 @@ SplashState.prototype = {
         game.state.add('levelSelect_state', LevelSelectState);
         game.state.add('controls_state', ControlsState);
         game.state.add('settings_state', SettingsState);
+        
     },
 
     // Called before preload and create

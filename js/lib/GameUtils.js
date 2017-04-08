@@ -44,6 +44,26 @@ var GameUtils = {
     getKeyMapping: function(key) {
         return "hello";
     },
+        
+    buildKeys: function() {
+        game.input.keyboard.addKey(Phaser.Keyboard.SHIFT);           // shift ability
+        game.input.keyboard.addKey(Phaser.Keyboard.Z);                                               // Shoot Button
+        game.input.keyboard.addKey(Phaser.Keyboard.X);                                               // Jump  Button
+        game.input.keyboard.addKey(Phaser.Keyboard.LEFT);                                            // Walk  Left
+        game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);                                           // Walk  Right
+        game.input.keyboard.addKey(Phaser.Keyboard.ESC);
+    },
+
+    getSetting: function(setting) {
+        return "YES";
+    },
+
+    toggleSetting: function(setting) {
+        if(setting == "YES")
+            return "NO";
+        else
+            return "YES";
+    },
     /**
      *  pauseGame
      *      Pauses the game when ever the 
