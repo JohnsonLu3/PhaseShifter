@@ -107,6 +107,7 @@ Level_1.prototype = {
 
         if(XKey.isDown && this.player.body.blocked.down && this.player.isAlive) {
             // player jump
+            this.player.jumping = true;
             this.playShiftAnimation('jump');
             this.player.body.velocity.y = -225;
         }
@@ -123,7 +124,7 @@ Level_1.prototype = {
             this.playShiftAnimation('walk');
             this.player.body.velocity.x = 150;
         
-        } else if(this.player.isAlive){
+        } else if(this.player.isAlive && !this.player.jumping){
             // reset velocity
             this.playShiftAnimation('idle');
             this.player.body.velocity.x = 0;
