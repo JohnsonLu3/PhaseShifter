@@ -70,6 +70,8 @@ Level_1.prototype = {
 
         if(this.player.health === 0 && this.player.isAlive){                     // Kill player
             this.player.isAlive = false;
+            this.player.body.velocity.x = 0;
+            this.player.body.velocity.y = 0;                        
             this.player.animations.play('die');
         }
     },
@@ -115,13 +117,15 @@ Level_1.prototype = {
         if(LeftKey.isDown && this.player.isAlive) {
             // player move left
             this.updateFacing(0);
-            this.playShiftAnimation('walk');
+            if(!this.player.jumping)
+                this.playShiftAnimation('walk');
             this.player.body.velocity.x = -150;
 
         } else if(RightKey.isDown && this.player.isAlive) {
             // player move right
             this.updateFacing(1);
-            this.playShiftAnimation('walk');
+            if(!this.player.jumping)
+                this.playShiftAnimation('walk');
             this.player.body.velocity.x = 150;
         
         } else if(this.player.isAlive && !this.player.jumping){
@@ -129,6 +133,8 @@ Level_1.prototype = {
             this.playShiftAnimation('idle');
             this.player.body.velocity.x = 0;
         
+        }else{
+            this.player.body.velocity.x = 0;
         }
     },
 

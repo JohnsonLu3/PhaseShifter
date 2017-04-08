@@ -50,7 +50,7 @@ function Player(){
     }
 
     function setJumping(){
-        player.jump = false;
+        player.jumping = false;
     }
 }
 
