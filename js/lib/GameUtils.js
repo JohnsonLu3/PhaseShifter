@@ -27,6 +27,23 @@ var GameUtils = {
         this.setAnchorToCenter([back_button, back_text]);
     },
 
+    makeHelpButton: function() {
+        var buttonX, buttonY;
+        var pause_button = game.add.button(buttonX, buttonY, 'helpButton',
+            function() {game.state.start(helpScreen)}
+        );
+    },
+
+    makePauseMenu: function() {
+        var resume_button;
+        var quit_button;
+    },
+
+    changeKey: function(keyToChange) {},
+
+    getKeyMapping: function(key) {
+        return "hello";
+    },
     /**
      *  pauseGame
      *      Pauses the game when ever the 
