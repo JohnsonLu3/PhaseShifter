@@ -2,18 +2,17 @@
  * The game state for level 1.
  * This is called by the levelSelectState when the user clicks on the first level icon.
  */
-<<<<<<< HEAD
+
  
  var platform;
  //phaseObjects, phasePlatforms
-=======
+
 
 var healthBar = [];
 var menuButton;                             // for the pause menu
 var menuText;
 var PauseText;
 
->>>>>>> 8f695d9f9ec2d166906569025bf9a7434035fb62
 var Level_1 = function() {};
 Level_1.prototype = {
     init: function() {
@@ -27,14 +26,12 @@ Level_1.prototype = {
         game.load.image('menu', 'assets/buttons/smallButton_150x60.png', 150, 60);
         game.load.spritesheet('player', "assets/phaser.png", 32,32);
         game.load.spritesheet('bullet', "assets/bullets.png", 16,16);
-<<<<<<< HEAD
+
         game.load.spritesheet('turret', "assets/turret.png", 32,32);
-        game.load.spritesheet('platform', "assets/platform.png",32,8);
-=======
+
         game.load.spritesheet('heart', "assets/battery_32x32.png", 32, 32);
         game.load.spritesheet('platform', "assets/platform.png", 32, 16);
 
->>>>>>> 8f695d9f9ec2d166906569025bf9a7434035fb62
         // Load necessary JS files
         game.load.script('customSprite_script', 'js/characters/customSprite.js');
         //game.load.script('player_script', 'js/characters/player.js');
@@ -70,7 +67,6 @@ Level_1.prototype = {
         GameUtils.buildKeys();
 
         // Create player
-<<<<<<< HEAD
         this.player = new Player(game, 32, game.world.height - 300, 'player', 0, 5);
         phaseObjects.push(this.player);
         game.camera.follow(this.player);
@@ -85,9 +81,6 @@ Level_1.prototype = {
         phaseObjects.push(platform);
         phasePlatforms.push(platform);
         //console.log(this.platform);
-=======
-        this.player = Player();
-        game.camera.follow(this.player);
 
         this.spawnLifeBar();
 
@@ -98,7 +91,7 @@ Level_1.prototype = {
 
         // Add lisitener for menubutton press
         game.input.onDown.add(this.levelSelect, self);
->>>>>>> 8f695d9f9ec2d166906569025bf9a7434035fb62
+
     },
 
     update: function() {
@@ -106,7 +99,7 @@ Level_1.prototype = {
         updatePhases();
         game.physics.arcade.collide(this.player, this.layer);
         this.playerMovement();
-<<<<<<< HEAD
+
         //Collisions.
         //Kill all bullets that hit solid ground.
         game.physics.arcade.collide(game.enemyBullets, this.layer,function(bullet,layer)
@@ -134,7 +127,7 @@ Level_1.prototype = {
     render: function() {
         game.debug.body(phasePlatforms[0]);
         //game.debug.bodyInfo(player, 32, 32);
-=======
+
 
         if(this.player.y > 610){                  // Player loses all their health if they touch the bottom of the screen
             this.player.health = 0;
@@ -156,7 +149,7 @@ Level_1.prototype = {
     render: function() {
         //game.debug.bodyInfo(this.player, 32, 32);
         //game.debug.body(this.player);
->>>>>>> 8f695d9f9ec2d166906569025bf9a7434035fb62
+
     },
 
     setControls: function() {
@@ -180,49 +173,35 @@ Level_1.prototype = {
      *      the correct animation / facing / shift state
      */
     playerMovement: function() {
-<<<<<<< HEAD
+
         if(ZKey.isDown){
             this.player.fire();
-=======
-        if(ZKey.isDown && this.player.isAlive){
-            // call shoot function
-            
->>>>>>> 8f695d9f9ec2d166906569025bf9a7434035fb62
+
         }
 
         if(XKey.isDown && this.player.body.blocked.down && this.player.isAlive) {
             // player jump
-<<<<<<< HEAD
-            this.player.playAnimation('jump');
-=======
+            
             this.player.jumping = true;
             this.playShiftAnimation('jump');
->>>>>>> 8f695d9f9ec2d166906569025bf9a7434035fb62
+
             this.player.body.velocity.y = -225;
         }
 
         if(LeftKey.isDown && this.player.isAlive) {
             // player move left
-<<<<<<< HEAD
+
             this.updateFacing(false);
             this.player.playAnimation('walk');
-=======
-            this.updateFacing(0);
-            if(!this.player.jumping)
-                this.playShiftAnimation('walk');
->>>>>>> 8f695d9f9ec2d166906569025bf9a7434035fb62
+
             this.player.body.velocity.x = -150;
 
         } else if(RightKey.isDown && this.player.isAlive) {
             // player move right
-<<<<<<< HEAD
+
             this.updateFacing(true);
             this.player.playAnimation('walk');
-=======
-            this.updateFacing(1);
-            if(!this.player.jumping)
-                this.playShiftAnimation('walk');
->>>>>>> 8f695d9f9ec2d166906569025bf9a7434035fb62
+
             this.player.body.velocity.x = 150;
         
         } else if(this.player.isAlive && !this.player.jumping){
