@@ -183,7 +183,7 @@ Level_1.prototype = {
             // player jump
             
             this.player.jumping = true;
-            this.playShiftAnimation('jump');
+            this.player.playAnimation('jump');
 
             this.player.body.velocity.y = -225;
         }

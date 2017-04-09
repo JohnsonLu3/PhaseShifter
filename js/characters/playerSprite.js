@@ -36,6 +36,7 @@ var Player = function(game, x, y, asset, interval, hp) {
     this.facing = true;            
     this.anchor.setTo(.5,.5);
     this.isAlive = true; 
+    this.jumping = false;
     //  We need to enable physics on the player
     game.physics.arcade.enable(this);
 
