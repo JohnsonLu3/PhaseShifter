@@ -147,11 +147,13 @@ Level_1.prototype = {
         }
 
         if(this.player.health === 0 && this.player.isAlive){                     // Kill player
-            this.player.isAlive = false;
-            this.player.body.velocity.x = 0;
-            this.player.body.velocity.y = 0;                        
+            this.player.isAlive = false;                   
             this.player.animations.play('die');
-            this.player.animations.currentAnim.onComplete.add(function () { this.player.kill()});
+            this.player.animations.currentAnim.onComplete.add(function () { 
+                game.world.width = gameW;                       // Reset game world cords
+                game.world.height = gameH;                      // because the camera messes with it
+                game.state.start('gameLose_state');
+            });
         }
 
         onPlatform = false;
@@ -223,44 +225,20 @@ Level_1.prototype = {
         }
 
         //Play the proper animation, uninterruptable
-        if (this.player.body.velocity.y != 0 && !onPlatform){
+        if (this.player.body.velocity.y != 0 && !onPlatform && this.player.isAlive){
             //console.log(this.player.body.velocity.y);
             this.player.playAnimation("jump");
         }
-        else if (this.player.body.velocity.x != 0)
+        else if (this.player.body.velocity.x != 0 && this.player.isAlive)
         {
             this.player.playAnimation("walk");
         }
-        else
+        else if (this.player.isAlive)
         {
             this.player.playAnimation("idle");
         }
     },
 
-    /**
-     *  playShiftAnimation
-     *  @param {*} animationToPlay 
-     * 
-     *  Takes an animation state, eg: jump, walk, idle
-     *  based on the player phase it plays the correct animation
-     *  
-     *
-    playShiftAnimation: function(animationToPlay) {
-
-        if(animationToPlay === "die"){
-            this.player.animations.play('die');
-            return;
-        }
-
-        if(this.player.phase === false){
-            this.player.animations.play( animationToPlay + '_B' );       // Blue State
-        } else {
-            this.player.animations.play( animationToPlay + '_R' );       // Red State
-        }
-
-        return;
-    },
-    **/
 
     /**
      *  updateFacing

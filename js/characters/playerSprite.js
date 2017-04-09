@@ -60,7 +60,7 @@ var Player = function(game, x, y, asset, interval, hp) {
     this.animations.add('jump_R', [35, 36, 37, 38, 39, 40, 41], 10, false);
 
     // Die
-    this.animations.add('die', [42, 43, 44, 45, 46, 47, 48], 10, false);
+    this.animations.add('die', [42, 43, 44, 45, 46, 47, 48], 8, false);
 }
 
 /**
