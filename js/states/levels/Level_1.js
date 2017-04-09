@@ -12,6 +12,7 @@ var globalTimer = 0;
 var phaseObjects = new Array();
 // Create a game group which will contain all special phase platforms.
 var phasePlatform = new Array();
+var exitDoor;
 
 var healthBar = [];
 var menuButton;                             // for the pause menu
@@ -33,6 +34,7 @@ Level_1.prototype = {
         game.load.image('menu', 'assets/buttons/smallButton_150x60.png', 150, 60);
         game.load.spritesheet('player', "assets/phaser.png", 32,32);
         game.load.spritesheet('bullet', "assets/bullets.png", 16,16);
+        game.load.image('exitDoor' , 'assets/exitDoor.png', 32, 32);
 
         game.load.spritesheet('turret', "assets/turret.png", 32,32);
 
@@ -74,6 +76,9 @@ Level_1.prototype = {
         this.setControls();
         GameUtils.buildKeys();
 
+        // make an exitDoor
+        exitDoor = game.add.sprite(2500, 350, 'exitDoor');
+
         // Create player
         this.player = new Player(game, 32, game.world.height - 300, 'player', 0, 5);
         phaseObjects.push(this.player);
@@ -107,6 +112,9 @@ Level_1.prototype = {
         globalTimer++;
         updatePhases();
         game.physics.arcade.collide(this.player, this.layer);
+
+        this.checkWinCondition();
+
 
         //Collisions.
         //Kill all bullets that hit solid ground.
@@ -163,6 +171,14 @@ Level_1.prototype = {
         //game.debug.body(phasePlatforms[0]);
         //game.debug.body(this.player);
 
+    },
+
+    checkWinCondition: function () {
+        if (this.player.overlap(exitDoor)){
+            game.world.width = gameW;                       // Reset game world cords
+            game.world.height = gameH;                      // because the camera messes with it
+            game.state.start('gameWin_state');
+        }
     },
 
     setControls: function() {
