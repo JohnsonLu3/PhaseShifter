@@ -31,7 +31,7 @@ var Player = function(game, x, y, asset, interval, hp) {
     this.walkingSpeed = 150;
     //Set various convenience methods that don't need to be specified in the actual game.
         // Add instance variables
-    this.health = 100;         
+    this.health = 10;         
     this.shiftState = false;       // Player shiftState    0 = Blue    1 = Red
     this.facing = true;            
     this.anchor.setTo(.5,.5);
@@ -134,11 +134,11 @@ Player.prototype.fire = function(){
         bullet.phase = this.shiftState;
         if (bullet.phase)
         {
-            bullet.loadTexture('bullet', 1);
+            bullet.loadTexture('bullet', 0);
         }
         else
         {
-            bullet.loadTexture('bullet', 0);
+            bullet.loadTexture('bullet', 1);
         }
         if (this.facing)
         {

@@ -2,6 +2,7 @@
 var Enemy = function(game,x,y,asset,interval,hp, player)
 {
     CustomSprite.call(this, game, x, y,asset,interval);
+    this.anchor.setTo(.5,.5);
     this.health = hp;
     this.player = player;
     this.cooldownAmt = 20;
@@ -30,6 +31,15 @@ Enemy.prototype.update = function()
 {
     this.changePhase();
     if (this.seePlayer()){
+        if (this.player.x > this.x)
+        {
+            
+            this.scale.x = -1 * Math.abs(this.scale.x);
+        }
+        else
+        {
+            this.scale.x = Math.abs(this.scale.x);
+        }
         this.playAnimation("attacking");
         if (this.cooldown == 0) {
             this.attack(this.player);

@@ -8,7 +8,7 @@
 
 function recieveDamage(turret, bullet)
 {
-    if (turret.shiftState == bullet.phase)
+    if (turret.shiftState === bullet.phase)
     {
         bullet.kill()
         turret.damage(1);
@@ -22,7 +22,7 @@ function recieveDamage(turret, bullet)
  */
 function recieveDamageP(player, bullet)
 {
-    if (player.shiftState == bullet.phase)
+    if (player.shiftState === bullet.phase)
     {
         bullet.kill()
         player.health--;

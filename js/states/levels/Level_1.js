@@ -6,12 +6,18 @@
  
  var platform;
  //phaseObjects, phasePlatforms
-
+// A global timer, this is used in order to keep track of things such as intervals for enemy phase changes.
+var globalTimer = 0;
+// Collection of all phase objects in the game, used for calling update each frame.
+var phaseObjects = new Array();
+// Create a game group which will contain all special phase platforms.
+var phasePlatform = new Array();
 
 var healthBar = [];
 var menuButton;                             // for the pause menu
 var menuText;
 var PauseText;
+var onPlatform = false;
 
 var Level_1 = function() {};
 Level_1.prototype = {
@@ -74,12 +80,17 @@ Level_1.prototype = {
         // Create a turret
         this.turret = new Turret(game, 700, 350, this.player);
         phaseObjects.push(this.turret);
-        
+
+        //Create another turret
+        this.turret2 = new Turret(game, 1150, 350, this.player);
+        phaseObjects.push(this.turret);
+
         //Create a platform.
         platform = new Platform(game,400,400, 200);
         platform.scale.setTo(3,3);
         phaseObjects.push(platform);
         phasePlatforms.push(platform);
+        //console.log(phasePlatforms);
         //console.log(this.platform);
 
         this.spawnLifeBar();
@@ -98,7 +109,6 @@ Level_1.prototype = {
         globalTimer++;
         updatePhases();
         game.physics.arcade.collide(this.player, this.layer);
-        this.playerMovement();
 
         //Collisions.
         //Kill all bullets that hit solid ground.
@@ -112,15 +122,20 @@ Level_1.prototype = {
         },null,this);
         //Resolve interactions between playerBullets and enemies and between enemyBullets and players.
         game.physics.arcade.overlap(this.turret, this.player.playerBullets, recieveDamage, null, this);
-        game.physics.arcade.overlap(this.player, game.enemyBullets, recieveDamageP, null, this);
+        game.physics.arcade.overlap(this.player, game.enemyBullets, this.recieveDamageP, null, this);
         //Collide player with phase platforms if they are in the same phase.
         for (var i = 0; i < phasePlatforms.length; i++)
         {
             if (this.player.shiftState === phasePlatforms[i].shiftState)
-            {
-                console.log(game.physics.arcade.collide(this.player, platform));
+            {   
+                if (!onPlatform)
+                {
+                    onPlatform = game.physics.arcade.collide(this.player, phasePlatforms[i]);
+                }
             }
         }
+        //Deal with player movement after checking for platform collision.
+        this.playerMovement();
 
         if(this.player.y > 610){                  // Player loses all their health if they touch the bottom of the screen
             this.player.health = 0;
@@ -136,12 +151,16 @@ Level_1.prototype = {
             this.player.body.velocity.x = 0;
             this.player.body.velocity.y = 0;                        
             this.player.animations.play('die');
+            this.player.animations.currentAnim.onComplete.add(function () { this.player.kill()});
         }
+
+        onPlatform = false;
         
     },
 
     render: function() {
         //game.debug.bodyInfo(this.player, 32, 32);
+        //game.debug.body(phasePlatforms[0]);
         //game.debug.body(this.player);
 
     },
@@ -173,11 +192,10 @@ Level_1.prototype = {
 
         }
 
-        if(XKey.isDown && this.player.body.blocked.down && this.player.isAlive) {
+        if(XKey.isDown && this.player.isAlive && (this.player.body.blocked.down || onPlatform )) {
             // player jump
             
             this.player.jumping = true;
-            this.player.playAnimation('jump');
 
             this.player.body.velocity.y = -225;
         }
@@ -186,7 +204,6 @@ Level_1.prototype = {
             // player move left
 
             this.updateFacing(false);
-            this.player.playAnimation('walk');
 
             this.player.body.velocity.x = -150;
 
@@ -194,17 +211,29 @@ Level_1.prototype = {
             // player move right
 
             this.updateFacing(true);
-            this.player.playAnimation('walk');
 
             this.player.body.velocity.x = 150;
         
         } else if(this.player.isAlive && !this.player.jumping){
             // reset velocity
-            this.player.playAnimation('idle');
             this.player.body.velocity.x = 0;
         
         }else{
             this.player.body.velocity.x = 0;
+        }
+
+        //Play the proper animation, uninterruptable
+        if (this.player.body.velocity.y != 0 && !onPlatform){
+            //console.log(this.player.body.velocity.y);
+            this.player.playAnimation("jump");
+        }
+        else if (this.player.body.velocity.x != 0)
+        {
+            this.player.playAnimation("walk");
+        }
+        else
+        {
+            this.player.playAnimation("idle");
         }
     },
 
@@ -307,8 +336,27 @@ Level_1.prototype = {
     },
 
     spawnPlatforms: function(x, y){
-        platform = game.add.sprite(x * 32, y * 32, 'platform');
-        game.physics.arcade.enable(platform);
+        platform = new Platform(game,x*32, y*32, ((Math.random()/2) + 0.5) * 300);
+        phasePlatforms.push(platform);
+        phaseObjects.push(platform);
+    },
+    
+/**
+ * This function is called when an enemy bullet is in contact with a player.
+ * @param {*} turret The player, which was just in contact with the bullet.
+ * @param {*} bullet The bullet, which is in contact with the player.
+ */
+        recieveDamageP: function (player, bullet)
+    {
+        if (player.shiftState === bullet.phase) {
+            bullet.kill()
+            player.health--;
+            if (healthBar[player.health] != null)
+            {
+                healthBar[player.health].kill();
+            }
+
+        }
     }
 };
 

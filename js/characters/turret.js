@@ -2,7 +2,7 @@
 
 var Turret = function(game,x,y,player)
 {
-    Enemy.call(this,game,x,y,'turret',100,2,player);
+    Enemy.call(this,game,x,y+20,'turret',100,2,player);
     //Fire a bullet every 2 seconds.
     this.cooldownAmt = 120;
     //Default bullet speed.
@@ -47,7 +47,7 @@ Turret.prototype.attack = function () {
     var bullet = game.enemyBullets.getFirstDead();
     if (bullet != null) {
         //Setting back to being alive.
-        bullet.reset(this.x + (0.5 * this.width), this.y + (0.5 * this.height));
+        bullet.reset(this.x + (0.5 * this.width), this.y);
         //Set the phase and color of this bullet.
         bullet.phase = this.shiftState;
         if (bullet.phase)
