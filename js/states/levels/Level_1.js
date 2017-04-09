@@ -18,6 +18,7 @@ var menuButton;                             // for the pause menu
 var menuText;
 var PauseText;
 var onPlatform = false;
+var enemyGroup;
 
 var Level_1 = function() {};
 Level_1.prototype = {
@@ -63,7 +64,8 @@ Level_1.prototype = {
         this.map.setCollisionBetween(0, 40);
         game.world.setBounds(0, 0, this.w, this.h);
         this.layer = this.map.createLayer('Tile Layer 1');
-
+        //Add group above the tile layer.
+        enemyGroup = game.add.group();
         // Start physics
         game.physics.startSystem(Phaser.Physics.ARCADE);
         
@@ -77,14 +79,10 @@ Level_1.prototype = {
         phaseObjects.push(this.player);
         game.camera.follow(this.player);
 
-        // Create a turret
-        this.turret = new Turret(game, 700, 350, this.player);
-        phaseObjects.push(this.turret);
 
-        //Create another turret
-        this.turret2 = new Turret(game, 1150, 350, this.player);
-        phaseObjects.push(this.turret);
-
+        this.addTurret(750,350,this.player);
+        this.addTurret(1150, 350, this.player);
+        
         //Create a platform.
         platform = new Platform(game,400,400, 200);
         platform.scale.setTo(3,3);
@@ -121,7 +119,7 @@ Level_1.prototype = {
             bullet.kill()
         },null,this);
         //Resolve interactions between playerBullets and enemies and between enemyBullets and players.
-        game.physics.arcade.overlap(this.turret, this.player.playerBullets, recieveDamage, null, this);
+        game.physics.arcade.overlap(enemyGroup, this.player.playerBullets, recieveDamage, null, this);
         game.physics.arcade.overlap(this.player, game.enemyBullets, this.recieveDamageP, null, this);
         //Collide player with phase platforms if they are in the same phase.
         for (var i = 0; i < phasePlatforms.length; i++)
@@ -335,6 +333,19 @@ Level_1.prototype = {
             }
 
         }
+    },
+    /**
+     * This function adds a turret to the current game world.
+     * @param {*} x The x position of the turret to be added.
+     * @param {*} y The y position of the turret to be added.
+     * @param {*} player A reference to the player character.
+     */
+    addTurret : function (x, y, player)
+    {
+        var newTurret = new Turret(game, x,y,player);
+        phaseObjects.push(newTurret);
+        enemyGroup.add(newTurret);
+
     }
 };
 
