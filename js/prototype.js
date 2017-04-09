@@ -45,6 +45,7 @@ Main.prototype = {
         game.load.script('gameUtils_script', 'js/lib/GameUtils.js');
         game.load.script('functions_script', 'js/lib/functions.js');
         game.load.script('buttonHandlers_script', 'js/lib/ButtonHandlers.js');
+        game.load.script('controlKeys_script', 'js/lib/ControlKeys.js');
     }
 }
 

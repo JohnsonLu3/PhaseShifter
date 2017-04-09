@@ -27,6 +27,43 @@ var GameUtils = {
         this.setAnchorToCenter([back_button, back_text]);
     },
 
+    makeHelpButton: function() {
+        var buttonX, buttonY;
+        var pause_button = game.add.button(buttonX, buttonY, 'helpButton',
+            function() {game.state.start(helpScreen)}
+        );
+    },
+
+    makePauseMenu: function() {
+        var resume_button;
+        var quit_button;
+    },
+
+    changeKey: function(keyToChange) {},
+
+    getKeyMapping: function(key) {
+        return "hello";
+    },
+        
+    buildKeys: function() {
+        game.input.keyboard.addKey(Phaser.Keyboard.SHIFT);           // shift ability
+        game.input.keyboard.addKey(Phaser.Keyboard.Z);                                               // Shoot Button
+        game.input.keyboard.addKey(Phaser.Keyboard.X);                                               // Jump  Button
+        game.input.keyboard.addKey(Phaser.Keyboard.LEFT);                                            // Walk  Left
+        game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);                                           // Walk  Right
+        game.input.keyboard.addKey(Phaser.Keyboard.ESC);
+    },
+
+    getSetting: function(setting) {
+        return "YES";
+    },
+
+    toggleSetting: function(setting) {
+        if(setting == "YES")
+            return "NO";
+        else
+            return "YES";
+    },
     /**
      *  pauseGame
      *      Pauses the game when ever the 

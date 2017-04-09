@@ -2,23 +2,39 @@
  * The game state for level 1.
  * This is called by the levelSelectState when the user clicks on the first level icon.
  */
+<<<<<<< HEAD
  
  var platform;
  //phaseObjects, phasePlatforms
+=======
+
+var healthBar = [];
+var menuButton;                             // for the pause menu
+var menuText;
+var PauseText;
+
+>>>>>>> 8f695d9f9ec2d166906569025bf9a7434035fb62
 var Level_1 = function() {};
 Level_1.prototype = {
     init: function() {
-        this.w = 2560;
-        this.h = 640;
+        this.w = 2560;                      // size of level W and H 
+        this.h = 640;                   
     },
     preload: function() {
         // Load images
         game.load.tilemap('mapdata', 'assets/levels/level0.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.image('tiles', 'assets/levels/tilesheet.png');
+        game.load.image('menu', 'assets/buttons/smallButton_150x60.png', 150, 60);
         game.load.spritesheet('player', "assets/phaser.png", 32,32);
         game.load.spritesheet('bullet', "assets/bullets.png", 16,16);
+<<<<<<< HEAD
         game.load.spritesheet('turret', "assets/turret.png", 32,32);
         game.load.spritesheet('platform', "assets/platform.png",32,8);
+=======
+        game.load.spritesheet('heart', "assets/battery_32x32.png", 32, 32);
+        game.load.spritesheet('platform', "assets/platform.png", 32, 16);
+
+>>>>>>> 8f695d9f9ec2d166906569025bf9a7434035fb62
         // Load necessary JS files
         game.load.script('customSprite_script', 'js/characters/customSprite.js');
         //game.load.script('player_script', 'js/characters/player.js');
@@ -51,8 +67,10 @@ Level_1.prototype = {
         // Set up cursors
         var cursors = game.input.keyboard.createCursorKeys();
         this.setControls();
+        GameUtils.buildKeys();
 
         // Create player
+<<<<<<< HEAD
         this.player = new Player(game, 32, game.world.height - 300, 'player', 0, 5);
         phaseObjects.push(this.player);
         game.camera.follow(this.player);
@@ -67,6 +85,20 @@ Level_1.prototype = {
         phaseObjects.push(platform);
         phasePlatforms.push(platform);
         //console.log(this.platform);
+=======
+        this.player = Player();
+        game.camera.follow(this.player);
+
+        this.spawnLifeBar();
+
+        // Spawn Platforms that can shift phases
+        this.spawnPlatforms(46, 12 );
+        this.spawnPlatforms(49, 12 );
+        this.spawnPlatforms(52, 12 );
+
+        // Add lisitener for menubutton press
+        game.input.onDown.add(this.levelSelect, self);
+>>>>>>> 8f695d9f9ec2d166906569025bf9a7434035fb62
     },
 
     update: function() {
@@ -74,6 +106,7 @@ Level_1.prototype = {
         updatePhases();
         game.physics.arcade.collide(this.player, this.layer);
         this.playerMovement();
+<<<<<<< HEAD
         //Collisions.
         //Kill all bullets that hit solid ground.
         game.physics.arcade.collide(game.enemyBullets, this.layer,function(bullet,layer)
@@ -101,15 +134,38 @@ Level_1.prototype = {
     render: function() {
         game.debug.body(phasePlatforms[0]);
         //game.debug.bodyInfo(player, 32, 32);
+=======
+
+        if(this.player.y > 610){                  // Player loses all their health if they touch the bottom of the screen
+            this.player.health = 0;
+
+
+            for(heart in healthBar){             // kill all heart sprites in healthbar
+                healthBar[heart].kill();
+            }
+        }
+
+        if(this.player.health === 0 && this.player.isAlive){                     // Kill player
+            this.player.isAlive = false;
+            this.player.body.velocity.x = 0;
+            this.player.body.velocity.y = 0;                        
+            this.player.animations.play('die');
+        }
+    },
+
+    render: function() {
+        //game.debug.bodyInfo(this.player, 32, 32);
+        //game.debug.body(this.player);
+>>>>>>> 8f695d9f9ec2d166906569025bf9a7434035fb62
     },
 
     setControls: function() {
-        ShiftKey = game.input.keyboard.addKey(Phaser.Keyboard.SHIFT).onDown.add(this.flipShiftFlag, this);           // shift ability
-        ZKey     = game.input.keyboard.addKey(Phaser.Keyboard.Z);                                               // Shoot Button
-        XKey     = game.input.keyboard.addKey(Phaser.Keyboard.X);                                               // Jump  Button
-        LeftKey  = game.input.keyboard.addKey(Phaser.Keyboard.LEFT);                                            // Walk  Left
-        RightKey = game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);                                           // Walk  Right
-       EscKey   = game.input.keyboard.addKey(Phaser.Keyboard.ESC).onDown.add(this.pauseGame, this);
+        ShiftKey = ControlKeys.phaseShiftKey.onDown.add(this.flipShiftFlag, this);//game.input.keyboard.addKey(Phaser.Keyboard.SHIFT).onDown.add(this.flipShiftFlag, this);           // shift ability
+        ZKey     = ControlKeys.shootKey;//game.input.keyboard.addKey(Phaser.Keyboard.Z);                                               // Shoot Button
+        XKey     = ControlKeys.jumpKey//game.input.keyboard.addKey(Phaser.Keyboard.X);                                               // Jump  Button
+        LeftKey  = ControlKeys.leftKey;//game.input.keyboard.addKey(Phaser.Keyboard.LEFT);                                            // Walk  Left
+        RightKey = ControlKeys.rightKey;//game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);                                           // Walk  Right
+        EscKey   = ControlKeys.pauseKey.onDown.add(this.pauseGame, this);
     },
 
     flipShiftFlag: function() {
@@ -124,33 +180,58 @@ Level_1.prototype = {
      *      the correct animation / facing / shift state
      */
     playerMovement: function() {
+<<<<<<< HEAD
         if(ZKey.isDown){
             this.player.fire();
+=======
+        if(ZKey.isDown && this.player.isAlive){
+            // call shoot function
+            
+>>>>>>> 8f695d9f9ec2d166906569025bf9a7434035fb62
         }
 
-        if(XKey.isDown && this.player.body.blocked.down) {
+        if(XKey.isDown && this.player.body.blocked.down && this.player.isAlive) {
             // player jump
+<<<<<<< HEAD
             this.player.playAnimation('jump');
+=======
+            this.player.jumping = true;
+            this.playShiftAnimation('jump');
+>>>>>>> 8f695d9f9ec2d166906569025bf9a7434035fb62
             this.player.body.velocity.y = -225;
         }
 
-        if(LeftKey.isDown) {
+        if(LeftKey.isDown && this.player.isAlive) {
             // player move left
+<<<<<<< HEAD
             this.updateFacing(false);
             this.player.playAnimation('walk');
+=======
+            this.updateFacing(0);
+            if(!this.player.jumping)
+                this.playShiftAnimation('walk');
+>>>>>>> 8f695d9f9ec2d166906569025bf9a7434035fb62
             this.player.body.velocity.x = -150;
 
-        } else if(RightKey.isDown) {
+        } else if(RightKey.isDown && this.player.isAlive) {
             // player move right
+<<<<<<< HEAD
             this.updateFacing(true);
             this.player.playAnimation('walk');
+=======
+            this.updateFacing(1);
+            if(!this.player.jumping)
+                this.playShiftAnimation('walk');
+>>>>>>> 8f695d9f9ec2d166906569025bf9a7434035fb62
             this.player.body.velocity.x = 150;
         
-        } else {
+        } else if(this.player.isAlive && !this.player.jumping){
             // reset velocity
             this.player.playAnimation('idle');
             this.player.body.velocity.x = 0;
         
+        }else{
+            this.player.body.velocity.x = 0;
         }
     },
 
@@ -165,7 +246,7 @@ Level_1.prototype = {
     playShiftAnimation: function(animationToPlay) {
 
         if(animationToPlay === "die"){
-            this.player.animations.play("die");
+            this.player.animations.play('die');
             return;
         }
 
@@ -204,10 +285,57 @@ Level_1.prototype = {
     pauseGame: function(){
         // NEED TO SHOW A PAUSE MENU WHERE YOU CAN GO BACK TO THE MAIN MAIN
         if(game.paused === true){
-            game.paused = false;
+            game.paused = false;                            // unpause game
+            game.world.remove(PauseText);
+            game.world.remove(menuText);
+            game.world.remove(menubutton);
+
         } else {
-            game.paused = true;
+            game.paused = true;                             // pause game
+            PauseText = game.add.text(game.camera.x + gameW/2, 20, 'Paused', { font: '30px Arial', fill: '#fff' });
+            PauseText.anchor.setTo(0.5, 0.5);
+
+            menubutton = game.add.sprite(game.camera.x + gameW/2, gameH/2, 'menu');
+            menubutton.anchor.setTo(0.5, 0.5);
+            
+            menuText = game.add.text(game.camera.x + gameW/2, gameH/2, 'Level Select', {font: '24px Arial', fill: 'white'});
+            menuText.anchor.setTo(0.5, 0.5);
+
         }
+    },
+
+    levelSelect: function(event){
+
+        if(game.paused === true){
+            var mouseX = event.x + 65;          // add weird offset
+            var mouseY = event.y + 24;
+
+            if( mouseX + game.camera.x >  menubutton.x && mouseX + game.camera.x < menubutton.x + 150
+                && mouseY + game.camera.y >  menubutton.y - 60 && mouseY + game.camera.y < menubutton.y + 60 ){
+                // CALL STATE SWITCH
+                game.paused = false;
+                game.world.width = gameW;                       // Reset game world cords
+                game.world.height = gameH;                      // because the camera messes with it
+                game.state.start('levelSelect_state');
+                
+            }
+        }
+    },
+
+    spawnLifeBar: function(){
+            // create health;
+        for(var x = 0; x < 10; x++){
+                heart = game.add.sprite((x*32) + 8, 16, 'heart');
+                heart.hit = false;
+                heart.fixedToCamera = true;
+
+                healthBar.push(heart);
+        }
+    },
+
+    spawnPlatforms: function(x, y){
+        platform = game.add.sprite(x * 32, y * 32, 'platform');
+        game.physics.arcade.enable(platform);
     }
 };
 

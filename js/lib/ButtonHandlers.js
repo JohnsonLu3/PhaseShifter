@@ -16,6 +16,9 @@ var ButtonHandlers = {
         game.state.start('controls_state');
     },
     
+    helpButtonHandler: function() {
+        game.state.start('help_state');
+    },
     /**
      * Handler for the levels screen buttons.
      * Loads the level, then starts it.

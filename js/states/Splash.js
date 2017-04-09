@@ -31,6 +31,7 @@ SplashState.prototype = {
         game.load.script('levelSelect_script', 'js/states/LevelSelect.js');
         game.load.script('gameWin_script', 'js/states/GameWin.js');
         game.load.script('gameLose_script', 'js/states/GameLose.js');
+        game.load.script('help_script', 'js/states/Help.js');
     },
 
     // Add menu game states to the game
@@ -39,6 +40,9 @@ SplashState.prototype = {
         game.state.add('levelSelect_state', LevelSelectState);
         game.state.add('controls_state', ControlsState);
         game.state.add('settings_state', SettingsState);
+        game.state.add('gameWin_state', GameWinState);
+        game.state.add('gameLose_state', GameLoseState);
+        game.state.add('help_state', HelpState);
     },
 
     // Called before preload and create
