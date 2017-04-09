@@ -1,14 +1,14 @@
 //Superclass of all enemies, have no attack or unique behavior of its own, define attack to use. Has knowledge of player location.
 var Enemy = function(game,x,y,asset,interval,hp, player)
 {
-    customSprite.call(this, game, x, y,asset,interval);
+    CustomSprite.call(this, game, x, y,asset,interval);
     this.health = hp;
     this.player = player;
     this.cooldownAmt = 20;
     this.cooldown = 0;
 }
 
-Enemy.prototype = Object.create(customSprite.prototype);
+Enemy.prototype = Object.create(CustomSprite.prototype);
 Enemy.prototype.constructor = Enemy;
 Enemy.prototype.setCooldown = function(num)
 {
@@ -17,16 +17,37 @@ Enemy.prototype.setCooldown = function(num)
         this.cooldownAmt = num;
     }
 }
+
+//Generic method for determining if the enemy can see the player, used for determining if we should attack. Implementation specific to various enemies
+Enemy.prototype.seePlayer = function()
+{
+    return false;
+}
+
+
 //Generic update loop, see if it will change phase, and attempt to attack the player.
 Enemy.prototype.update = function()
 {
     this.changePhase();
-    if(this.cooldown == 0)
+    if (this.seePlayer()){
+        this.playAnimation("attacking");
+        if (this.cooldown == 0) {
+            this.attack(this.player);
+            this.cooldown = this.cooldownAmt;
+        }
+        else
+        {
+            this.cooldown--;
+        }
+    }
+    else
     {
-        this.attack(this.player);
-        this.cooldown = this.cooldownAmt
+        this.playAnimation("idle");
+        if (this.cooldown > 0)
+            this.cooldown--;
     }
 }
+
 
 Enemy.prototype.attack = function(){}
 Enemy.prototype.setHealth = function(health)
@@ -37,47 +58,25 @@ Enemy.prototype.setHealth = function(health)
     }
 }
 
-//Turret enemy, aims at player and attempts to fire at him.
-
-var Turret = function(game,x,y,player)
+Enemy.prototype.playAnimation = function(name)
 {
-    Enemy.call(this,game,x,y,'turret',50,2,player);
-    //Default bullet speed.
-    this.bulletSpeed = 200;
-}
-Turret.prototype = Object.create(Enemy.prototype);
-Turret.prototype.constructor = Turret;
-Turret.prototype.setSpeed = function(speed)
-{
-    if (speed > 0)
+    if (name === "die")
     {
-        this.bulletSpeed = speed;
+        this.animations.play("die");
     }
-}
-Turret.prototype.attack = function()
-{
-    var boundX = this.x - 600;
-    var maxX = this.x + 600;
-    var boundY = this.y - 300;
-    var maxY = this.y + 300;
-    if (this.alive && this.player.x > boundX && this.player.x < maxX && this.player.y > boundY && this.player.y < maxY)
+    else
     {
-        var bullet = enemyBullets.getFirstDead();
-        if (bullet != null) {
-            //Setting back to being alive.
-            bullet.reset(this.x + (0.5 * this.width), this.y + (0.5 * this.height));
-            //Set the phase and color of this bullet.
-            bullet.phase = this.phase;
-            if (bullet.phase)
-                bullet.tint = PINK;
-            else
-                bullet.tint = BLUE;
-            //Move the bullet towards the player
-            game.physics.arcade.moveToXY(bullet, this.player.x + 0.5 * this.player.width, this.player.y + 0.5* this.player.height ,this.bulletSpeed);    
+        if (this.shiftState) {
+            //We are in the red state, play red variation of animation.
+            this.animations.play(name + "_R");
         }
-        
+        else {
+            // Play the blue variation of the animation.
+            this.animations.play(name + "_B");
+        }
     }
 }
+
 
 
 

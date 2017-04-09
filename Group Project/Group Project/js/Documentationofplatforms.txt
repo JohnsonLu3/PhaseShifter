@@ -1,0 +1,141 @@
+///////////      ////////////    ///////////   /////////////
+  //       //    //        //    //            //
+  //       //    //        //    //            //
+  //       //    //        //    //            /////////////
+  //       //    //        //    //                       //
+  //       //    //        //    //                       //
+///////////      ////////////    ///////////   /////////////
+////////////////////////////////////////////////////////////
+
+This is simply a prototype of the actual platforming and major phase mechanics that
+will be present in the game.
+
+Basic Controls and rules:
+Move with the arrow keys, Phase change with space, you may only walk on phase platforms with the same
+phase as you(as indicated by your color.) There is a sample enemy here that will periodically shoot bullets
+at you, if your phase matches the enemy's bullet, you will get hurt. You can also shoot using the z key.
+
+Classes Hierarchy:
+To allow special properties in phaser sprites, I created a subclass of Phaser.Sprite known as customSprite. More specialized
+subclasses are the Enemy class and the Player class which both inherit from customSprite. Finally, there is the Turret
+class which is a subclass of Enemy. Note that you cannot create these classes using Phaser's game.add.sprite, instead,
+you must construct them using the constructors I will list in the method summary. These subclasses will add themselves
+to the world. You can access all Phaser.Sprite fields and methods from any of these classes.
+                                            
+                                            Phaser.Sprite
+                                                  |
+                                                  |
+                                                  |
+                                            customSprite
+                                            /           \
+                                           /             \
+                                          /               \
+                                       Enemy            Player
+                                         |
+                                         |
+                                         |
+                                       Turret
+
+Method Summary:
+
+customSprite:
+
+#Constructor
+customSprite(game,x,y,asset,interval);
+game - Reference to the Phaser.Game object (where to place the sprite)
+x - X position of sprite
+y - Y position of sprite
+asset - Name of the image asset to load the sprite with.
+interval - Number of frames to pass before this sprite phase changes. 0 will make it never phase change.
+
+#Sets phase and color to newphase
+customSprite.setPhase(newPhase)
+
+#Sets the interval of this sprite
+customSprite.setInterval(newInterval)
+
+#Generic update, performs game logic* This should usually be overridden by any subclass
+customSprite.update()
+
+*Note, update will simply change the phase of customSprite at appropriate intervals.
+
+
+Player:
+
+#Constructor
+Player(game, x, y, asset, interval, hp);
+game - Reference to the Phaser.Game object (where to place the sprite)
+x - X position of sprite
+y - Y position of sprite
+asset - Name of the image asset to load the sprite with.
+interval - Number of frames to pass before this sprite phase changes. 0 will make it never phase change.
+hp - initial hp of the player
+
+#Sets the value of the hp of the player to newHealth
+Player.setHealth(newHealth)
+
+#Sets the cooldown of the player, the cooldown is simply how many frames amust pass before being able to fire another
+#bullet.
+Player.setCoolDown(newCoolDown)
+
+#Sets the speed of the bullet of player's weapon Default is 250
+Player.setSpeed(newSpeed)
+
+#Sets the movement speed of the player. Default is 350
+Player.setWalkSpeed()
+
+#Fires a bullet based on player's last position.
+Player.fire()
+
+Enemy:
+
+#Constructor
+Enemy(game,x,y,asset,interval,hp, player)
+game - Reference to the Phaser.Game object (where to place the sprite)
+x - X position of sprite
+y - Y position of sprite
+asset - Name of the image asset to load the sprite with.
+interval - Number of frames to pass before this sprite phase changes. 0 will make it never phase change.
+hp - initial hp of the player
+player - A reference to the player.
+
+#Generic attack method, must be overriden by subclasses for their own specific behavior.
+Enemy.attack()
+
+#Cooldown is how many frames must the enemy wait before attacking again.
+Enemy.prototype.setCooldown = function(num)
+
+#Sets the hp of the enemy.
+Enemy.setHealth(newHP);
+
+
+Turret:
+
+
+var Turret = function(game,x,y,player)*
+game - Reference to the Phaser.Game object (where to place the sprite)
+x - X position of sprite
+y - Y position of sprite
+player - reference to the player.
+
+*Turret will call the super constructor with some default values such as 'turret' for asset, 50 for interval, and 2
+for hp. The latter 2 can be changed using the setters of setHealth and setInterval.
+
+#Sets the speed of the turret's bullets. The default value is 200.
+Turret.setSpeed(newSpeed)
+
+
+
+Things that are pretty ugly, probably could be improved...
+
+Currently using individual sprites for all phase platforms when it could be much easier to make a group, currently don't
+know how to construct a group with subclasses of Phaser.sprite (can't use game.add.group). 
+
+More modularity for certain classes perhaps, allow more modifiable variable values.
+
+Lots of setup in the create method, all of these classes use default values which the user must change using setters.
+
+No Death animation and stuff yet.
+
+No sophisticated AI yet(no moving enemies.)
+

@@ -9,15 +9,56 @@
  * @param {*} hp        The initial hitpoints of the sprite.
  */
 var Player = function(game, x, y, asset, interval, hp) {
+
     // Call CustomSprite's constructor
     CustomSprite.call(this, game, x, y, asset, interval);
     this.health = hp;
     this.cooldown = 0;
+    // Set up the player bullets, allow physics and convenience methods for them
+    this.playerBullets = game.add.group();
+    this.playerBullets.enableBody = true;
+    this.playerBullets.physicsBodyType = Phaser.Physics.ARCADE;
+    //Add a max of 30 bullets that the player can shoot.
+    this.playerBullets.createMultiple(30, 'bullet');
+    this.playerBullets.setAll('checkWorldBounds', true);
+    this.playerBullets.setAll('outOfBoundsKill', true);    
+
     //Remember the last direction we ran, we will fire bullets in that direction.
     this.facing = 1;     // 1 = right, 0 = left
-    this.cooldownAmt = 20;
+    this.cooldownAmt = 60;
     this.bulletSpeed = 250;
     this.walkingSpeed = 150;
+    //Set various convenience methods that don't need to be specified in the actual game.
+        // Add instance variables
+    this.health = 100;         
+    this.shiftState = false;       // Player shiftState    0 = Blue    1 = Red
+    this.facing = true;            
+    this.anchor.setTo(.5,.5);
+
+    //  We need to enable physics on the player
+    game.physics.arcade.enable(this);
+
+    //  Adjust the player hit box
+    this.body.setSize(14, 24, 8, 6);
+
+    //  Player physics properties
+    this.body.gravity.y = 350;
+    this.body.collideWorldBounds = true;
+
+    // Idle
+    this.animations.add('idle_B', [0, 1, 2, 3, 4, 5, 6], 10, true);
+    this.animations.add('idle_R', [7, 8, 9, 10, 11, 12, 13], 10, true);
+
+    // Walk
+    this.animations.add('walk_B', [14, 15, 16, 17, 18, 19, 20], 10, false);
+    this.animations.add('walk_R', [21, 22, 23, 24, 25, 26, 27], 10, false);
+
+    // Jump
+    this.animations.add('jump_B', [28, 29, 30, 31, 32, 33, 34], 10, false);
+    this.animations.add('jump_R', [35, 36, 37, 38, 39, 40, 41], 10, false);
+
+    // Die
+    this.animations.add('die', [42, 43, 44, 45, 46, 47, 48], 10, false);
 }
 
 /**
@@ -42,39 +83,62 @@ Player.prototype.setWalkSpeed = function(speed)
 }
 Player.prototype.changePhase = function()
 {
-    if (this.phase)
-    {
-       this.tint =  BLUE;
-    }
-    else
-    {
-       this.tint = PINK;
-    }
-    this.phase = !this.phase;
+    this.shiftState = !this.shiftState;
 }
 Player.prototype.setHealth = function(health)
 {
     if (health > 0)
     {
-        this. health = health;
+        this.health = health;
     }
 }
-//Player has no update method, its all controlled by the player.
-Player.prototype.update = function(){};
+
+//Player's play animation method.
+Player.prototype.playAnimation = function(name)
+{
+    if (name === "die")
+    {
+        this.animations.play("die");
+    }
+    else
+    {
+        if (this.shiftState) {
+            //We are in the red state, play red variation of animation.
+            this.animations.play(name + "_R");
+        }
+        else {
+            // Play the blue variation of the animation.
+            this.animations.play(name + "_B");
+        }
+    }
+}
+
+//Player has an update metho to see if cooldown can be decreased., its all controlled by the player.
+Player.prototype.update = function(){
+    if (this.cooldown > 0)
+    {
+        this.cooldown--;
+    }
+
+};
 //Fire a bullet from the player
 Player.prototype.fire = function(){
-    var bullet = playerBullets.getFirstDead();
+    var bullet = this.playerBullets.getFirstDead();
     if (this.cooldown == 0 && bullet != null && this.alive)
     {
         //Setting back to being alive.
-        bullet.reset(this.x + (0.5 * this.width),this.y + (0.5 * this.height));
+        bullet.reset(this.x + (0.5 * this.width),this.y-5);
         //Set the phase and color of this bullet.
-        bullet.phase = this.phase;
+        bullet.phase = this.shiftState;
         if (bullet.phase)
-            bullet.tint = PINK;
+        {
+            bullet.loadTexture('bullet', 1);
+        }
         else
-            bullet.tint = BLUE;
-        if (this.dirRight)
+        {
+            bullet.loadTexture('bullet', 0);
+        }
+        if (this.facing)
         {
             bullet.body.velocity.x = 250;
         }
@@ -82,7 +146,7 @@ Player.prototype.fire = function(){
         {
             bullet.body.velocity.x = -250;
         }
-        this.cooldown = 20;
+        this.cooldown = this.cooldownAmt;
     }
 };
 

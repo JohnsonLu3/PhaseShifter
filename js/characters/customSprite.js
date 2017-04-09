@@ -13,17 +13,21 @@ var CustomSprite = function(game, x, y, asset, interval) {
     // Set interval
     this.interval = interval;
     //Random phase
-    this.phase;
+    this.shiftState;
+    // Remember the frame when you last shifted
+    this.lastShift;
     if (Math.random() > 0.5)
     {
-        this.tint = PINK;
+        //Color is sprite specific, switching between frames.
+
+        //this.tint = PINK;
         //this.tint = NO_COLOR;
-        this.phase = true;
+        this.shiftState = true;
     }
     else
     {
-        this.tint = BLUE;
-        this.phase = false;
+        //this.tint = BLUE;
+        this.shiftState = false;
     }
     //Display sprite if possible
     game.add.existing(this);
@@ -37,27 +41,14 @@ CustomSprite.prototype = Object.create(Phaser.Sprite.prototype);
 CustomSprite.prototype.constructor = CustomSprite;
 CustomSprite.prototype.setPhase = function(phase)
 {
-    this.phase = phase;
-    if (phase)
-    {
-        this.tint = PINK;
-    }
-    else
-    {
-        this.tint = BLUE;
-    }
+    this.shiftState = phase;
 }
 CustomSprite.prototype.changePhase = function()
 {
     if (this.interval != 0) {
-        if (globalTimer % this.interval == 0) {
-            if (this.phase) {
-                this.tint = BLUE;
-            }
-            else {
-                this.tint = PINK;
-            }
-            this.phase = !this.phase;
+        if (globalTimer % this.interval == 0 && globalTimer != this.lastShift) {
+            this.shiftState = !this.shiftState;
+            this.lastShift = globalTimer;
         }
     }
 }
@@ -71,3 +62,9 @@ CustomSprite.prototype.setInterval = function(num)
 {
     this.interval = num;
 }
+
+
+
+
+
+
