@@ -121,13 +121,6 @@ Level_1.prototype = {
                 console.log(game.physics.arcade.collide(this.player, platform));
             }
         }
-        
-    },
-
-    render: function() {
-        game.debug.body(phasePlatforms[0]);
-        //game.debug.bodyInfo(player, 32, 32);
-
 
         if(this.player.y > 610){                  // Player loses all their health if they touch the bottom of the screen
             this.player.health = 0;
@@ -144,6 +137,7 @@ Level_1.prototype = {
             this.player.body.velocity.y = 0;                        
             this.player.animations.play('die');
         }
+        
     },
 
     render: function() {
