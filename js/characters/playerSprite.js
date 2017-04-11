@@ -28,7 +28,7 @@ var Player = function(game, x, y, asset, interval, hp) {
     this.facing = 1;     // 1 = right, 0 = left
     this.cooldownAmt = 60;
     this.bulletSpeed = 350;
-    this.walkingSpeed = 300;
+    this.walkingSpeed = 500;
     //Set various convenience methods that don't need to be specified in the actual game.
         // Add instance variables
     this.health = 10;         
@@ -52,8 +52,8 @@ var Player = function(game, x, y, asset, interval, hp) {
     this.animations.add('idle_R', [7, 8, 9, 10, 11, 12, 13], 10, true);
 
     // Walk
-    this.animations.add('walk_B', [14, 15, 16, 17, 18, 19, 20], 10, false);
-    this.animations.add('walk_R', [21, 22, 23, 24, 25, 26, 27], 10, false);
+    this.animations.add('walk_B', [14, 15, 16, 17, 18, 19, 20], 20, false);
+    this.animations.add('walk_R', [21, 22, 23, 24, 25, 26, 27], 20, false);
 
     // Jump
     this.animations.add('jump_B', [28, 29, 30, 31, 32, 33, 34], 10, false);

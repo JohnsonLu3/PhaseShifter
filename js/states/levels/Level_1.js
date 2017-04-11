@@ -3,7 +3,6 @@
  * This is called by the levelSelectState when the user clicks on the first level icon.
  */
 
- var turretTEST;
  var platform;
  //phaseObjects, phasePlatforms
 // A global timer, this is used in order to keep track of things such as intervals for enemy phase changes.
@@ -143,7 +142,7 @@ Level_1.prototype = {
         //Deal with player movement after checking for platform collision.
         this.playerMovement();
 
-        if(this.player.y > 610){                  // Player loses all their health if they touch the bottom of the screen
+        if(this.player.y > this.h - 70){                  // Player loses all their health if they touch the bottom of the screen
             this.player.health = 0;
 
 
@@ -212,7 +211,7 @@ Level_1.prototype = {
             
             this.player.jumping = true;
 
-            this.player.body.velocity.y = -300;
+            this.player.body.velocity.y = -350;
         }
 
         if(LeftKey.isDown && this.player.isAlive) {
@@ -220,14 +219,14 @@ Level_1.prototype = {
 
             this.updateFacing(false);
 
-            this.player.body.velocity.x = -150;
+            this.player.body.velocity.x = -200;
 
         } else if(RightKey.isDown && this.player.isAlive) {
             // player move right
 
             this.updateFacing(true);
 
-            this.player.body.velocity.x = 150;
+            this.player.body.velocity.x = 200;
         
         } else if(this.player.isAlive && !this.player.jumping){
             // reset velocity
@@ -363,6 +362,4 @@ Level_1.prototype = {
 
     }
 };
-
-
 
