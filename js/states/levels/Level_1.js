@@ -3,7 +3,7 @@
  * This is called by the levelSelectState when the user clicks on the first level icon.
  */
 
- 
+ var turretTEST;
  var platform;
  //phaseObjects, phasePlatforms
 // A global timer, this is used in order to keep track of things such as intervals for enemy phase changes.
@@ -19,6 +19,7 @@ var menuButton;                             // for the pause menu
 var menuText;
 var PauseText;
 var onPlatform = false;
+var enemyGroup;
 
 var Level_1 = function() {};
 Level_1.prototype = {
@@ -31,14 +32,14 @@ Level_1.prototype = {
         game.load.tilemap('mapdata', 'assets/levels/level0.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.image('tiles', 'assets/levels/tilesheet.png');
         game.load.image('menu', 'assets/buttons/smallButton_150x60.png', 150, 60);
-        game.load.spritesheet('player', "assets/phaser.png", 32,32);
+        game.load.spritesheet('player', "assets/phaser.png", 64,64);
         game.load.spritesheet('bullet', "assets/bullets.png", 16,16);
-        game.load.image('exitDoor' , 'assets/exitDoor.png', 32, 32);
+        game.load.image('exitDoor' , 'assets/exitDoor.png', 64, 64);
 
-        game.load.spritesheet('turret', "assets/turret.png", 32,32);
+        game.load.spritesheet('turret', "assets/turret.png", 64,64);
 
         game.load.spritesheet('heart', "assets/battery_32x32.png", 32, 32);
-        game.load.spritesheet('platform', "assets/platform.png", 32, 16);
+        game.load.spritesheet('platform', "assets/platform.png", 64, 32);
 
         // Load necessary JS files
         game.load.script('customSprite_script', 'js/characters/customSprite.js');
@@ -65,7 +66,8 @@ Level_1.prototype = {
         this.map.setCollisionBetween(0, 40);
         game.world.setBounds(0, 0, this.w, this.h);
         this.layer = this.map.createLayer('Tile Layer 1');
-
+        //Add group above the tile layer.
+        enemyGroup = game.add.group();
         // Start physics
         game.physics.startSystem(Phaser.Physics.ARCADE);
         
@@ -75,24 +77,19 @@ Level_1.prototype = {
         GameUtils.buildKeys();
 
         // make an exitDoor
-        exitDoor = game.add.sprite(2500, 350, 'exitDoor');
+        exitDoor = game.add.sprite(2500, 323, 'exitDoor');
 
         // Create player
         this.player = new Player(game, 32, game.world.height - 300, 'player', 0, 5);
         phaseObjects.push(this.player);
         game.camera.follow(this.player);
 
-        // Create a turret
-        this.turret = new Turret(game, 700, 350, this.player);
-        phaseObjects.push(this.turret);
 
-        //Create another turret
-        this.turret2 = new Turret(game, 1150, 350, this.player);
-        phaseObjects.push(this.turret);
-
+        this.addTurret(750,332,this.player);
+        this.addTurret(1150, 332, this.player);
+        
         //Create a platform.
         platform = new Platform(game,400,400, 200);
-        platform.scale.setTo(3,3);
         phaseObjects.push(platform);
         phasePlatforms.push(platform);
         //console.log(phasePlatforms);
@@ -129,7 +126,7 @@ Level_1.prototype = {
             bullet.kill()
         },null,this);
         //Resolve interactions between playerBullets and enemies and between enemyBullets and players.
-        game.physics.arcade.overlap(this.turret, this.player.playerBullets, recieveDamage, null, this);
+        game.physics.arcade.overlap(enemyGroup, this.player.playerBullets, recieveDamage, null, this);
         game.physics.arcade.overlap(this.player, game.enemyBullets, this.recieveDamageP, null, this);
         //Collide player with phase platforms if they are in the same phase.
         for (var i = 0; i < phasePlatforms.length; i++)
@@ -172,7 +169,6 @@ Level_1.prototype = {
         //game.debug.bodyInfo(this.player, 32, 32);
         //game.debug.body(phasePlatforms[0]);
         //game.debug.body(this.player);
-
     },
 
     checkWinCondition: function () {
@@ -215,7 +211,7 @@ Level_1.prototype = {
             
             this.player.jumping = true;
 
-            this.player.body.velocity.y = -225;
+            this.player.body.velocity.y = -300;
         }
 
         if(LeftKey.isDown && this.player.isAlive) {
@@ -351,6 +347,19 @@ Level_1.prototype = {
             }
 
         }
+    },
+    /**
+     * This function adds a turret to the current game world.
+     * @param {*} x The x position of the turret to be added.
+     * @param {*} y The y position of the turret to be added.
+     * @param {*} player A reference to the player character.
+     */
+    addTurret : function (x, y, player)
+    {
+        var newTurret = new Turret(game, x,y,player);
+        phaseObjects.push(newTurret);
+        enemyGroup.add(newTurret);
+
     }
 };
 

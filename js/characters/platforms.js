@@ -9,7 +9,8 @@ var Platform = function (game, x, y, interval) {
     CustomSprite.call(this, game, x, y, 'platform', interval);
     game.physics.arcade.enable(this);
     this.body.immovable = true;
-    this.body.setSize(25, 3, 4, 6);
+    this.body.setSize(60, 8, 2, 12);
+    
 }
 
 Platform.prototype = Object.create(CustomSprite.prototype);

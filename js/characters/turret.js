@@ -9,6 +9,7 @@ var Turret = function(game,x,y,player)
     this.bulletSpeed = 200;
     //Enable physics on turret enemies.
     game.physics.arcade.enable(this);
+    this.body.setSize(40, 40, 0, 0);
     //Add various animations to this sprite.
 
     //IDLE
