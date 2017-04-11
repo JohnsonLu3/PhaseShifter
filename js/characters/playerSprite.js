@@ -27,8 +27,8 @@ var Player = function(game, x, y, asset, interval, hp) {
     //Remember the last direction we ran, we will fire bullets in that direction.
     this.facing = 1;     // 1 = right, 0 = left
     this.cooldownAmt = 60;
-    this.bulletSpeed = 250;
-    this.walkingSpeed = 150;
+    this.bulletSpeed = 350;
+    this.walkingSpeed = 300;
     //Set various convenience methods that don't need to be specified in the actual game.
         // Add instance variables
     this.health = 10;         
@@ -41,10 +41,10 @@ var Player = function(game, x, y, asset, interval, hp) {
     game.physics.arcade.enable(this);
 
     //  Adjust the player hit box
-    this.body.setSize(14, 24, 8, 6);
+    this.body.setSize(24, 48, 16, 10);
 
     //  Player physics properties
-    this.body.gravity.y = 350;
+    this.body.gravity.y = 450;
     this.body.collideWorldBounds = true;
 
     // Idle

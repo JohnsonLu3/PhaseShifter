@@ -3,7 +3,7 @@
  * This is called by the levelSelectState when the user clicks on the first level icon.
  */
 
- 
+ var turretTEST;
  var platform;
  //phaseObjects, phasePlatforms
 // A global timer, this is used in order to keep track of things such as intervals for enemy phase changes.
@@ -32,14 +32,14 @@ Level_1.prototype = {
         game.load.tilemap('mapdata', 'assets/levels/level0.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.image('tiles', 'assets/levels/tilesheet.png');
         game.load.image('menu', 'assets/buttons/smallButton_150x60.png', 150, 60);
-        game.load.spritesheet('player', "assets/phaser.png", 32,32);
+        game.load.spritesheet('player', "assets/phaser.png", 64,64);
         game.load.spritesheet('bullet', "assets/bullets.png", 16,16);
-        game.load.image('exitDoor' , 'assets/exitDoor.png', 32, 32);
+        game.load.image('exitDoor' , 'assets/exitDoor.png', 64, 64);
 
-        game.load.spritesheet('turret', "assets/turret.png", 32,32);
+        game.load.spritesheet('turret', "assets/turret.png", 64,64);
 
         game.load.spritesheet('heart', "assets/battery_32x32.png", 32, 32);
-        game.load.spritesheet('platform', "assets/platform.png", 32, 16);
+        game.load.spritesheet('platform', "assets/platform.png", 64, 32);
 
         // Load necessary JS files
         game.load.script('customSprite_script', 'js/characters/customSprite.js');
@@ -77,7 +77,7 @@ Level_1.prototype = {
         GameUtils.buildKeys();
 
         // make an exitDoor
-        exitDoor = game.add.sprite(2500, 350, 'exitDoor');
+        exitDoor = game.add.sprite(2500, 323, 'exitDoor');
 
         // Create player
         this.player = new Player(game, 32, game.world.height - 300, 'player', 0, 5);
@@ -85,12 +85,12 @@ Level_1.prototype = {
         game.camera.follow(this.player);
 
 
-        this.addTurret(750,350,this.player);
-        this.addTurret(1150, 350, this.player);
+        this.addTurret(750,332,this.player);
+        this.addTurret(1150, 332, this.player);
+
         
         //Create a platform.
         platform = new Platform(game,400,400, 200);
-        platform.scale.setTo(3,3);
         phaseObjects.push(platform);
         phasePlatforms.push(platform);
         //console.log(phasePlatforms);
@@ -170,7 +170,6 @@ Level_1.prototype = {
         //game.debug.bodyInfo(this.player, 32, 32);
         //game.debug.body(phasePlatforms[0]);
         //game.debug.body(this.player);
-
     },
 
     checkWinCondition: function () {
@@ -213,7 +212,7 @@ Level_1.prototype = {
             
             this.player.jumping = true;
 
-            this.player.body.velocity.y = -225;
+            this.player.body.velocity.y = -300;
         }
 
         if(LeftKey.isDown && this.player.isAlive) {
