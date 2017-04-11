@@ -87,6 +87,7 @@ Level_1.prototype = {
 
         this.addTurret(750,332,this.player);
         this.addTurret(1150, 332, this.player);
+
         
         //Create a platform.
         platform = new Platform(game,400,400, 200);

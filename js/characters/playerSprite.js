@@ -44,7 +44,7 @@ var Player = function(game, x, y, asset, interval, hp) {
     this.body.setSize(24, 48, 16, 10);
 
     //  Player physics properties
-    this.body.gravity.y = 350;
+    this.body.gravity.y = 450;
     this.body.collideWorldBounds = true;
 
     // Idle
