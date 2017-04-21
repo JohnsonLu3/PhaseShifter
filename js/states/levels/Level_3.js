@@ -62,12 +62,12 @@ Level_3.prototype = {
 
         // Load level from mapdata
         this.map = game.add.tilemap('mapdata');
-        //this.map.addTilesetImage('hazards', 'hazardTiles');
+        this.map.addTilesetImage('hazards', 'hazardTiles');
         this.map.addTilesetImage('tilesheet2', 'collisionTiles');
-        this.map.setCollisionBetween(0,400);
+        this.map.setCollisionBetween(0, 277);
         game.world.setBounds(0, 0, this.w, this.h);
-        //this.map.createLayer('hazards');
-        this.map.createLayer('Collisions');
+        this.hazard = this.map.createLayer('hazards');
+        this.layer = this.map.createLayer('Collisions');
 
         //Add group above the tile layer.
         enemyGroup = game.add.group();
@@ -83,7 +83,7 @@ Level_3.prototype = {
         exitDoor = game.add.sprite(2500, 323, 'exitDoor');
 
         // Create player
-        this.player = new Player(game, 32, 32, 'player', 0, 5);
+        this.player = new Player(game, 32, this.h - (16 * 32), 'player', 0, 5);
         phaseObjects.push(this.player);
         game.camera.follow(this.player);
 
@@ -102,9 +102,7 @@ Level_3.prototype = {
         this.spawnLifeBar();
 
         // Spawn Platforms that can shift phases
-        //this.spawnPlatforms(46, 12 );
-        //this.spawnPlatforms(49, 12 );
-        //this.spawnPlatforms(52, 12 );
+        this.createLevelPlatforms();
 
         // Add lisitener for menubutton press
         game.input.onDown.add(this.levelSelect, self);
@@ -115,6 +113,7 @@ Level_3.prototype = {
         globalTimer++;
         updatePhases();
         game.physics.arcade.collide(this.player, this.layer);
+        game.physics.arcade.collide(this.player, this.hazard);
 
         this.checkWinCondition();
 
@@ -215,7 +214,7 @@ Level_3.prototype = {
             
             this.player.jumping = true;
 
-            this.player.body.velocity.y = -300;
+            this.player.body.velocity.y = this.player.jumpHeight;
         }
 
         if(LeftKey.isDown && this.player.isAlive) {
@@ -223,14 +222,14 @@ Level_3.prototype = {
 
             this.updateFacing(false);
 
-            this.player.body.velocity.x = -150;
+            this.player.body.velocity.x = -this.player.walkingSpeed;
 
         } else if(RightKey.isDown && this.player.isAlive) {
             // player move right
 
             this.updateFacing(true);
 
-            this.player.body.velocity.x = 150;
+            this.player.body.velocity.x = this.player.walkingSpeed;
         
         } else if(this.player.isAlive && !this.player.jumping){
             // reset velocity
@@ -329,10 +328,31 @@ Level_3.prototype = {
         }
     },
 
-    spawnPlatforms: function(x, y){
-        platform = new Platform(game,x*32, y*32, ((Math.random()/2) + 0.5) * 300);
+    spawnPlatforms: function(x, y, interval, state){
+        platform = new Platform(game,x*32, y*32,  interval, state);
         phasePlatforms.push(platform);
         phaseObjects.push(platform);
+    },
+
+    createLevelPlatforms:function(){
+        // starting area
+        this.spawnPlatforms(47, 66, 0, 1 );
+        this.spawnPlatforms(47, 62, 0, 0 );
+        this.spawnPlatforms(47, 58, 0, 1 );
+
+        // large gap
+        this.spawnPlatforms(110, 64, 0, 1 );
+        this.spawnPlatforms(120, 64, 0, 0 );
+        
+        // rise
+        this.spawnPlatforms(158, 60, 0, 1 );
+        this.spawnPlatforms(154, 56, 0, 0 );
+        this.spawnPlatforms(158, 52, 0, 1 );
+        this.spawnPlatforms(154, 48, 0, 0 );
+        this.spawnPlatforms(158, 44, 0, 1 );
+        this.spawnPlatforms(154, 40, 0, 0 );
+        this.spawnPlatforms(158, 36, 0, 1 );
+        this.spawnPlatforms(154, 32, 0, 0 );
     },
     
 /**

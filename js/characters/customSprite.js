@@ -7,7 +7,7 @@
  * @param {*} asset     The image asset to initialize the sprite with
  * @param {*} interval  The time before the sprite will change phases. (0 will make the sprite never phase change)
  */
-var CustomSprite = function(game, x, y, asset, interval) {
+var CustomSprite = function(game, x, y, asset, interval, state) {
     // Call superclass constructor
     Phaser.Sprite.call(this, game, x, y, asset);
     // Set interval
@@ -16,7 +16,7 @@ var CustomSprite = function(game, x, y, asset, interval) {
     this.shiftState;
     // Remember the frame when you last shifted
     this.lastShift;
-    if (Math.random() > 0.5)
+    if (state === 1)
     {
         //Color is sprite specific, switching between frames.
 

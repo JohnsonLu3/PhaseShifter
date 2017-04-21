@@ -27,8 +27,9 @@ var Player = function(game, x, y, asset, interval, hp) {
     //Remember the last direction we ran, we will fire bullets in that direction.
     this.facing = 1;     // 1 = right, 0 = left
     this.cooldownAmt = 60;
-    this.bulletSpeed = 350;
-    this.walkingSpeed = 500;
+    this.bulletSpeed = 600;
+    this.walkingSpeed = 250;
+    this.jumpHeight  = -350;
     //Set various convenience methods that don't need to be specified in the actual game.
         // Add instance variables
     this.health = 10;         
@@ -142,11 +143,11 @@ Player.prototype.fire = function(){
         }
         if (this.facing)
         {
-            bullet.body.velocity.x = 250;
+            bullet.body.velocity.x = this.bulletSpeed;
         }
         else
         {
-            bullet.body.velocity.x = -250;
+            bullet.body.velocity.x = -this.bulletSpeed;
         }
         this.cooldown = this.cooldownAmt;
     }

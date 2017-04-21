@@ -98,9 +98,9 @@ Level_1.prototype = {
         this.spawnLifeBar();
 
         // Spawn Platforms that can shift phases
-        this.spawnPlatforms(46, 12 );
-        this.spawnPlatforms(49, 12 );
-        this.spawnPlatforms(52, 12 );
+        this.spawnPlatforms(46, 12 ,((Math.random()/2) + 0.5), 1);
+        this.spawnPlatforms(49, 12 ,((Math.random()/2) + 0.5), 0);
+        this.spawnPlatforms(52, 12 ,((Math.random()/2) + 0.5), 1);
 
         // Add lisitener for menubutton press
         game.input.onDown.add(this.levelSelect, self);
@@ -211,7 +211,7 @@ Level_1.prototype = {
             
             this.player.jumping = true;
 
-            this.player.body.velocity.y = -350;
+            this.player.body.velocity.y = this.player.jumpHeight;
         }
 
         if(LeftKey.isDown && this.player.isAlive) {
@@ -219,14 +219,14 @@ Level_1.prototype = {
 
             this.updateFacing(false);
 
-            this.player.body.velocity.x = -200;
+            this.player.body.velocity.x = -this.player.walkingSpeed;
 
         } else if(RightKey.isDown && this.player.isAlive) {
             // player move right
 
             this.updateFacing(true);
 
-            this.player.body.velocity.x = 200;
+            this.player.body.velocity.x = this.player.walkingSpeed;
         
         } else if(this.player.isAlive && !this.player.jumping){
             // reset velocity
@@ -325,8 +325,8 @@ Level_1.prototype = {
         }
     },
 
-    spawnPlatforms: function(x, y){
-        platform = new Platform(game,x*32, y*32, ((Math.random()/2) + 0.5) * 300);
+    spawnPlatforms: function(x, y, interval ,state){
+        platform = new Platform(game,x*32, y*32, interval, state);
         phasePlatforms.push(platform);
         phaseObjects.push(platform);
     },

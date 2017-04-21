@@ -5,8 +5,8 @@
  * @param {*} y Y position of the platform
  * @param {*} interval The interval of the platform, the amount of frames that must pass before changing phase.
  */
-var Platform = function (game, x, y, interval) {
-    CustomSprite.call(this, game, x, y, 'platform', interval);
+var Platform = function (game, x, y, interval, state) {
+    CustomSprite.call(this, game, x, y, 'platform', interval, state);
     game.physics.arcade.enable(this);
     this.body.immovable = true;
     this.body.setSize(60, 8, 2, 12);
