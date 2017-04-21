@@ -1,5 +1,5 @@
 /**
- * The game state for level 1.
+ * The game state for level 3.
  * This is called by the levelSelectState when the user clicks on the first level icon.
  */
 
@@ -21,16 +21,17 @@ var PauseText;
 var onPlatform = false;
 var enemyGroup;
 
-var Level_1 = function() {};
-Level_1.prototype = {
+var Level_3 = function() {};
+Level_3.prototype = {
     init: function() {
-        this.w = 10240;                      // size of level W and H 
-        this.h = 3200;                   
+        this.w = 5120;                      // size of level W and H 
+        this.h = 2400;                   
     },
     preload: function() {
         // Load images
         game.load.tilemap('mapdata', 'assets/levels/SpikesAndFalls.json', null, Phaser.Tilemap.TILED_JSON);
-        game.load.image('tiles', 'assets/levels/tilesheet2.png');
+        game.load.image('collisionTiles', 'assets/levels/tilesheet2.png');
+        game.load.image('hazardTiles', 'assets/levels/hazards.png');
         game.load.image('menu', 'assets/buttons/smallButton_150x60.png', 150, 60);
         game.load.spritesheet('player', "assets/phaser.png", 64,64);
         game.load.spritesheet('bullet', "assets/bullets.png", 16,16);
@@ -61,10 +62,13 @@ Level_1.prototype = {
 
         // Load level from mapdata
         this.map = game.add.tilemap('mapdata');
-        this.map.addTilesetImage('tilesheet', 'tiles');
-        this.map.setCollisionBetween(0, 40);
+        //this.map.addTilesetImage('hazards', 'hazardTiles');
+        this.map.addTilesetImage('tilesheet2', 'collisionTiles');
+        this.map.setCollisionBetween(0,400);
         game.world.setBounds(0, 0, this.w, this.h);
-        this.layer = this.map.createLayer('collison');
+        //this.map.createLayer('hazards');
+        this.map.createLayer('Collisions');
+
         //Add group above the tile layer.
         enemyGroup = game.add.group();
         // Start physics
@@ -76,10 +80,10 @@ Level_1.prototype = {
         GameUtils.buildKeys();
 
         // make an exitDoor
-        //exitDoor = game.add.sprite(2500, 323, 'exitDoor');
+        exitDoor = game.add.sprite(2500, 323, 'exitDoor');
 
         // Create player
-        this.player = new Player(game, 32, game.world.height - 300, 'player', 0, 5);
+        this.player = new Player(game, 32, 32, 'player', 0, 5);
         phaseObjects.push(this.player);
         game.camera.follow(this.player);
 

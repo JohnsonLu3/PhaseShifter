@@ -10,6 +10,7 @@ LevelSelectState.prototype = {
         // Load level files
         this.loadLevelScript(1);
         this.loadLevelScript(2);
+        this.loadLevelScript(3);
     },
 
     create: function() {
@@ -70,6 +71,8 @@ LevelSelectState.prototype = {
     // For now, we'll manually load every game state.
     addLevelStates: function() {
         game.state.add('level_1_state', Level_1);
+        game.state.add('level_2_state', Level_2);
+        game.state.add('level_3_state', Level_3);
     }
 
 };
