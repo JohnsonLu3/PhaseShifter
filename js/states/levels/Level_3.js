@@ -4,7 +4,7 @@
  */
 
  var platform;
- //phaseObjects, phasePlatforms
+//phaseObjects, phasePlatforms
 // A global timer, this is used in order to keep track of things such as intervals for enemy phase changes.
 var globalTimer = 0;
 // Collection of all phase objects in the game, used for calling update each frame.
@@ -371,7 +371,7 @@ Level_3.prototype = {
 
     takeDamage: function(player)
     {
-        if (iFrames == 0 && player.invulnerable === false){
+        if (iFrames == 0){
             player.health--;
             if (healthBar[player.health] != null) {
                 healthBar[player.health].kill();
