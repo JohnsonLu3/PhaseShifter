@@ -89,11 +89,13 @@ Level_3.prototype = {
         game.camera.follow(this.player);
 
 
-        this.addTurret(2280,1938,this.player);
+        this.addTurret(2280, 1938, this.player);
         this.addTurret(3080, 1906, this.player);
-        this.addTurret(4293, 2002,this.player);
+        this.addTurret(4293, 2002, this.player);
+        this.addTurret(4500, 2002, this.player);
+        this.addTurret(4600, 2002, this.player);
         this.addTurret(4525, 1010, this.player);
-        this.addTurret(3862, 1010,this.player);
+        this.addTurret(3862, 1010, this.player);
         this.addTurret(3170, 1010, this.player);
 
         this.spawnLifeBar();

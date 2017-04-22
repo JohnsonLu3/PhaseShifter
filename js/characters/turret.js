@@ -4,9 +4,9 @@ var Turret = function(game,x,y,player)
 {
     Enemy.call(this,game,x,y+20,'turret',100,2,player);
     //Fire a bullet every 2 seconds.
-    this.cooldownAmt = 120;
+    this.cooldownAmt = 70;
     //Default bullet speed.
-    this.bulletSpeed = 200;
+    this.bulletSpeed = 275;
     //Enable physics on turret enemies.
     game.physics.arcade.enable(this);
     this.body.setSize(40, 40, 0, 0);
