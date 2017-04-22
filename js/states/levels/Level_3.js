@@ -15,11 +15,9 @@ var phasePlatform = new Array();
 var exitDoor;
 
 var healthBar = [];
-var menuButton;                             // for the pause menu
-var menuText;
-var PauseText;
 var onPlatform = false;
 var enemyGroup;
+
 
 var Level_3 = function() {};
 Level_3.prototype = {
@@ -64,10 +62,16 @@ Level_3.prototype = {
         this.map = game.add.tilemap('mapdata');
         this.map.addTilesetImage('hazards', 'hazardTiles');
         this.map.addTilesetImage('tilesheet2', 'collisionTiles');
-        this.map.setCollisionBetween(0, 277);
         game.world.setBounds(0, 0, this.w, this.h);
         this.hazard = this.map.createLayer('hazards');
         this.layer = this.map.createLayer('Collisions');
+        this.map.setCollisionBetween(0, 400, true, this.layer);
+        this.map.setCollisionBetween(0, 400, true, this.hazard);
+
+        this.map.setTileIndexCallback(226, this.spikeCollide, this, this.hazard);
+        this.map.setTileIndexCallback(227, this.spikeCollide, this, this.hazard);
+        this.map.setTileIndexCallback(228, this.spikeCollide, this, this.hazard);
+        this.map.setTileIndexCallback(229, this.spikeCollide, this, this.hazard);
 
         //Add group above the tile layer.
         enemyGroup = game.add.group();
@@ -77,7 +81,7 @@ Level_3.prototype = {
         // Set up cursors
         var cursors = game.input.keyboard.createCursorKeys();
         this.setControls();
-        GameUtils.buildKeys();
+        //GameUtils.buildKeys();
 
         // make an exitDoor
         exitDoor = game.add.sprite(32, (31 * 32), 'exitDoor');
@@ -90,14 +94,6 @@ Level_3.prototype = {
 
         this.addTurret(750,332,this.player);
         this.addTurret(1150, 332, this.player);
-
-        
-        //Create a platform.
-        platform = new Platform(game,400,400, 200);
-        phaseObjects.push(platform);
-        phasePlatforms.push(platform);
-        //console.log(phasePlatforms);
-        //console.log(this.platform);
 
         this.spawnLifeBar();
 
@@ -124,10 +120,12 @@ Level_3.prototype = {
         {
             bullet.kill()
         },null,this);
+        
         game.physics.arcade.collide(this.player.playerBullets, this.layer,function(bullet,layer)
         {
             bullet.kill()
         },null,this);
+
         //Resolve interactions between playerBullets and enemies and between enemyBullets and players.
         game.physics.arcade.overlap(enemyGroup, this.player.playerBullets, recieveDamage, null, this);
         game.physics.arcade.overlap(this.player, game.enemyBullets, this.recieveDamageP, null, this);
@@ -188,7 +186,7 @@ Level_3.prototype = {
         XKey     = ControlKeys.jumpKey//game.input.keyboard.addKey(Phaser.Keyboard.X);                                               // Jump  Button
         LeftKey  = ControlKeys.leftKey;//game.input.keyboard.addKey(Phaser.Keyboard.LEFT);                                            // Walk  Left
         RightKey = ControlKeys.rightKey;//game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);                                           // Walk  Right
-        EscKey   = ControlKeys.pauseKey.onDown.add(this.pauseGame, this);
+        EscKey   = ControlKeys.pauseKey.onDown.add(GameUtils.pauseGame, this);
     },
 
     flipShiftFlag: function() {
@@ -209,7 +207,7 @@ Level_3.prototype = {
 
         }
 
-        if(XKey.isDown && this.player.isAlive && (this.player.body.blocked.down || onPlatform )) {
+        if(XKey.isDown && this.player.isAlive ) {
             // player jump
             
             this.player.jumping = true;
@@ -269,34 +267,6 @@ Level_3.prototype = {
         }
 
         return;
-    },
-
-    /**
-     *  pauseGame
-     *      Pauses the game when ever the 
-     *      ESC key is pressed. Pressing
-     *      the key again unpause the game.
-     */
-    pauseGame: function(){
-        // NEED TO SHOW A PAUSE MENU WHERE YOU CAN GO BACK TO THE MAIN MAIN
-        if(game.paused === true){
-            game.paused = false;                            // unpause game
-            game.world.remove(PauseText);
-            game.world.remove(menuText);
-            game.world.remove(menubutton);
-
-        } else {
-            game.paused = true;                             // pause game
-            PauseText = game.add.text(game.camera.x + gameW/2, 20, 'Paused', { font: '30px Arial', fill: '#fff' });
-            PauseText.anchor.setTo(0.5, 0.5);
-
-            menubutton = game.add.sprite(game.camera.x + gameW/2, gameH/2, 'menu');
-            menubutton.anchor.setTo(0.5, 0.5);
-            
-            menuText = game.add.text(game.camera.x + gameW/2, gameH/2, 'Level Select', {font: '24px Arial', fill: 'white'});
-            menuText.anchor.setTo(0.5, 0.5);
-
-        }
     },
 
     levelSelect: function(event){
@@ -368,7 +338,7 @@ Level_3.prototype = {
  * @param {*} turret The player, which was just in contact with the bullet.
  * @param {*} bullet The bullet, which is in contact with the player.
  */
-        recieveDamageP: function (player, bullet)
+    recieveDamageP: function (player, bullet)
     {
         if (player.shiftState === bullet.phase) {
             bullet.kill()
@@ -392,6 +362,24 @@ Level_3.prototype = {
         phaseObjects.push(newTurret);
         enemyGroup.add(newTurret);
 
+    },
+
+    spikeCollide : function(){
+        console.log("Spike Touch");
+        //game.physics.arcade.collide(this.player, this.hazard);
+        
+        // Player touchs a spike, Take a lot of damage
+        if(this.player.health > 0){
+           for(var i = 0; i < 3; i++){
+            this.player.health--;
+            if (healthBar[this.player.health] != null){
+                healthBar[this.player.health].kill();
+            } 
+        }
+            if(this.player.health < 0){
+                this.player.health = 0;
+            }
+        }
     }
 };
 
