@@ -39,21 +39,6 @@ var GameUtils = {
         var quit_button;
     },
 
-    changeKey: function(keyToChange) {},
-
-    getKeyMapping: function(key) {
-        return "hello";
-    },
-        
-    buildKeys: function() {
-        game.input.keyboard.addKey(Phaser.Keyboard.SHIFT);           // shift ability
-        game.input.keyboard.addKey(Phaser.Keyboard.Z);                                               // Shoot Button
-        game.input.keyboard.addKey(Phaser.Keyboard.X);                                               // Jump  Button
-        game.input.keyboard.addKey(Phaser.Keyboard.LEFT);                                            // Walk  Left
-        game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);                                           // Walk  Right
-        game.input.keyboard.addKey(Phaser.Keyboard.ESC);
-    },
-
     getSetting: function(setting) {
         return "YES";
     },
@@ -70,13 +55,46 @@ var GameUtils = {
      *      ESC key is pressed. Pressing
      *      the key again unpause the game.
      */
-    pauseGame: function() {
+    pauseGame: function(){
         // NEED TO SHOW A PAUSE MENU WHERE YOU CAN GO BACK TO THE MAIN MAIN
         if(game.paused === true){
-            game.paused = false;
-        } else {
-            game.paused = true;
-        }
-    }
+            game.paused = false;                            // unpause game
+            game.world.remove(PauseText);
+            game.world.remove(menuText);
+            game.world.remove(menubutton);
 
+        } else {
+            game.paused = true;                             // pause game
+            PauseText = game.add.text(game.camera.x + gameW/2, 20, 'Paused', { font: '30px Arial', fill: '#fff' });
+            PauseText.anchor.setTo(0.5, 0.5);
+
+            menubutton = game.add.sprite(game.camera.x + gameW/2, gameH/2, 'menu');
+            menubutton.anchor.setTo(0.5, 0.5);
+            
+            menuText = game.add.text(game.camera.x + gameW/2, gameH/2, 'Level Select', {font: '24px Arial', fill: 'white'});
+            menuText.anchor.setTo(0.5, 0.5);
+        }
+    },
+
+    /**
+     * This function acts as the handler for the pause menu.
+     * If the player clicks on the level select button, they are taken back to that screen.
+     * 
+     */
+    pauseMenuHandler: function(event){
+
+        if(game.paused === true){
+            var mouseX = event.x + 65;          // add weird offset
+            var mouseY = event.y + 24;
+
+            if( mouseX + game.camera.x >  menubutton.x && mouseX + game.camera.x < menubutton.x + 150
+                && mouseY + game.camera.y >  menubutton.y - 60 && mouseY + game.camera.y < menubutton.y + 60 ){
+                // CALL STATE SWITCH
+                game.paused = false;
+                game.world.width = gameW;                       // Reset game world cords
+                game.world.height = gameH;                      // because the camera messes with it
+                game.state.start('levelSelect_state');
+            }
+        }
+    },
 }
