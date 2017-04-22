@@ -105,11 +105,11 @@ Level_1.prototype = {
 
     update: function() {
         globalTimer++;
-        updatePhases();
         game.physics.arcade.collide(this.player, this.layer);
 
+        // Check for win condition (ends game)
         this.checkWinCondition();
-
+        this.checkCheats();
 
         //Collisions.
         //Kill all bullets that hit solid ground.
@@ -135,12 +135,12 @@ Level_1.prototype = {
                 }
             }
         }
+
         //Deal with player movement after checking for platform collision.
         this.playerMovement();
 
         if(this.player.y > this.h - 70){                  // Player loses all their health if they touch the bottom of the screen
             this.player.health = 0;
-
 
             for(heart in healthBar){             // kill all heart sprites in healthbar
                 healthBar[heart].kill();
@@ -173,6 +173,23 @@ Level_1.prototype = {
             game.world.height = gameH;                      // because the camera messes with it
             game.state.start('gameWin_state');
         }
+    },
+
+    checkCheats: function() {
+        if(Cheat1Key.isDown) {
+            game.state.start('level_1_state');
+        }
+        else if(Cheat2Key.isDown) {
+            game.state.start('level_2_state');
+        }
+        else if (Cheat3Key.isDown) {
+            game.state.start('level_3_state');
+        }
+        // Toggle invincibility
+        else if (CheatIKey.isDown) {
+            this.player.invulnerable = !this.player.invulnerable;
+        }
+
     },
 
     /**
@@ -272,8 +289,6 @@ Level_1.prototype = {
         return;
     },
 
-    
-
     spawnLifeBar: function(){
             // create health;
         for(var x = 0; x < 10; x++){
@@ -296,16 +311,16 @@ Level_1.prototype = {
  * @param {*} turret The player, which was just in contact with the bullet.
  * @param {*} bullet The bullet, which is in contact with the player.
  */
-        recieveDamageP: function (player, bullet)
+    recieveDamageP: function (player, bullet)
     {
-        if (player.shiftState === bullet.phase) {
-            bullet.kill()
-            player.health--;
-            if (healthBar[player.health] != null)
-            {
-                healthBar[player.health].kill();
+        if(player.invulnerable === false) {
+            if (player.shiftState === bullet.phase) {
+                bullet.kill()
+                player.health--;
+                if (healthBar[player.health] != null) {
+                    healthBar[player.health].kill();
+                }
             }
-
         }
     },
     /**

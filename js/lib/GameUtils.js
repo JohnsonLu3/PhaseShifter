@@ -34,11 +34,6 @@ var GameUtils = {
         );
     },
 
-    makePauseMenu: function() {
-        var resume_button;
-        var quit_button;
-    },
-
     getSetting: function(setting) {
         return "YES";
     },
@@ -79,10 +74,8 @@ var GameUtils = {
     /**
      * This function acts as the handler for the pause menu.
      * If the player clicks on the level select button, they are taken back to that screen.
-     * 
      */
     pauseMenuHandler: function(event){
-
         if(game.paused === true){
             var mouseX = event.x + 65;          // add weird offset
             var mouseY = event.y + 24;
@@ -96,5 +89,5 @@ var GameUtils = {
                 game.state.start('levelSelect_state');
             }
         }
-    },
+    }
 }
