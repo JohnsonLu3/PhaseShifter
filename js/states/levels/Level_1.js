@@ -191,7 +191,11 @@ Level_1.prototype = {
         }
         else if (Cheat3Key.isDown) {
             game.state.start('level_3_state');
+        }        // Toggle invincibility
+        else if (CheatIKey.isDown) {
+            this.player.invulnerable = !this.player.invulnerable;
         }
+
     },
 
     /**
