@@ -1,5 +1,6 @@
 var Drone = function(game,x,y,player)
 {
+    this.lastDirection = false;
     this.aVelocity = 200;
     this.hasSight = false;
     Enemy.call(this, game, x, y, "drone", 0, 1, player);
@@ -11,8 +12,11 @@ var Drone = function(game,x,y,player)
         if (this.hasSight) {
             //Accelerate
             this.speed += this.acceleration;
-            var angle = game.physics.arcade.angleBetween(this, this.player);
-            console.log(this.body.angle - angle);
+            var angle =(game.physics.arcade.angleBetween(this, this.player));
+            var currentFacing = (this.body.rotation * 2 * Math.PI / 360);
+            currentFacing += Math.PI;
+            console.log(angle,currentFacing);
+            this.body.rotation += 0.05;
         }
         else {
             // Slow down, lose 20 % of velocity every frame. 
@@ -44,15 +48,6 @@ Drone.prototype.update = function()
     this.changePhase();
     this.playAnimation("attacking");
     if (this.seePlayer()){
-        if (this.player.x > this.x)
-        {
-            
-            this.scale.x = -1 * Math.abs(this.scale.x);
-        }
-        else
-        {
-            this.scale.x = Math.abs(this.scale.x);
-        }
         this.hasSight = true;
     }
     else

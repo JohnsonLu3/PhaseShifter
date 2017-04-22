@@ -97,7 +97,7 @@ Level_2.prototype = {
         this.addTurret(2200,1455,this.player);
         this.addTurret(2400,1455,this.player);
 
-        this.addDrone(300, 1000, this.player);
+        this.addDrone(300, 950, this.player);
 
         this.spawnLifeBar();
 
