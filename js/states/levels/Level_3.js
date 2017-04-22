@@ -167,7 +167,7 @@ Level_3.prototype = {
     },
 
     render: function() {
-        game.debug.spriteInfo(this.player, 32, 32);
+        //game.debug.spriteInfo(this.player, 32, 32);
     },
 
     checkWinCondition: function () {
