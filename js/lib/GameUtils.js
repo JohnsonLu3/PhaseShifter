@@ -44,17 +44,7 @@ var GameUtils = {
         menuText = game.make.text(game.camera.x + gameW/2, gameH/2, 'Level Select', {font: '24px Arial', fill: 'white'});
         menuText.anchor.setTo(0.5, 0.5);
     },
-
-    getSetting: function(setting) {
-        return "YES";
-    },
-
-    toggleSetting: function(setting) {
-        if(setting == "YES")
-            return "NO";
-        else
-            return "YES";
-    },
+    
     /**
      *  pauseGame
      *      Pauses the game when ever the 

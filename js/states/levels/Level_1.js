@@ -100,11 +100,14 @@ Level_1.prototype = {
         // Add lisitener for menubutton press
         game.input.onDown.add(GameUtils.pauseMenuHandler, self);
 
-        // Change music
+        // Stop the music!
         music.stop();
-        music = game.add.audio('level1');
-        music.loop = true;
-        music.play();
+        if(musicFlag === true) {
+            // Change music
+            music = game.add.audio('level1');
+            music.loop = true;
+            music.play();
+        }
     },
 
     update: function() {
@@ -189,7 +192,6 @@ Level_1.prototype = {
         else if (Cheat3Key.isDown) {
             game.state.start('level_3_state');
         }
-
     },
 
     /**
