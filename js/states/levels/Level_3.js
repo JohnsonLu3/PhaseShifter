@@ -163,9 +163,6 @@ Level_3.prototype = {
     },
 
     render: function() {
-        //game.debug.bodyInfo(this.player, 32, 32);
-        //game.debug.body(phasePlatforms[0]);
-        //game.debug.body(this.player);
     },
 
     checkWinCondition: function () {
