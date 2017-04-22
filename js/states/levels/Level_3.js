@@ -66,10 +66,6 @@ Level_3.prototype = {
         this.map.setCollisionBetween(0, 400, true, this.layer);
         this.map.setCollisionBetween(0, 400, true, this.hazard);
 
-        this.map.setTileIndexCallback(226, this.spikeCollide, this, this.hazard);
-        this.map.setTileIndexCallback(227, this.spikeCollide, this, this.hazard);
-        this.map.setTileIndexCallback(228, this.spikeCollide, this, this.hazard);
-        this.map.setTileIndexCallback(229, this.spikeCollide, this, this.hazard);
 
         //Add group above the tile layer.
         enemyGroup = game.add.group();
@@ -89,10 +85,19 @@ Level_3.prototype = {
         game.camera.follow(this.player);
 
 
-        this.addTurret(750,332,this.player);
-        this.addTurret(1150, 332, this.player);
+        this.addTurret(2280, 1938, this.player);
+        this.addTurret(3080, 1906, this.player);
+        this.addTurret(4293, 2002, this.player);
+        this.addTurret(4500, 2002, this.player);
+        this.addTurret(4600, 2002, this.player);
+        this.addTurret(4525, 1010, this.player);
+        this.addTurret(3862, 1010, this.player);
+        this.addTurret(3170, 1010, this.player);
 
         this.spawnLifeBar();
+        
+        if (iFrames > 0)
+            iFrames--;
 
         // Spawn Platforms that can shift phases
         this.createLevelPlatforms();
@@ -113,7 +118,7 @@ Level_3.prototype = {
     update: function() {
         globalTimer++;
         game.physics.arcade.collide(this.player, this.layer);
-        game.physics.arcade.collide(this.player, this.hazard);
+        game.physics.arcade.collide(this.player, this.hazard, this.takeDamage, null, this);
 
         this.checkWinCondition();
         this.checkCheats();
@@ -167,10 +172,13 @@ Level_3.prototype = {
         }
 
         onPlatform = false;
-        
+        if (iFrames > 0)
+            iFrames--;
+
     },
 
     render: function() {
+        //game.debug.spriteInfo(this.player, 32, 32);
     },
 
     checkWinCondition: function () {
@@ -363,6 +371,17 @@ Level_3.prototype = {
 
         }
     },
+
+    takeDamage: function(player)
+    {
+        if (iFrames == 0){
+            player.health--;
+            if (healthBar[player.health] != null) {
+                healthBar[player.health].kill();
+            }
+            iFrames = 30;   
+        }
+    },
     /**
      * This function adds a turret to the current game world.
      * @param {*} x The x position of the turret to be added.
@@ -377,21 +396,6 @@ Level_3.prototype = {
 
     },
 
-    spikeCollide : function(){
-        //game.physics.arcade.collide(this.player, this.hazard);
-        // Player touchs a spike, Take a lot of damage
-        if(this.player.health > 0){
-           for(var i = 0; i < 3; i++){
-            this.player.health--;
-            if (healthBar[this.player.health] != null){
-                healthBar[this.player.health].kill();
-            } 
-        }
-            if(this.player.health < 0){
-                this.player.health = 0;
-            }
-        }
-    }
 };
 
 
