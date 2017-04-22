@@ -16,6 +16,9 @@ var phaseObjects = new Array();
 // Create a game group which will contain all special phase platforms. Need to keep track in order to determine collision.
 var phasePlatforms = new Array();
 
+// This is the music object. We will need to change this variable when we switch levels.
+var music;
+
 // Declare the Main object
 var Main = function() {};
 

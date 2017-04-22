@@ -100,6 +100,12 @@ Level_3.prototype = {
         // Add lisitener for menubutton press
         game.input.onDown.add(GameUtils.pauseMenuHandler, self);
 
+        // Change the music
+        music.stop();
+        music = game.add.audio('level1');
+        music.loop = true;
+        music.play();
+
     },
 
     update: function() {
