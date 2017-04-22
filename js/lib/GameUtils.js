@@ -44,7 +44,7 @@ var GameUtils = {
         menuText = game.make.text(game.camera.x + gameW/2, gameH/2, 'Level Select', {font: '24px Arial', fill: 'white'});
         menuText.anchor.setTo(0.5, 0.5);
     },
-    
+
     /**
      *  pauseGame
      *      Pauses the game when ever the 
@@ -88,9 +88,18 @@ var GameUtils = {
                 && mouseY + game.camera.y >  menubutton.y - 60 && mouseY + game.camera.y < menubutton.y + 60 ){
                 // CALL STATE SWITCH
                 game.paused = false;
+                // Revert music back to theme
+                music.stop();
+                if(musicFlag === true) {
+                    music = game.add.audio("theme");
+                    music.loop = true;
+                    music.play();
+                }
+                
                 game.world.width = gameW;                       // Reset game world cords
                 game.world.height = gameH;                      // because the camera messes with it
                 game.state.start('levelSelect_state');
+                
             }
         }
     }

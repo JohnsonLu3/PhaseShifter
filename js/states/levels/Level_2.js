@@ -1,11 +1,10 @@
 /**
  * The game state for level 2.
- * This is called by the levelSelectState when the user clicks on the first level icon.
+ * This is called by the levelSelectState when the user clicks on the second level icon.
  */
 
- var turretTEST;
- var platform;
- //phaseObjects, phasePlatforms
+var platform;
+//phaseObjects, phasePlatforms
 // A global timer, this is used in order to keep track of things such as intervals for enemy phase changes.
 var globalTimer = 0;
 // Collection of all phase objects in the game, used for calling update each frame.
@@ -17,9 +16,7 @@ var exitDoor;
 var iFrames = 0;
 
 var healthBar = [];
-var menuButton;                             // for the pause menu
-var menuText;
-var PauseText;
+
 var onPlatform = false;
 var enemyGroup;
 
@@ -33,7 +30,6 @@ Level_2.prototype = {
         // Load images
         game.load.tilemap('mapdata', 'assets/levels/level2.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.image('collisionTiles', 'assets/tilesheet2.png');
-        game.load.image('menu', 'assets/buttons/smallButton_150x60.png', 150, 60);
         game.load.spritesheet('player', "assets/phaser.png", 64,64);
         game.load.spritesheet('bullet', "assets/bullets.png", 16,16);
         game.load.image('exitDoor' , 'assets/exitDoor.png', 64, 64);
@@ -50,8 +46,6 @@ Level_2.prototype = {
         game.load.script('platforms', 'js/characters/platforms.js');
     },
     create: function() {
-        // Change background color
-        game.stage.backgroundColor = '#787878';
         // Create a group for all enemy bullets, this will greatly simplify the collision detections
         game.enemyBullets = game.add.group();
         game.enemyBullets.enableBody = true;
@@ -77,7 +71,6 @@ Level_2.prototype = {
         game.physics.startSystem(Phaser.Physics.ARCADE);
         
         // Set up cursors
-        var cursors = game.input.keyboard.createCursorKeys();
         this.setControls();
 
         // make an exitDoor
@@ -106,6 +99,15 @@ Level_2.prototype = {
 
         // Add lisitener for menubutton press
         game.input.onDown.add(GameUtils.pauseMenuHandler, self);
+
+        // Stop the music!
+        music.stop();
+        if(musicFlag === true) {
+            // Change music
+            music = game.add.audio('level1');
+            music.loop = true;
+            music.play();
+        }
 
     },
 
@@ -343,10 +345,11 @@ Level_2.prototype = {
  */
     recieveDamageP: function (player, bullet)
     {
-        if (player.shiftState === bullet.phase) {
-            bullet.kill()
-            this.takeDamage(player);
-
+        if(player.invulnerable === false) {
+            if (player.shiftState === bullet.phase) {
+                bullet.kill()
+                this.takeDamage(player);
+            }
         }
     },
 

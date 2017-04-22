@@ -3,7 +3,6 @@
  * This is called by the levelSelectState when the user clicks on the first level icon.
  */
 
- var turretTEST;
  var platform;
  //phaseObjects, phasePlatforms
 // A global timer, this is used in order to keep track of things such as intervals for enemy phase changes.
@@ -45,8 +44,6 @@ Level_3.prototype = {
         game.load.script('platforms', 'js/characters/platforms.js');
     },
     create: function() {
-        // Change background color
-        game.stage.backgroundColor = '#787878';
         // Create a group for all enemy bullets, this will greatly simplify the collision detections
         game.enemyBullets = game.add.group();
         game.enemyBullets.enableBody = true;
