@@ -13,6 +13,10 @@ function recieveDamage(turret, bullet)
         bullet.kill()
         turret.damage(1);
     }
+
+    if(turret.health <= 0){
+        turret.animations.play("die");
+    }
 }
 
 /**
