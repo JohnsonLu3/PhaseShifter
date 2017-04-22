@@ -207,7 +207,6 @@ Level_3.prototype = {
         Cheat2Key = ControlKeys.twoKey;
         Cheat3Key = ControlKeys.threeKey;
         CheatIKey = ControlKeys.invincibilityKey;
-
     },
 
     flipShiftFlag: function() {
