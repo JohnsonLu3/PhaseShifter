@@ -28,9 +28,13 @@ MainMenuState.prototype = {
     create: function() {
         GameUtils.makeScreenTitle('Main Menu');
 
-        music = game.add.audio('theme');
-        music.loop = true;
-        music.play();
-
+        // First start up
+        if (music === undefined) {
+            music = game.add.audio('theme');
+            music.loop = true;
+        }
+        if (musicFlag === true && music.isPlaying === false) {
+            music.play();
+        }
     },
 };

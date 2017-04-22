@@ -89,5 +89,8 @@ SplashState.prototype = {
             game.state.start('mainMenu_state');
         }, 1000);
         
+        // Make sure the music and sound flags are true
+        musicFlag = true;
+        soundFlag = true;
     }
 };

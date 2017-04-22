@@ -3,6 +3,7 @@
  */
 var ControlKeys = {
     
+    // Primary controls
     'leftKey':          game.input.keyboard.addKey(Phaser.Keyboard.A),
     'rightKey':         game.input.keyboard.addKey(Phaser.Keyboard.D),
     'leftKey2':          game.input.keyboard.addKey(Phaser.Keyboard.LEFT),
@@ -13,6 +14,12 @@ var ControlKeys = {
     'shootKey':         game.input.keyboard.addKey(Phaser.Keyboard.CONTROL),
     'shootKey2':         game.input.keyboard.addKey(Phaser.Keyboard.Z),
     'pauseKey':         game.input.keyboard.addKey(Phaser.Keyboard.ESC),
+
+    // Secondary controls
+    'leftKey2':          game.input.keyboard.addKey(Phaser.Keyboard.LEFT),
+    'rightKey2':         game.input.keyboard.addKey(Phaser.Keyboard.RIGHT),
+    'jumpKey2':          game.input.keyboard.addKey(Phaser.Keyboard.X),
+    'shootKey2':         game.input.keyboard.addKey(Phaser.Keyboard.Z),
     
     // Cheat keys
     'oneKey':           game.input.keyboard.addKey(Phaser.Keyboard.ONE),
