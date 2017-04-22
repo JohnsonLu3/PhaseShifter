@@ -22,7 +22,9 @@ SplashState.prototype = {
         game.load.audio('level1', 'assets/bgm/Level Up.mp3');
     },
 
-    loadSFX: function () {},
+    loadSFX: function () {
+        game.load.audio('phaser_walking', 'assets/sfx/phaser_walking.mp3');
+    },
 
     loadFonts: function () {},
 

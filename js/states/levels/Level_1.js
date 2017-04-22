@@ -17,6 +17,9 @@ var healthBar = [];
 var onPlatform = false;
 var enemyGroup;
 
+// This is for walking
+var walkSound;
+
 var Level_1 = function() {};
 Level_1.prototype = {
     // Load all images for the level
@@ -99,6 +102,9 @@ Level_1.prototype = {
 
         // Add lisitener for menubutton press
         game.input.onDown.add(GameUtils.pauseMenuHandler, self);
+
+        // Foot steps
+        walkSound = game.add.audio('phaser_walking');
 
         // Stop the music!
         music.stop();
@@ -270,14 +276,17 @@ Level_1.prototype = {
         //Play the proper animation, uninterruptable
         if (this.player.body.velocity.y != 0 && !onPlatform && this.player.isAlive){
             //console.log(this.player.body.velocity.y);
+            walkSound.stop();
             this.player.playAnimation("jump");
         }
         else if (this.player.body.velocity.x != 0 && this.player.isAlive)
         {
+            walkSound.play('', 0, 1, false, false);
             this.player.playAnimation("walk");
         }
         else if (this.player.isAlive)
         {
+            walkSound.stop();
             this.player.playAnimation("idle");
         }
     },
@@ -345,5 +354,18 @@ Level_1.prototype = {
         phaseObjects.push(newTurret);
         enemyGroup.add(newTurret);
 
+    },
+
+    /**
+     * This function checks for whether or not sounds should be played
+     */
+
+    checkSounds: function() {
+        if(this.player.body.velocity.x != 0 && this.player.body.blocked.down && !walkSound.isPlaying) {
+            walkSound.play('', 0, 1, false, false);
+        }
+        else {
+            walkSound.stop();
+        }
     }
 };
