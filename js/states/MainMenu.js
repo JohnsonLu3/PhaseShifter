@@ -27,10 +27,10 @@ MainMenuState.prototype = {
     // Called by Phaser when the game state is started
     create: function() {
         GameUtils.makeScreenTitle('Main Menu');
-        /*setTimeout(function() {
-            // Start the level select state for now
-            game.state.start('levelSelect_state');
-        }, 2000);
-        */
+
+        music = game.add.audio('theme');
+        music.loop = true;
+        music.play();
+
     },
 };

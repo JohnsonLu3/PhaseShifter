@@ -17,7 +17,10 @@ SplashState.prototype = {
         game.load.image('smallButton', 'assets/buttons/smallButton_150x60.png', 150, 60);
     },
 
-    loadBGM: function () {},
+    loadBGM: function () {
+        game.load.audio('theme', 'assets/bgm/Super Power Cool Dude.mp3');
+        game.load.audio('level1', 'assets/bgm/Level Up.mp3');
+    },
 
     loadSFX: function () {},
 

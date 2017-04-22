@@ -9,5 +9,7 @@ GameWinState.prototype = {
     create: function() {
         GameUtils.makeBackButton('mainMenu_state');
         GameUtils.makeScreenTitle('Game Win');
+
+        music.stop();
     }
 };
