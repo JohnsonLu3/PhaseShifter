@@ -170,7 +170,9 @@ Level_3.prototype = {
         }
 
         onPlatform = false;
-        
+        if (iFrames > 0)
+            iFrames--;
+
     },
 
     render: function() {
