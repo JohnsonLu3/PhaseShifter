@@ -3,11 +3,11 @@
  */
 var ControlKeys = {
     
-    'leftKey':          game.input.keyboard.addKey(Phaser.Keyboard.LEFT),
-    'rightKey':         game.input.keyboard.addKey(Phaser.Keyboard.RIGHT),
+    'leftKey':          game.input.keyboard.addKey(Phaser.Keyboard.A),
+    'rightKey':         game.input.keyboard.addKey(Phaser.Keyboard.D),
     'phaseShiftKey':    game.input.keyboard.addKey(Phaser.Keyboard.SHIFT),
-    'jumpKey':          game.input.keyboard.addKey(Phaser.Keyboard.X),
-    'shootKey':         game.input.keyboard.addKey(Phaser.Keyboard.Z),
+    'jumpKey':          game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR),
+    'shootKey':         game.input.keyboard.addKey(Phaser.Keyboard.CONTROL),
     'pauseKey':         game.input.keyboard.addKey(Phaser.Keyboard.ESC),
     
     // Cheat keys
@@ -15,10 +15,6 @@ var ControlKeys = {
     'twoKey':           game.input.keyboard.addKey(Phaser.Keyboard.TWO),
     'threeKey':         game.input.keyboard.addKey(Phaser.Keyboard.THREE),
     'invincibilityKey': game.input.keyboard.addKey(Phaser.Keyboard.I),
-
-    changeKey: function(keyToChange, newKeyCode) {
-        this[keyToChange] = game.input.keyboard.addKey(newKeyCode);
-    },
 
     getKeyMapping: function(key) {
         var keyValue = this[key].keyCode;

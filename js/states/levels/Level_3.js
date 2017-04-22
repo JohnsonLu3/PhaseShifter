@@ -13,7 +13,6 @@ var phaseObjects = new Array();
 // Create a game group which will contain all special phase platforms.
 var phasePlatform = new Array();
 var exitDoor;
-
 var healthBar = [];
 var onPlatform = false;
 var enemyGroup;
@@ -30,7 +29,6 @@ Level_3.prototype = {
         game.load.tilemap('mapdata', 'assets/levels/SpikesAndFalls.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.image('collisionTiles', 'assets/levels/tilesheet2.png');
         game.load.image('hazardTiles', 'assets/levels/hazards.png');
-        game.load.image('menu', 'assets/buttons/smallButton_150x60.png', 150, 60);
         game.load.spritesheet('player', "assets/phaser.png", 64,64);
         game.load.spritesheet('bullet', "assets/bullets.png", 16,16);
         game.load.image('exitDoor' , 'assets/exitDoor.png', 64, 64);
@@ -79,12 +77,11 @@ Level_3.prototype = {
         game.physics.startSystem(Phaser.Physics.ARCADE);
         
         // Set up cursors
-        var cursors = game.input.keyboard.createCursorKeys();
         this.setControls();
-        //GameUtils.buildKeys();
 
         // make an exitDoor
         exitDoor = game.add.sprite(32, (31 * 32), 'exitDoor');
+
 
         // Create player
         this.player = new Player(game, 32, this.h - (16 * 32), 'player', 0, 5);
@@ -101,18 +98,17 @@ Level_3.prototype = {
         this.createLevelPlatforms();
 
         // Add lisitener for menubutton press
-        game.input.onDown.add(this.levelSelect, self);
+        game.input.onDown.add(GameUtils.pauseMenuHandler, self);
 
     },
 
     update: function() {
         globalTimer++;
-        updatePhases();
         game.physics.arcade.collide(this.player, this.layer);
         game.physics.arcade.collide(this.player, this.hazard);
 
         this.checkWinCondition();
-
+        this.checkCheats();
 
         //Collisions.
         //Kill all bullets that hit solid ground.
@@ -180,13 +176,41 @@ Level_3.prototype = {
         }
     },
 
+    // Cheat handler
+    checkCheats: function() {
+        if(Cheat1Key.isDown) {
+            game.state.start('level_1_state');
+        }
+        else if(Cheat2Key.isDown) {
+            game.state.start('level_2_state');
+        }
+        else if (Cheat3Key.isDown) {
+            game.state.start('level_3_state');
+        }
+        // Toggle invincibility
+        else if (CheatIKey.isDown) {
+            this.player.invulnerable = !this.player.invulnerable;
+        }
+
+    },
+
+    /**
+     * This sets all the key mappings
+     */
     setControls: function() {
-        ShiftKey = ControlKeys.phaseShiftKey.onDown.add(this.flipShiftFlag, this);//game.input.keyboard.addKey(Phaser.Keyboard.SHIFT).onDown.add(this.flipShiftFlag, this);           // shift ability
-        ZKey     = ControlKeys.shootKey;//game.input.keyboard.addKey(Phaser.Keyboard.Z);                                               // Shoot Button
-        XKey     = ControlKeys.jumpKey//game.input.keyboard.addKey(Phaser.Keyboard.X);                                               // Jump  Button
-        LeftKey  = ControlKeys.leftKey;//game.input.keyboard.addKey(Phaser.Keyboard.LEFT);                                            // Walk  Left
-        RightKey = ControlKeys.rightKey;//game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);                                           // Walk  Right
-        EscKey   = ControlKeys.pauseKey.onDown.add(GameUtils.pauseGame, this);
+        ShiftKey = ControlKeys.phaseShiftKey.onDown.add(this.flipShiftFlag, this);  // shift ability
+        ZKey     = ControlKeys.shootKey;                                            // Shoot Button
+        XKey     = ControlKeys.jumpKey                                              // Jump  Button
+        LeftKey  = ControlKeys.leftKey;                                             // Walk  Left
+        RightKey = ControlKeys.rightKey;                                            // Walk  Right
+        EscKey   = ControlKeys.pauseKey.onDown.add(GameUtils.pauseGame, this);           // Pause menu
+
+        // Cheat Keys
+        Cheat1Key = ControlKeys.oneKey;
+        Cheat2Key = ControlKeys.twoKey;
+        Cheat3Key = ControlKeys.threeKey;
+        CheatIKey = ControlKeys.invincibilityKey;
+
     },
 
     flipShiftFlag: function() {
@@ -204,7 +228,6 @@ Level_3.prototype = {
 
         if(ZKey.isDown){
             this.player.fire();
-
         }
 
         if(XKey.isDown && this.player.isAlive ) {
@@ -267,24 +290,6 @@ Level_3.prototype = {
         }
 
         return;
-    },
-
-    levelSelect: function(event){
-
-        if(game.paused === true){
-            var mouseX = event.x + 65;          // add weird offset
-            var mouseY = event.y + 24;
-
-            if( mouseX + game.camera.x >  menubutton.x && mouseX + game.camera.x < menubutton.x + 150
-                && mouseY + game.camera.y >  menubutton.y - 60 && mouseY + game.camera.y < menubutton.y + 60 ){
-                // CALL STATE SWITCH
-                game.paused = false;
-                game.world.width = gameW;                       // Reset game world cords
-                game.world.height = gameH;                      // because the camera messes with it
-                game.state.start('levelSelect_state');
-                
-            }
-        }
     },
 
     spawnLifeBar: function(){

@@ -35,8 +35,14 @@ var GameUtils = {
     },
 
     makePauseMenu: function() {
-        var resume_button;
-        var quit_button;
+        PauseText = game.make.text(game.camera.x + gameW/2, 20, 'Paused', { font: '30px Arial', fill: '#fff' });
+        PauseText.anchor.setTo(0.5, 0.5);
+
+        menubutton = game.make.sprite(game.camera.x + gameW/2, gameH/2, 'menu');
+        menubutton.anchor.setTo(0.5, 0.5);
+            
+        menuText = game.make.text(game.camera.x + gameW/2, gameH/2, 'Level Select', {font: '24px Arial', fill: 'white'});
+        menuText.anchor.setTo(0.5, 0.5);
     },
 
     getSetting: function(setting) {
@@ -64,25 +70,26 @@ var GameUtils = {
             game.world.remove(menubutton);
 
         } else {
-            game.paused = true;                             // pause game
-            PauseText = game.add.text(game.camera.x + gameW/2, 20, 'Paused', { font: '30px Arial', fill: '#fff' });
-            PauseText.anchor.setTo(0.5, 0.5);
-
-            menubutton = game.add.sprite(game.camera.x + gameW/2, gameH/2, 'menu');
-            menubutton.anchor.setTo(0.5, 0.5);
-            
-            menuText = game.add.text(game.camera.x + gameW/2, gameH/2, 'Level Select', {font: '24px Arial', fill: 'white'});
-            menuText.anchor.setTo(0.5, 0.5);
+            // Update the positions of the menu elements
+            PauseText.x = game.camera.x + gameW/2;
+            PauseText.y = game.camera.y + 20;
+            menubutton.x = game.camera.x + gameW/2;
+            menubutton.y = game.camera.y + gameH/2;
+            menuText.x = game.camera.x + gameW/2;
+            menuText.y = game.camera.y + gameH/2;
+            // Show the menu
+            game.add.existing(PauseText);
+            game.add.existing(menubutton);
+            game.add.existing(menuText);
+            game.paused = true;
         }
     },
 
     /**
      * This function acts as the handler for the pause menu.
      * If the player clicks on the level select button, they are taken back to that screen.
-     * 
      */
     pauseMenuHandler: function(event){
-
         if(game.paused === true){
             var mouseX = event.x + 65;          // add weird offset
             var mouseY = event.y + 24;
@@ -96,5 +103,5 @@ var GameUtils = {
                 game.state.start('levelSelect_state');
             }
         }
-    },
+    }
 }

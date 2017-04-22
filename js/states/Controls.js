@@ -7,7 +7,7 @@ ControlsState.prototype = {
     init: function() {},
 
     preload: function() {
-        this.textProp = {fill: 'white'};
+        this.textProp = {fill: 'white', font: '24px Arial'};
         this.col1_label = 300, this.col2_label = 700;
         this.col1_button = 480, this.col2_button = 860;
         this.row1 = 200, this.row2 = 300, this.row3 = 400;
@@ -23,10 +23,10 @@ ControlsState.prototype = {
         this.keyToChange = undefined;
         this.labelToChange = undefined;
         this.isChanging = false;
-        game.input.keyboard.onDownCallback = this.keyboardHandler;
     },
 
     makeLabels: function() {
+        // Labels for the controls
         this.left_label =        game.make.text(this.col1_label, this.row1, 'Move Left', this.textProp);
         this.right_label =       game.make.text(this.col1_label, this.row2, 'Move Right', this.textProp);
         this.phaseShift_label =  game.make.text(this.col1_label, this.row3, 'Phase Shift', this.textProp);
@@ -34,12 +34,17 @@ ControlsState.prototype = {
         this.shoot_label =       game.make.text(this.col2_label, this.row2, 'Shoot', this.textProp);
         GameUtils.setAnchorToCenter([this.left_label, this.right_label, this.phaseShift_label, this.jump_label, this.shoot_label]);
 
+        // Labels for the buttons
         this.leftButton_label =         game.make.text(this.col1_button, this.row1, ControlKeys.getKeyMapping('leftKey'), this.textProp);
         this.rightButton_label =        game.make.text(this.col1_button, this.row2, ControlKeys.getKeyMapping('rightKey'), this.textProp);
         this.phaseShiftButton_label =   game.make.text(this.col1_button, this.row3, ControlKeys.getKeyMapping('phaseShiftKey'), this.textProp);
         this.jumpButton_label =         game.make.text(this.col2_button, this.row1, ControlKeys.getKeyMapping('jumpKey'), this.textProp);
         this.shootButton_label =        game.make.text(this.col2_button, this.row2, ControlKeys.getKeyMapping('shootKey'), this.textProp);
         GameUtils.setAnchorToCenter([this.leftButton_label, this.rightButton_label, this.phaseShiftButton_label, this.jumpButton_label, this.shootButton_label]);
+
+        // Label for a hint
+        this.hint_label = game.make.text(game.world.centerX, 500, 'Hint: Use your left hand to control movement and your right hand to shoot and phase shift', this.textProp);
+        GameUtils.setAnchorToCenter([this.hint_label]);
     },
 
     makeButtons: function() {
@@ -70,28 +75,7 @@ ControlsState.prototype = {
         game.add.existing(this.phaseShiftButton_label);
         game.add.existing(this.jumpButton_label);
         game.add.existing(this.shootButton_label);
-    },
-
-    handleButton: function(keyToChange, labelToChange) {
-        /*
-        // Allow changes
-        this.isChanging = true;
-        this.keyToChange = keyToChange;
-        Console.log(this.keyToChange.keyCode);
-        this.labelToChange = labelToChange;
-        Console.log(this.labelToChange.text);
-        // Prompt the user
-        this.newKey_label = game.add.text(game.world.centerX, game.world.centerY, 'Press a key', {fill: 'red'});
-        */
-    },
-
-    keyboardHandler: function(e) {
-        if(this.isChanging == true) {
-            ControlKeys.changeKey(this.keyToChange, this.lastKey.keyCode);
-            this.labelToChange.setText(ControlKeys.getKeyMapping(this.keyToChange));
-            this.isChanging = false;
-            this.newKey_label.destroy();
-        }
-        return;
+        // Add hint label
+        game.add.existing(this.hint_label);
     }
 }

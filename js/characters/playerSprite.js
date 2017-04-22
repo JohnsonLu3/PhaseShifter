@@ -62,6 +62,9 @@ var Player = function(game, x, y, asset, interval, hp) {
 
     // Die
     this.animations.add('die', [42, 43, 44, 45, 46, 47, 48], 8, false);
+
+    // Cheats
+    this.invulnerable = false;
 }
 
 /**
