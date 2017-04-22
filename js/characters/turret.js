@@ -21,7 +21,7 @@ var Turret = function(game,x,y,player)
     this.animations.add("attacking_B", [50,51,52,53,54,55], 10, true);
 
     //DYING
-    this.animations.add("dying", [56,57,58,59,60,61,62], 10, true);
+    this.animations.add("die", [56,57,58,59,60,61,62], 20, false);
 
 }
 Turret.prototype = Object.create(Enemy.prototype);
