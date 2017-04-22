@@ -42,14 +42,11 @@ Level_1.prototype = {
 
         // Load necessary JS files
         game.load.script('customSprite_script', 'js/characters/customSprite.js');
-        //game.load.script('player_script', 'js/characters/player.js');
         game.load.script('functs', 'js/lib/functions.js');
         game.load.script('playerSprite_script', 'js/characters/playerSprite.js');
         game.load.script('platforms', 'js/characters/platforms.js');
     },
     create: function() {
-        // Change background color
-        game.stage.backgroundColor = '#787878';
         // Create a group for all enemy bullets, this will greatly simplify the collision detections
         game.enemyBullets = game.add.group();
         game.enemyBullets.enableBody = true;
@@ -57,7 +54,7 @@ Level_1.prototype = {
         //Add a max of 100 bullets that all enemies can shoot.
         game.enemyBullets.createMultiple(100, 'bullet');
         game.enemyBullets.setAll('checkWorldBounds', true);
-        game.enemyBullets.setAll('outOfBoundsKill', true);            
+        game.enemyBullets.setAll('outOfBoundsKill', true);
 
         // Load level from mapdata
         this.map = game.add.tilemap('mapdata');
@@ -71,9 +68,9 @@ Level_1.prototype = {
         game.physics.startSystem(Phaser.Physics.ARCADE);
         
         // Set up cursors
-        var cursors = game.input.keyboard.createCursorKeys();
+        //var cursors = game.input.keyboard.createCursorKeys();
         this.setControls();
-        GameUtils.buildKeys();
+        //GameUtils.buildKeys();
 
         // make an exitDoor
         exitDoor = game.add.sprite(2500, 323, 'exitDoor');
@@ -82,7 +79,6 @@ Level_1.prototype = {
         this.player = new Player(game, 32, game.world.height - 300, 'player', 0, 5);
         phaseObjects.push(this.player);
         game.camera.follow(this.player);
-
 
         this.addTurret(750,332,this.player);
         this.addTurret(1150, 332, this.player);
@@ -103,7 +99,7 @@ Level_1.prototype = {
         this.spawnPlatforms(52, 12 ,((Math.random()/2) + 0.5), 1);
 
         // Add lisitener for menubutton press
-        game.input.onDown.add(this.levelSelect, self);
+        game.input.onDown.add(GameUtils.pauseMenuHandler, self);
 
     },
 
@@ -179,13 +175,22 @@ Level_1.prototype = {
         }
     },
 
+    /**
+     * This sets all the key mappings
+     */
     setControls: function() {
-        ShiftKey = ControlKeys.phaseShiftKey.onDown.add(this.flipShiftFlag, this);//game.input.keyboard.addKey(Phaser.Keyboard.SHIFT).onDown.add(this.flipShiftFlag, this);           // shift ability
-        ZKey     = ControlKeys.shootKey;//game.input.keyboard.addKey(Phaser.Keyboard.Z);                                               // Shoot Button
-        XKey     = ControlKeys.jumpKey//game.input.keyboard.addKey(Phaser.Keyboard.X);                                               // Jump  Button
-        LeftKey  = ControlKeys.leftKey;//game.input.keyboard.addKey(Phaser.Keyboard.LEFT);                                            // Walk  Left
-        RightKey = ControlKeys.rightKey;//game.input.keyboard.addKey(Phaser.Keyboard.RIGHT);                                           // Walk  Right
-        EscKey   = ControlKeys.pauseKey.onDown.add(this.pauseGame, this);
+        ShiftKey = ControlKeys.phaseShiftKey.onDown.add(this.flipShiftFlag, this);  // shift ability
+        ZKey     = ControlKeys.shootKey;                                            // Shoot Button
+        XKey     = ControlKeys.jumpKey                                              // Jump  Button
+        LeftKey  = ControlKeys.leftKey;                                             // Walk  Left
+        RightKey = ControlKeys.rightKey;                                            // Walk  Right
+        EscKey   = ControlKeys.pauseKey.onDown.add(GameUtils.pauseGame, this);           // Pause menu
+
+        // Cheat Keys
+        Cheat1Key = ControlKeys.oneKey;
+        Cheat2Key = ControlKeys.twoKey;
+        Cheat3Key = ControlKeys.threeKey;
+        CheatIKey = ControlKeys.invincibilityKey;
     },
 
     flipShiftFlag: function() {
@@ -203,7 +208,6 @@ Level_1.prototype = {
 
         if(ZKey.isDown){
             this.player.fire();
-
         }
 
         if(XKey.isDown && this.player.isAlive && (this.player.body.blocked.down || onPlatform )) {
@@ -213,7 +217,7 @@ Level_1.prototype = {
 
             this.player.body.velocity.y = this.player.jumpHeight;
         }
-
+        
         if(LeftKey.isDown && this.player.isAlive) {
             // player move left
 
@@ -232,7 +236,7 @@ Level_1.prototype = {
             // reset velocity
             this.player.body.velocity.x = 0;
         
-        }else{
+        } else{
             this.player.body.velocity.x = 0;
         }
 
@@ -268,51 +272,7 @@ Level_1.prototype = {
         return;
     },
 
-    /**
-     *  pauseGame
-     *      Pauses the game when ever the 
-     *      ESC key is pressed. Pressing
-     *      the key again unpause the game.
-     */
-    pauseGame: function(){
-        // NEED TO SHOW A PAUSE MENU WHERE YOU CAN GO BACK TO THE MAIN MAIN
-        if(game.paused === true){
-            game.paused = false;                            // unpause game
-            game.world.remove(PauseText);
-            game.world.remove(menuText);
-            game.world.remove(menubutton);
-
-        } else {
-            game.paused = true;                             // pause game
-            PauseText = game.add.text(game.camera.x + gameW/2, 20, 'Paused', { font: '30px Arial', fill: '#fff' });
-            PauseText.anchor.setTo(0.5, 0.5);
-
-            menubutton = game.add.sprite(game.camera.x + gameW/2, gameH/2, 'menu');
-            menubutton.anchor.setTo(0.5, 0.5);
-            
-            menuText = game.add.text(game.camera.x + gameW/2, gameH/2, 'Level Select', {font: '24px Arial', fill: 'white'});
-            menuText.anchor.setTo(0.5, 0.5);
-
-        }
-    },
-
-    levelSelect: function(event){
-
-        if(game.paused === true){
-            var mouseX = event.x + 65;          // add weird offset
-            var mouseY = event.y + 24;
-
-            if( mouseX + game.camera.x >  menubutton.x && mouseX + game.camera.x < menubutton.x + 150
-                && mouseY + game.camera.y >  menubutton.y - 60 && mouseY + game.camera.y < menubutton.y + 60 ){
-                // CALL STATE SWITCH
-                game.paused = false;
-                game.world.width = gameW;                       // Reset game world cords
-                game.world.height = gameH;                      // because the camera messes with it
-                game.state.start('levelSelect_state');
-                
-            }
-        }
-    },
+    
 
     spawnLifeBar: function(){
             // create health;

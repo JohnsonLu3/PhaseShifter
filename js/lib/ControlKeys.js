@@ -9,6 +9,12 @@ var ControlKeys = {
     'jumpKey':          game.input.keyboard.addKey(Phaser.Keyboard.X),
     'shootKey':         game.input.keyboard.addKey(Phaser.Keyboard.Z),
     'pauseKey':         game.input.keyboard.addKey(Phaser.Keyboard.ESC),
+    
+    // Cheat keys
+    'oneKey':           game.input.keyboard.addKey(Phaser.Keyboard.ONE),
+    'twoKey':           game.input.keyboard.addKey(Phaser.Keyboard.TWO),
+    'threeKey':         game.input.keyboard.addKey(Phaser.Keyboard.THREE),
+    'invincibilityKey': game.input.keyboard.addKey(Phaser.Keyboard.I),
 
     changeKey: function(keyToChange, newKeyCode) {
         this[keyToChange] = game.input.keyboard.addKey(newKeyCode);
