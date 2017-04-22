@@ -16,19 +16,14 @@ var CustomSprite = function(game, x, y, asset, interval, state) {
     this.shiftState;
     // Remember the frame when you last shifted
     this.lastShift;
-    if (state === 1)
-    {
+    if (state === 1) {
         //Color is sprite specific, switching between frames.
-
-        //this.tint = PINK;
-        //this.tint = NO_COLOR;
         this.shiftState = true;
     }
-    else
-    {
-        //this.tint = BLUE;
+    else {
         this.shiftState = false;
     }
+    
     //Display sprite if possible
     game.add.existing(this);
 }
