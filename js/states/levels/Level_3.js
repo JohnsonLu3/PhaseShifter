@@ -358,7 +358,7 @@ Level_3.prototype = {
  */
     recieveDamageP: function (player, bullet)
     {
-        if (player.shiftState === bullet.phase) {
+        if (player.shiftState === bullet.phase && player.invulnerable === false) {
             bullet.kill()
             player.health--;
             if (healthBar[player.health] != null)
@@ -371,7 +371,7 @@ Level_3.prototype = {
 
     takeDamage: function(player)
     {
-        if (iFrames == 0){
+        if (iFrames == 0 && player.invulnerable === false){
             player.health--;
             if (healthBar[player.health] != null) {
                 healthBar[player.health].kill();
