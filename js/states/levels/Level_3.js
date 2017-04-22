@@ -195,12 +195,16 @@ Level_3.prototype = {
      * This sets all the key mappings
      */
     setControls: function() {
-        ShiftKey = ControlKeys.phaseShiftKey.onDown.add(this.flipShiftFlag, this);  // shift ability
-        ZKey     = ControlKeys.shootKey;                                            // Shoot Button
-        XKey     = ControlKeys.jumpKey                                              // Jump  Button
-        LeftKey  = ControlKeys.leftKey;                                             // Walk  Left
-        RightKey = ControlKeys.rightKey;                                            // Walk  Right
-        EscKey   = ControlKeys.pauseKey.onDown.add(GameUtils.pauseGame, this);           // Pause menu
+        ShiftKey  = ControlKeys.phaseShiftKey.onDown.add(this.flipShiftFlag, this);  // shift ability
+        shootKey  = ControlKeys.shootKey;                                            // Shoot Button
+        shootKey2 = ControlKeys.shootKey2;                                            // Shoot Button
+        jumpKey   = ControlKeys.jumpKey;                                              // Jump  Button
+        jumpKey2  = ControlKeys.jumpKey2;                                              // Jump  Button
+        LeftKey   = ControlKeys.leftKey;                                             // Walk  Left
+        RightKey  = ControlKeys.rightKey;                                            // Walk  Right
+        LeftKey2  = ControlKeys.leftKey2;                                            // Walk  Left
+        RightKey2 = ControlKeys.rightKey2;                                           // Walk  Right
+        EscKey    = ControlKeys.pauseKey.onDown.add(GameUtils.pauseGame, this);      // Pause menu
 
         // Cheat Keys
         Cheat1Key = ControlKeys.oneKey;
@@ -222,11 +226,11 @@ Level_3.prototype = {
      */
     playerMovement: function() {
 
-        if(ZKey.isDown){
+        if(shootKey.isDown || shootKey2.isDown){
             this.player.fire();
         }
 
-        if(XKey.isDown && this.player.isAlive ) {
+        if((jumpKey.isDown || jumpKey2.isDown) && this.player.isAlive && (this.player.body.blocked.down || onPlatform ) ) {
             // player jump
             
             this.player.jumping = true;
@@ -234,14 +238,14 @@ Level_3.prototype = {
             this.player.body.velocity.y = this.player.jumpHeight;
         }
 
-        if(LeftKey.isDown && this.player.isAlive) {
+        if((LeftKey.isDown || LeftKey2.isDown ) && this.player.isAlive) {
             // player move left
 
             this.updateFacing(false);
 
             this.player.body.velocity.x = -this.player.walkingSpeed;
 
-        } else if(RightKey.isDown && this.player.isAlive) {
+        } else if((RightKey.isDown || RightKey2.isDown )  && this.player.isAlive) {
             // player move right
 
             this.updateFacing(true);
@@ -366,9 +370,7 @@ Level_3.prototype = {
     },
 
     spikeCollide : function(){
-        console.log("Spike Touch");
         //game.physics.arcade.collide(this.player, this.hazard);
-        
         // Player touchs a spike, Take a lot of damage
         if(this.player.health > 0){
            for(var i = 0; i < 3; i++){
