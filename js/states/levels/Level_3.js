@@ -80,7 +80,7 @@ Level_3.prototype = {
         GameUtils.buildKeys();
 
         // make an exitDoor
-        exitDoor = game.add.sprite(2500, 323, 'exitDoor');
+        exitDoor = game.add.sprite(32, (31 * 32), 'exitDoor');
 
         // Create player
         this.player = new Player(game, 32, this.h - (16 * 32), 'player', 0, 5);
@@ -353,6 +353,14 @@ Level_3.prototype = {
         this.spawnPlatforms(154, 40, 0, 0 );
         this.spawnPlatforms(158, 36, 0, 1 );
         this.spawnPlatforms(154, 32, 0, 0 );
+
+        // spike pit
+        this.spawnPlatforms(77, 30, 0, 1 );
+        this.spawnPlatforms(72, 27, 0, 0 );
+        this.spawnPlatforms(62, 27, 0, 1 );
+        this.spawnPlatforms(52, 27, 0, 0 );
+        this.spawnPlatforms(42, 27, 0, 1 );
+        this.spawnPlatforms(32, 27, 0, 0 );
     },
     
 /**
