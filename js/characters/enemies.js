@@ -5,6 +5,7 @@ var Enemy = function(game,x,y,asset,interval,hp, player)
     this.anchor.setTo(.5,.5);
     this.health = hp;
     this.player = player;
+    game.physics.arcade.enable(this);
     this.cooldownAmt = 20;
     this.cooldown = 0;
 }

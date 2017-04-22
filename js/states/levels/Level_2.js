@@ -22,6 +22,8 @@ var menuText;
 var PauseText;
 var onPlatform = false;
 var enemyGroup;
+//Group consisting of all drones.
+var droneGroup;
 
 var Level_2 = function() {};
 Level_2.prototype = {
@@ -39,6 +41,7 @@ Level_2.prototype = {
         game.load.image('exitDoor' , 'assets/exitDoor.png', 64, 64);
         game.load.image('hazardTiles', 'assets/levels/hazards.png');
         game.load.spritesheet('turret', "assets/turret.png", 64,64);
+        game.load.spritesheet("drone", "assets/Drone.png", 32, 32);
 
         game.load.spritesheet('heart', "assets/battery_32x32.png", 32, 32);
         game.load.spritesheet('platform', "assets/platform.png", 64, 32);
@@ -48,6 +51,7 @@ Level_2.prototype = {
         game.load.script('functs', 'js/lib/functions.js');
         game.load.script('playerSprite_script', 'js/characters/playerSprite.js');
         game.load.script('platforms', 'js/characters/platforms.js');
+        game.load.script('drone', 'js/characters/drone.js');
     },
     create: function() {
         // Change background color
@@ -73,6 +77,7 @@ Level_2.prototype = {
 
         //Add group above the tile layer.
         enemyGroup = game.add.group();
+        droneGroup = game.add.group();
         // Start physics
         game.physics.startSystem(Phaser.Physics.ARCADE);
         
@@ -98,6 +103,8 @@ Level_2.prototype = {
         this.addTurret(2000,1455,this.player);
         this.addTurret(2200,1455,this.player);
         this.addTurret(2400,1455,this.player);
+
+        this.addDrone(300, 1000, this.player);
 
         this.spawnLifeBar();
 
@@ -130,6 +137,10 @@ Level_2.prototype = {
         //Resolve interactions between playerBullets and enemies and between enemyBullets and players.
         game.physics.arcade.overlap(enemyGroup, this.player.playerBullets, recieveDamage, null, this);
         game.physics.arcade.overlap(this.player, game.enemyBullets, this.recieveDamageP, null, this);
+        game.physics.arcade.overlap(this.player,droneGroup, function(player,drone)
+        {
+            drone.kill();
+        }, null, this);
         //Collide player with phase platforms if they are in the same phase.
         for (var i = 0; i < phasePlatforms.length; i++)
         {
@@ -368,7 +379,21 @@ Level_2.prototype = {
         phaseObjects.push(newTurret);
         enemyGroup.add(newTurret);
 
+    },
+    /**
+     * This function adds a drone to the world.
+     * @param {*} x The x position of the drone.
+     * @param {*} y The y position of the drone.
+     * @parmam {*} player A reference to the player character.
+     */
+    addDrone : function(x,y,player)
+    {
+        var newDrone = new Drone(game, x, y, player);
+        phaseObjects.push(newDrone);
+        droneGroup.add(newDrone)
     }
+    
+
 };
 
 
