@@ -198,9 +198,9 @@ Level_1.prototype = {
     setControls: function() {
         ShiftKey  = ControlKeys.phaseShiftKey.onDown.add(this.flipShiftFlag, this);  // shift ability
         shootKey  = ControlKeys.shootKey;                                            // Shoot Button
-        shootKey2 = ControlKeys.shootKey2;                                            // Shoot Button
-        jumpKey   = ControlKeys.jumpKey;                                              // Jump  Button
-        jumpKey2  = ControlKeys.jumpKey2;                                              // Jump  Button
+        shootKey2 = ControlKeys.shootKey2;                                           // Shoot Button
+        jumpKey   = ControlKeys.jumpKey;                                             // Jump  Button
+        jumpKey2  = ControlKeys.jumpKey2;                                            // Jump  Button
         LeftKey   = ControlKeys.leftKey;                                             // Walk  Left
         RightKey  = ControlKeys.rightKey;                                            // Walk  Right
         LeftKey2  = ControlKeys.leftKey2;                                            // Walk  Left
