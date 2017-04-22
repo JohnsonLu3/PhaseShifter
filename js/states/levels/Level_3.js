@@ -4,7 +4,7 @@
  */
 
  var platform;
- //phaseObjects, phasePlatforms
+//phaseObjects, phasePlatforms
 // A global timer, this is used in order to keep track of things such as intervals for enemy phase changes.
 var globalTimer = 0;
 // Collection of all phase objects in the game, used for calling update each frame.
@@ -358,7 +358,7 @@ Level_3.prototype = {
  */
     recieveDamageP: function (player, bullet)
     {
-        if (player.shiftState === bullet.phase) {
+        if (player.shiftState === bullet.phase && player.invulnerable === false) {
             bullet.kill()
             player.health--;
             if (healthBar[player.health] != null)

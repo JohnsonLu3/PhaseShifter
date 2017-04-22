@@ -4,6 +4,7 @@ var Enemy = function(game,x,y,asset,interval,hp, player)
     CustomSprite.call(this, game, x, y,asset,interval);
     this.anchor.setTo(.5,.5);
     this.health = hp;
+    this.alive  = true;
     this.player = player;
     game.physics.arcade.enable(this);
     this.cooldownAmt = 20;
@@ -30,6 +31,7 @@ Enemy.prototype.seePlayer = function()
 //Generic update loop, see if it will change phase, and attempt to attack the player.
 Enemy.prototype.update = function()
 {
+  if(this.health > 0){
     this.changePhase();
     if (this.seePlayer()){
         if (this.player.x > this.x)
@@ -57,6 +59,8 @@ Enemy.prototype.update = function()
         if (this.cooldown > 0)
             this.cooldown--;
     }
+  }
+    
 }
 
 
@@ -74,6 +78,7 @@ Enemy.prototype.playAnimation = function(name)
     if (name === "die")
     {
         this.animations.play("die");
+         this.animations.currentAnim.onComplete.add(function () {this.alive = false;});
     }
     else
     {

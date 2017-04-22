@@ -10,9 +10,15 @@ function recieveDamage(turret, bullet)
 {
     if (turret.shiftState === bullet.phase)
     {
-        bullet.kill()
-        turret.damage(1);
+        bullet.kill();
+        turret.health--;
+        if(turret.health == 0){
+            turret.animations.play("die");
+            turret.animations.currentAnim.onComplete.add(function(){turret.kill()});
+        }
+
     }
+    
 }
 
 /**
