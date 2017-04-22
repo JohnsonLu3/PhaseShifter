@@ -5,12 +5,14 @@
  */
 var LevelSelectState = function() {};
 LevelSelectState.prototype = {
-    init: function() {},
     preload: function() {
         // Load level files
         this.loadLevelScript(1);
         this.loadLevelScript(2);
         this.loadLevelScript(3);
+        
+        // Load menu button
+        game.load.image('menu', 'assets/buttons/smallButton_150x60.png', 150, 60);
     },
 
     create: function() {
@@ -25,6 +27,9 @@ LevelSelectState.prototype = {
         this.addLevelStates();
         this.makeButtons();
         this.addButtons();
+
+        // Create the pause menu so that it can be shown in game
+        GameUtils.makePauseMenu();
     },
     
     // Manually make buttons for now

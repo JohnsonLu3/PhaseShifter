@@ -14,37 +14,38 @@ var phasePlatform = new Array();
 var exitDoor;
 
 var healthBar = [];
-var menuButton;                             // for the pause menu
-var menuText;
-var PauseText;
 var onPlatform = false;
 var enemyGroup;
 
 var Level_1 = function() {};
 Level_1.prototype = {
+    // Load all images for the level
+    loadImages: function() {
+        game.load.tilemap('mapdata', 'assets/levels/level0.json', null, Phaser.Tilemap.TILED_JSON);
+        game.load.image('tiles', 'assets/levels/tilesheet.png');
+        game.load.image('exitDoor' , 'assets/exitDoor.png', 64, 64);
+        game.load.spritesheet('player', "assets/phaser.png", 64,64);
+        game.load.spritesheet('bullet', "assets/bullets.png", 16,16);
+        game.load.spritesheet('turret', "assets/turret.png", 64,64);
+        game.load.spritesheet('heart', "assets/battery_32x32.png", 32, 32);
+        game.load.spritesheet('platform', "assets/platform.png", 64, 32);
+    },
+
+    // Load all the scripts
+    loadScripts: function() {
+        game.load.script('customSprite_script', 'js/characters/customSprite.js');
+        game.load.script('functs', 'js/lib/functions.js');
+        game.load.script('playerSprite_script', 'js/characters/playerSprite.js');
+        game.load.script('platforms', 'js/characters/platforms.js');
+    },
+
     init: function() {
         this.w = 2560;                      // size of level W and H 
         this.h = 640;                   
     },
     preload: function() {
-        // Load images
-        game.load.tilemap('mapdata', 'assets/levels/level0.json', null, Phaser.Tilemap.TILED_JSON);
-        game.load.image('tiles', 'assets/levels/tilesheet.png');
-        game.load.image('menu', 'assets/buttons/smallButton_150x60.png', 150, 60);
-        game.load.spritesheet('player', "assets/phaser.png", 64,64);
-        game.load.spritesheet('bullet', "assets/bullets.png", 16,16);
-        game.load.image('exitDoor' , 'assets/exitDoor.png', 64, 64);
-
-        game.load.spritesheet('turret', "assets/turret.png", 64,64);
-
-        game.load.spritesheet('heart', "assets/battery_32x32.png", 32, 32);
-        game.load.spritesheet('platform', "assets/platform.png", 64, 32);
-
-        // Load necessary JS files
-        game.load.script('customSprite_script', 'js/characters/customSprite.js');
-        game.load.script('functs', 'js/lib/functions.js');
-        game.load.script('playerSprite_script', 'js/characters/playerSprite.js');
-        game.load.script('platforms', 'js/characters/platforms.js');
+        this.loadImages();
+        this.loadScripts();
     },
     create: function() {
         // Create a group for all enemy bullets, this will greatly simplify the collision detections
@@ -68,9 +69,7 @@ Level_1.prototype = {
         game.physics.startSystem(Phaser.Physics.ARCADE);
         
         // Set up cursors
-        //var cursors = game.input.keyboard.createCursorKeys();
         this.setControls();
-        //GameUtils.buildKeys();
 
         // make an exitDoor
         exitDoor = game.add.sprite(2500, 323, 'exitDoor');
@@ -185,10 +184,6 @@ Level_1.prototype = {
         else if (Cheat3Key.isDown) {
             game.state.start('level_3_state');
         }
-        // Toggle invincibility
-        else if (CheatIKey.isDown) {
-            this.player.invulnerable = !this.player.invulnerable;
-        }
 
     },
 
@@ -207,7 +202,7 @@ Level_1.prototype = {
         Cheat1Key = ControlKeys.oneKey;
         Cheat2Key = ControlKeys.twoKey;
         Cheat3Key = ControlKeys.threeKey;
-        CheatIKey = ControlKeys.invincibilityKey;
+        CheatIKey = ControlKeys.invincibilityKey.onDown.add(function() {this.player.invulnerable = !this.player.invulnerable;}, this);
     },
 
     flipShiftFlag: function() {

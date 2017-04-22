@@ -13,11 +13,7 @@ var phaseObjects = new Array();
 // Create a game group which will contain all special phase platforms.
 var phasePlatform = new Array();
 var exitDoor;
-
 var healthBar = [];
-var menuButton;                             // for the pause menu
-var menuText;
-var PauseText;
 var onPlatform = false;
 var enemyGroup;
 
@@ -32,7 +28,6 @@ Level_3.prototype = {
         game.load.tilemap('mapdata', 'assets/levels/SpikesAndFalls.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.image('collisionTiles', 'assets/levels/tilesheet2.png');
         game.load.image('hazardTiles', 'assets/levels/hazards.png');
-        game.load.image('menu', 'assets/buttons/smallButton_150x60.png', 150, 60);
         game.load.spritesheet('player', "assets/phaser.png", 64,64);
         game.load.spritesheet('bullet', "assets/bullets.png", 16,16);
         game.load.image('exitDoor' , 'assets/exitDoor.png', 64, 64);
@@ -75,7 +70,6 @@ Level_3.prototype = {
         game.physics.startSystem(Phaser.Physics.ARCADE);
         
         // Set up cursors
-        var cursors = game.input.keyboard.createCursorKeys();
         this.setControls();
 
         // make an exitDoor
