@@ -3,7 +3,6 @@
  * This is called by the levelSelectState when the user clicks on the first level icon.
  */
 
- var turretTEST;
  var platform;
  //phaseObjects, phasePlatforms
 // A global timer, this is used in order to keep track of things such as intervals for enemy phase changes.
@@ -45,8 +44,6 @@ Level_3.prototype = {
         game.load.script('platforms', 'js/characters/platforms.js');
     },
     create: function() {
-        // Change background color
-        game.stage.backgroundColor = '#787878';
         // Create a group for all enemy bullets, this will greatly simplify the collision detections
         game.enemyBullets = game.add.group();
         game.enemyBullets.enableBody = true;
@@ -66,10 +63,6 @@ Level_3.prototype = {
         this.map.setCollisionBetween(0, 400, true, this.layer);
         this.map.setCollisionBetween(0, 400, true, this.hazard);
 
-        this.map.setTileIndexCallback(226, this.spikeCollide, this, this.hazard);
-        this.map.setTileIndexCallback(227, this.spikeCollide, this, this.hazard);
-        this.map.setTileIndexCallback(228, this.spikeCollide, this, this.hazard);
-        this.map.setTileIndexCallback(229, this.spikeCollide, this, this.hazard);
 
         //Add group above the tile layer.
         enemyGroup = game.add.group();
@@ -89,33 +82,40 @@ Level_3.prototype = {
         game.camera.follow(this.player);
 
 
-        this.addTurret(2280,1938,this.player);
+        this.addTurret(2280, 1938, this.player);
         this.addTurret(3080, 1906, this.player);
-        this.addTurret(4293, 2002,this.player);
+        this.addTurret(4293, 2002, this.player);
+        this.addTurret(4500, 2002, this.player);
+        this.addTurret(4600, 2002, this.player);
         this.addTurret(4525, 1010, this.player);
-        this.addTurret(3862, 1010,this.player);
+        this.addTurret(3862, 1010, this.player);
         this.addTurret(3170, 1010, this.player);
 
         this.spawnLifeBar();
+        
+        if (iFrames > 0)
+            iFrames--;
 
         // Spawn Platforms that can shift phases
         this.createLevelPlatforms();
 
         // Add lisitener for menubutton press
         game.input.onDown.add(GameUtils.pauseMenuHandler, self);
-
-        // Change the music
+        
+        // Stop the music!
         music.stop();
-        music = game.add.audio('level1');
-        music.loop = true;
-        music.play();
-
+        if(musicFlag === true) {
+            // Change music
+            music = game.add.audio('level1');
+            music.loop = true;
+            music.play();
+        }
     },
 
     update: function() {
         globalTimer++;
         game.physics.arcade.collide(this.player, this.layer);
-        game.physics.arcade.collide(this.player, this.hazard);
+        game.physics.arcade.collide(this.player, this.hazard, this.takeDamage, null, this);
 
         this.checkWinCondition();
         this.checkCheats();
@@ -169,7 +169,9 @@ Level_3.prototype = {
         }
 
         onPlatform = false;
-        
+        if (iFrames > 0)
+            iFrames--;
+
     },
 
     render: function() {
@@ -366,6 +368,17 @@ Level_3.prototype = {
 
         }
     },
+
+    takeDamage: function(player)
+    {
+        if (iFrames == 0){
+            player.health--;
+            if (healthBar[player.health] != null) {
+                healthBar[player.health].kill();
+            }
+            iFrames = 30;   
+        }
+    },
     /**
      * This function adds a turret to the current game world.
      * @param {*} x The x position of the turret to be added.
@@ -380,21 +393,6 @@ Level_3.prototype = {
 
     },
 
-    spikeCollide : function(){
-        //game.physics.arcade.collide(this.player, this.hazard);
-        // Player touchs a spike, Take a lot of damage
-        if(this.player.health > 0){
-           for(var i = 0; i < 3; i++){
-            this.player.health--;
-            if (healthBar[this.player.health] != null){
-                healthBar[this.player.health].kill();
-            } 
-        }
-            if(this.player.health < 0){
-                this.player.health = 0;
-            }
-        }
-    }
 };
 
 

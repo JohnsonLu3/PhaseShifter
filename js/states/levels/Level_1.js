@@ -100,11 +100,14 @@ Level_1.prototype = {
         // Add lisitener for menubutton press
         game.input.onDown.add(GameUtils.pauseMenuHandler, self);
 
-        // Change music
+        // Stop the music!
         music.stop();
-        music = game.add.audio('level1');
-        music.loop = true;
-        music.play();
+        if(musicFlag === true) {
+            // Change music
+            music = game.add.audio('level1');
+            music.loop = true;
+            music.play();
+        }
     },
 
     update: function() {
@@ -188,6 +191,9 @@ Level_1.prototype = {
         }
         else if (Cheat3Key.isDown) {
             game.state.start('level_3_state');
+        }        // Toggle invincibility
+        else if (CheatIKey.isDown) {
+            this.player.invulnerable = !this.player.invulnerable;
         }
 
     },
@@ -198,9 +204,9 @@ Level_1.prototype = {
     setControls: function() {
         ShiftKey  = ControlKeys.phaseShiftKey.onDown.add(this.flipShiftFlag, this);  // shift ability
         shootKey  = ControlKeys.shootKey;                                            // Shoot Button
-        shootKey2 = ControlKeys.shootKey2;                                            // Shoot Button
-        jumpKey   = ControlKeys.jumpKey;                                              // Jump  Button
-        jumpKey2  = ControlKeys.jumpKey2;                                              // Jump  Button
+        shootKey2 = ControlKeys.shootKey2;                                           // Shoot Button
+        jumpKey   = ControlKeys.jumpKey;                                             // Jump  Button
+        jumpKey2  = ControlKeys.jumpKey2;                                            // Jump  Button
         LeftKey   = ControlKeys.leftKey;                                             // Walk  Left
         RightKey  = ControlKeys.rightKey;                                            // Walk  Right
         LeftKey2  = ControlKeys.leftKey2;                                            // Walk  Left

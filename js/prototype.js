@@ -19,6 +19,10 @@ var phasePlatforms = new Array();
 // This is the music object. We will need to change this variable when we switch levels.
 var music;
 
+// These are the flags for the music and sounds
+var musicFlag;
+var soundFlag;
+
 // Declare the Main object
 var Main = function() {};
 

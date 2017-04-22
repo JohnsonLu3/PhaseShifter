@@ -45,16 +45,6 @@ var GameUtils = {
         menuText.anchor.setTo(0.5, 0.5);
     },
 
-    getSetting: function(setting) {
-        return "YES";
-    },
-
-    toggleSetting: function(setting) {
-        if(setting == "YES")
-            return "NO";
-        else
-            return "YES";
-    },
     /**
      *  pauseGame
      *      Pauses the game when ever the 
@@ -98,9 +88,18 @@ var GameUtils = {
                 && mouseY + game.camera.y >  menubutton.y - 60 && mouseY + game.camera.y < menubutton.y + 60 ){
                 // CALL STATE SWITCH
                 game.paused = false;
+                // Revert music back to theme
+                music.stop();
+                if(musicFlag === true) {
+                    music = game.add.audio("theme");
+                    music.loop = true;
+                    music.play();
+                }
+                
                 game.world.width = gameW;                       // Reset game world cords
                 game.world.height = gameH;                      // because the camera messes with it
                 game.state.start('levelSelect_state');
+                
             }
         }
     }

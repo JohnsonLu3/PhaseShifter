@@ -1,11 +1,10 @@
 /**
  * The game state for level 2.
- * This is called by the levelSelectState when the user clicks on the first level icon.
+ * This is called by the levelSelectState when the user clicks on the second level icon.
  */
 
- var turretTEST;
- var platform;
- //phaseObjects, phasePlatforms
+var platform;
+//phaseObjects, phasePlatforms
 // A global timer, this is used in order to keep track of things such as intervals for enemy phase changes.
 var globalTimer = 0;
 // Collection of all phase objects in the game, used for calling update each frame.
@@ -17,9 +16,7 @@ var exitDoor;
 var iFrames = 0;
 
 var healthBar = [];
-var menuButton;                             // for the pause menu
-var menuText;
-var PauseText;
+
 var onPlatform = false;
 var enemyGroup;
 //Group consisting of all drones.
@@ -35,7 +32,6 @@ Level_2.prototype = {
         // Load images
         game.load.tilemap('mapdata', 'assets/levels/level2.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.image('collisionTiles', 'assets/tilesheet2.png');
-        game.load.image('menu', 'assets/buttons/smallButton_150x60.png', 150, 60);
         game.load.spritesheet('player', "assets/phaser.png", 64,64);
         game.load.spritesheet('bullet', "assets/bullets.png", 16,16);
         game.load.image('exitDoor' , 'assets/exitDoor.png', 64, 64);
@@ -54,8 +50,6 @@ Level_2.prototype = {
         game.load.script('drone', 'js/characters/drone.js');
     },
     create: function() {
-        // Change background color
-        game.stage.backgroundColor = '#787878';
         // Create a group for all enemy bullets, this will greatly simplify the collision detections
         game.enemyBullets = game.add.group();
         game.enemyBullets.enableBody = true;
@@ -82,7 +76,6 @@ Level_2.prototype = {
         game.physics.startSystem(Phaser.Physics.ARCADE);
         
         // Set up cursors
-        var cursors = game.input.keyboard.createCursorKeys();
         this.setControls();
 
         // make an exitDoor
@@ -113,6 +106,15 @@ Level_2.prototype = {
 
         // Add lisitener for menubutton press
         game.input.onDown.add(GameUtils.pauseMenuHandler, self);
+
+        // Stop the music!
+        music.stop();
+        if(musicFlag === true) {
+            // Change music
+            music = game.add.audio('level1');
+            music.loop = true;
+            music.play();
+        }
 
     },
 
@@ -212,16 +214,17 @@ Level_2.prototype = {
 
     },
 
-    /**
-     * This sets all the key mappings
-     */
-    setControls: function() {
-        ShiftKey = ControlKeys.phaseShiftKey.onDown.add(this.flipShiftFlag, this);  // shift ability
-        ZKey     = ControlKeys.shootKey;                                            // Shoot Button
-        XKey     = ControlKeys.jumpKey                                              // Jump  Button
-        LeftKey  = ControlKeys.leftKey;                                             // Walk  Left
-        RightKey = ControlKeys.rightKey;                                            // Walk  Right
-        EscKey   = ControlKeys.pauseKey.onDown.add(GameUtils.pauseGame, this);           // Pause menu
+   setControls: function() {
+        ShiftKey  = ControlKeys.phaseShiftKey.onDown.add(this.flipShiftFlag, this);  // shift ability
+        shootKey  = ControlKeys.shootKey;                                            // Shoot Button
+        shootKey2 = ControlKeys.shootKey2;                                            // Shoot Button
+        jumpKey   = ControlKeys.jumpKey;                                              // Jump  Button
+        jumpKey2  = ControlKeys.jumpKey2;                                              // Jump  Button
+        LeftKey   = ControlKeys.leftKey;                                             // Walk  Left
+        RightKey  = ControlKeys.rightKey;                                            // Walk  Right
+        LeftKey2  = ControlKeys.leftKey2;                                            // Walk  Left
+        RightKey2 = ControlKeys.rightKey2;                                           // Walk  Right
+        EscKey    = ControlKeys.pauseKey.onDown.add(GameUtils.pauseGame, this);      // Pause menu
 
         // Cheat Keys
         Cheat1Key = ControlKeys.oneKey;
@@ -242,11 +245,12 @@ Level_2.prototype = {
      *      the correct animation / facing / shift state
      */
     playerMovement: function() {
-        if(ZKey.isDown){
+
+        if(shootKey.isDown || shootKey2.isDown){
             this.player.fire();
         }
 
-        if(XKey.isDown && this.player.isAlive && (this.player.body.blocked.down || onPlatform )) {
+        if((jumpKey.isDown || jumpKey2.isDown) && this.player.isAlive && (this.player.body.blocked.down || onPlatform ) ) {
             // player jump
             
             this.player.jumping = true;
@@ -254,15 +258,16 @@ Level_2.prototype = {
             this.player.body.velocity.y = this.player.jumpHeight;
         }
 
-        if(LeftKey.isDown && this.player.isAlive) {
+        if((LeftKey.isDown || LeftKey2.isDown ) && this.player.isAlive) {
             // player move left
 
             this.updateFacing(false);
 
             this.player.body.velocity.x = -this.player.walkingSpeed;
 
-        } else if(RightKey.isDown && this.player.isAlive) {
+        } else if((RightKey.isDown || RightKey2.isDown )  && this.player.isAlive) {
             // player move right
+
             this.updateFacing(true);
 
             this.player.body.velocity.x = this.player.walkingSpeed;
@@ -289,6 +294,7 @@ Level_2.prototype = {
             this.player.playAnimation("idle");
         }
     },
+
 
 
     /**
@@ -350,10 +356,11 @@ Level_2.prototype = {
  */
     recieveDamageP: function (player, bullet)
     {
-        if (player.shiftState === bullet.phase) {
-            bullet.kill()
-            this.takeDamage(player);
-
+        if(player.invulnerable === false) {
+            if (player.shiftState === bullet.phase) {
+                bullet.kill()
+                this.takeDamage(player);
+            }
         }
     },
 
