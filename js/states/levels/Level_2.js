@@ -166,8 +166,21 @@ Level_2.prototype = {
         }
 
         onPlatform = false;
-        if (iFrames > 0)
+
+        if (iFrames > 0){
             iFrames--;
+
+            if(iFrames % 5 === 0){
+                    this.player.visible = 0;
+                }else{
+                    if(iFrames % 2 === 0){
+                        this.player.visible = 1;
+                    }
+                }
+            }else{
+                this.player.visible = 1;
+            }
+
         
     },
 
