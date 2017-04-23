@@ -93,8 +93,15 @@ Level_3.prototype = {
 
         this.spawnLifeBar();
         
-        if (iFrames > 0)
+        if (iFrames > 0){
             iFrames--;
+            
+            if(iFrames % 2 === 0){
+                    this.player.visible = 0;
+                }else{
+                    //this.player.visible = 1;
+                }
+            }
 
         // Spawn Platforms that can shift phases
         this.createLevelPlatforms();
@@ -169,8 +176,20 @@ Level_3.prototype = {
         }
 
         onPlatform = false;
-        if (iFrames > 0)
+
+        if (iFrames > 0){
             iFrames--;
+
+            if(iFrames % 5 === 0){
+                    this.player.visible = 0;
+                }else{
+                    if(iFrames % 2 === 0){
+                        this.player.visible = 1;
+                    }
+                }
+            }else{
+                this.player.visible = 1;
+            }
 
     },
 
