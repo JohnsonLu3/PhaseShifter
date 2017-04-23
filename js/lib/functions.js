@@ -22,6 +22,23 @@ function recieveDamage(turret, bullet)
 }
 
 /**
+ * This function is called when a bullet is in contact with a drone.
+ * @param {*} drone The drone who collided with the bullet
+ * @param {*} bullet The bullet which was in contact with the drone.
+ */
+
+
+function recieveDamageD(drone, bullet)
+{
+    if (drone.shiftState === bullet.phase)
+    {
+        bullet.kill();
+        drone.explode();
+    }
+    
+}
+
+/**
  * This function is called when an enemy bullet is in contact with a player.
  * @param {*} turret The player, which was just in contact with the bullet.
  * @param {*} bullet The bullet, which is in contact with the player.
