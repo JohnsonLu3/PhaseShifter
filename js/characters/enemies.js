@@ -6,6 +6,7 @@ var Enemy = function(game,x,y,asset,interval,hp, player)
     this.health = hp;
     this.alive  = true;
     this.player = player;
+    game.physics.arcade.enable(this);
     this.cooldownAmt = 20;
     this.cooldown = 0;
 }

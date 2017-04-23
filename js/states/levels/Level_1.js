@@ -19,6 +19,7 @@ var enemyGroup;
 
 // This is for walking
 var walkSound;
+var shiftSound;
 
 var Level_1 = function() {};
 Level_1.prototype = {
@@ -105,6 +106,8 @@ Level_1.prototype = {
 
         // Foot steps
         walkSound = game.add.audio('phaser_walking');
+        // Phase Shift sound
+        shiftSound = game.add.audio('shift');
 
         // Stop the music!
         music.stop();
@@ -228,6 +231,7 @@ Level_1.prototype = {
 
     flipShiftFlag: function() {
         this.player.changePhase();
+        shiftSound.play();
     },
     
 
