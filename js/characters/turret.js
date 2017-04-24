@@ -60,6 +60,8 @@ Turret.prototype.attack = function () {
         }
         //Move the bullet towards the player
         game.physics.arcade.moveToXY(bullet, this.player.x + 0.5 * this.player.width, this.player.y - 5, this.bulletSpeed);
+
+        EnemyUtils.playTurretAttackSound();
     }
 
 }
