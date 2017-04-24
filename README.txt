@@ -1,28 +1,9 @@
-This is the folder structure of the Phase Shifter project:
+BUGS
+- There is a weird bug that causes the game to freeze occasionally when pressing the 'I' key to toggle invincibility
+- On level 2, I've experienced some tunneling when falling from near the top of the level. I haven't seen this happen in level 1 or 3
+- The resizing of the sprite assets seems to have messed up the help screen
 
-../cse_380_group_project
-    /assets
-        /levels
-        /src
-    /js
-        /characters
-        /lib
-        /states
-            /levels
-
-/cse_380_group_project
-    The root folder
-/assets
-    The folder for all the assets the game needs (e.g. images, sounds, music, tilemaps, etc.)
-/js
-    The folder for all the JavaScript files
-/js/characters
-    The folder for all the sprite objects
-/js/lib
-    The folder for utility functions
-/js/states
-    The folder for all Phaser game states (e.g. menus, levels, status screens, etc.)
-/js/states/levels
-    The folder for game levels
-
-        
+IMPROVEMENTS
+- The sounds could be better. Will work on it if I have the time.
+- Needs more background music
+- Health bars or some other indication for enemies would be helpful
