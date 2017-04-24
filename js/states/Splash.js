@@ -27,7 +27,7 @@ SplashState.prototype = {
         game.load.audio('shift', 'assets/sfx/shift.mp3');
         game.load.audio('phaser_death', 'assets/sfx/phaser_death.mp3');
         game.load.audio('phaser_damage', 'assets/sfx/phaser_damage.mp3');
-        game.load.audio('phaser_attack', 'assets/sfx/phaser_attack.mp3');
+        game.load.audio('phaser_attack', 'assets/sfx/phaser_attack.ogg');
         game.load.audio('drone_explode', 'assets/sfx/drone_explode.mp3');
     },
 

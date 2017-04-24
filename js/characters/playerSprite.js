@@ -153,5 +153,6 @@ Player.prototype.fire = function(){
             bullet.body.velocity.x = -this.bulletSpeed;
         }
         this.cooldown = this.cooldownAmt;
+        PlayerUtils.playAttackSound();
     }
 };

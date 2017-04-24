@@ -40,8 +40,8 @@ var ControlKeys = {
         this.invincibilityKey.onDown.add(function() {GameUtils.handleInvulnerability(player)}, this);
         this.phaseShiftKey.onDown.add(function() {PlayerUtils.phaseShift(player)}, this);
         this.pauseKey.onDown.add(GameUtils.pauseGame, this);
-        this.shootKey.onDown.add(function() {player.fire(); PlayerUtils.playAttackSound();})
-        this.shootKey2.onDown.add(function() {player.fire(); PlayerUtils.playAttackSound();})
+        this.shootKey.onDown.add(function() {player.fire()});
+        this.shootKey2.onDown.add(function() {player.fire()});
 
         // Add listener for menubutton press
         game.input.onDown.add(GameUtils.pauseMenuHandler, self);
