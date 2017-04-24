@@ -169,7 +169,8 @@ Level_1.prototype = {
         if (this.player.overlap(exitDoor)){
             game.world.width = gameW;                       // Reset game world cords
             game.world.height = gameH;                      // because the camera messes with it
-            game.state.start('gameWin_state');
+            LevelTransitionState.setNextLevel(2);
+            game.state.start('levelTransition_state');
         }
     },
 

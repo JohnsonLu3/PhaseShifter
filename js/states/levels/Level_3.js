@@ -3,8 +3,8 @@
  * This is called by the levelSelectState when the user clicks on the first level icon.
  */
 
- var platform;
-//phaseObjects, phasePlatforms
+var platform;
+
 // A global timer, this is used in order to keep track of things such as intervals for enemy phase changes.
 var globalTimer = 0;
 // Collection of all phase objects in the game, used for calling update each frame.

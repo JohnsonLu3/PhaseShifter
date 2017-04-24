@@ -39,6 +39,7 @@ SplashState.prototype = {
         game.load.script('controls_script', 'js/states/Controls.js');
         game.load.script('settings_script', 'js/states/Settings.js');
         game.load.script('levelSelect_script', 'js/states/LevelSelect.js');
+        game.load.script('levelTransition_script', 'js/states/LevelTransition.js');
         game.load.script('gameWin_script', 'js/states/GameWin.js');
         game.load.script('gameLose_script', 'js/states/GameLose.js');
         game.load.script('help_script', 'js/states/Help.js');
@@ -48,6 +49,7 @@ SplashState.prototype = {
     addMenuStates: function() {
         game.state.add('mainMenu_state', MainMenuState);
         game.state.add('levelSelect_state', LevelSelectState);
+        game.state.add('levelTransition_state', LevelTransitionState);
         game.state.add('controls_state', ControlsState);
         game.state.add('settings_state', SettingsState);
         game.state.add('gameWin_state', GameWinState);
