@@ -53,7 +53,7 @@ var PlayerUtils = {
 
     playAttackSound: function() {
         if(soundFlag === true) {
-            this.attackSound.play();
+            this.attackSound.play('', 0, 0.7);
         }
     },
 
@@ -98,13 +98,12 @@ var PlayerUtils = {
      *      the correct animation / facing / shift state
      */
     handlePlayerMovement: function(player) {
-
+/*
         if(ControlKeys.shootKey.isDown || ControlKeys.shootKey2.isDown) {
-            //this.playAttackSound();
-            this.attackSound.play('', 0, 0.7);
+            this.playAttackSound();
             player.fire();
         }
-
+*/
         if((ControlKeys.jumpKey.isDown || ControlKeys.jumpKey2.isDown) && player.isAlive && (player.body.blocked.down || onPlatform ) ) {
             // player jump
             

@@ -256,7 +256,8 @@ Level_2.prototype = {
             if (this.healthBar[player.health] != null) {
                 this.healthBar[player.health].kill();
             }
-            iFrames = 30;   
+            iFrames = 30;
+            PlayerUtils.playDamageSound();
         }
     },
     /**
