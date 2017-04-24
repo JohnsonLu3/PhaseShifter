@@ -28,6 +28,7 @@ SplashState.prototype = {
         game.load.audio('phaser_death', 'assets/sfx/phaser_death.mp3');
         game.load.audio('phaser_damage', 'assets/sfx/phaser_damage.mp3');
         game.load.audio('phaser_attack', 'assets/sfx/phaser_attack.mp3');
+        game.load.audio('drone_explode', 'assets/sfx/drone_explode.mp3');
     },
 
     loadFonts: function () {},
@@ -101,5 +102,6 @@ SplashState.prototype = {
 
         // Make sure to initialize SFX objects!
         PlayerUtils.initSFX();
+        EnemyUtils.initSFX();
     }
 };

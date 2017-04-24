@@ -93,7 +93,9 @@ var GameUtils = {
                 if(musicFlag === true) {
                     music = game.add.audio("theme");
                     music.loop = true;
-                    music.play();
+                    // Note that the 3rd parameter is the volume, between 0 and 1.
+                    // The music is too loud, so we are compensating for that here.
+                    music.play('', 0, 0.5);
                 }
                 
                 game.world.width = gameW;                       // Reset game world cords

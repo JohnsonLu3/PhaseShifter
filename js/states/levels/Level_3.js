@@ -170,6 +170,7 @@ Level_3.prototype = {
             {
                 this.takeDamage(player);
                 drone.explode();
+                EnemyUtils.playDroneExplodeSound();
             }
         }, null, this);
 

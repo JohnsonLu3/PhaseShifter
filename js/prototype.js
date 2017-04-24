@@ -50,6 +50,7 @@ Main.prototype = {
     loadUtils: function() {
         game.load.script('playerUtils_script', 'js/lib/PlayerUtils.js');
         game.load.script('gameUtils_script', 'js/lib/GameUtils.js');
+        game.load.script('enemyUtils_script', 'js/lib/EnemyUtils.js');
         game.load.script('functions_script', 'js/lib/functions.js');
         game.load.script('buttonHandlers_script', 'js/lib/ButtonHandlers.js');
         game.load.script('controlKeys_script', 'js/lib/ControlKeys.js');

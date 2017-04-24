@@ -162,6 +162,7 @@ Level_2.prototype = {
             {
                 this.takeDamage(player);
                 drone.explode();
+                EnemyUtils.playDroneExplodeSound();
             }
         }, null, this);
         //Collide player with phase platforms if they are in the same phase.

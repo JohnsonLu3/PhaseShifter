@@ -13,6 +13,8 @@ function recieveDamage(turret, bullet)
         bullet.kill();
         turret.health--;
         if(turret.health == 0){
+            // Temporary
+            EnemyUtils.playDroneExplodeSound();
             turret.animations.play("die");
             turret.animations.currentAnim.onComplete.add(function(){turret.kill()});
         }
@@ -31,33 +33,13 @@ function recieveDamage(turret, bullet)
 function recieveDamageD(drone, bullet)
 {
     if (drone.shiftState === bullet.phase)
-    {
+    {   
+        EnemyUtils.playDroneExplodeSound();
         bullet.kill();
         drone.explode();
     }
     
 }
-
-/**
- * This function is called when an enemy bullet is in contact with a player.
- * @param {*} turret The player, which was just in contact with the bullet.
- * @param {*} bullet The bullet, which is in contact with the player.
- */
-function recieveDamageP(player, bullet)
-{
-    if (player.shiftState === bullet.phase)
-    {
-        bullet.kill()
-        player.health--;
-        if (player.health == 0)
-        {
-            player.animations.play("die");
-            player.animations.currentAnim.onComplete.add(function(){player.kill()});
-        }
-        
-    }
-}
-
 
 /**
  * Change the phase of all the phase objects

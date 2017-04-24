@@ -101,7 +101,7 @@ var PlayerUtils = {
 
         if(ControlKeys.shootKey.isDown || ControlKeys.shootKey2.isDown) {
             //this.playAttackSound();
-            this.attackSound.play();
+            this.attackSound.play('', 0, 0.7);
             player.fire();
         }
 
