@@ -20,6 +20,8 @@ SplashState.prototype = {
     loadBGM: function () {
         game.load.audio('theme', 'assets/bgm/Super Power Cool Dude.mp3');
         game.load.audio('level1', 'assets/bgm/Level Up.mp3');
+        game.load.audio('level2', 'assets/bgm/Voltaic.mp3');
+        game.load.audio('level3', 'assets/bgm/Laser Groove.mp3');
     },
 
     loadSFX: function () {

@@ -120,7 +120,7 @@ Level_2.prototype = {
         music.stop();
         if(musicFlag === true) {
             // Change music
-            music = game.add.audio('level1');
+            music = game.add.audio('level2');
             music.loop = true;
             // Note that the 3rd parameter is the volume, between 0 and 1.
             // The music is too loud, so we are compensating for that here.
