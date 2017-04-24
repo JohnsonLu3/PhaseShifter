@@ -40,6 +40,9 @@ var ControlKeys = {
         this.invincibilityKey.onDown.add(function() {GameUtils.handleInvulnerability(player)}, this);
         this.phaseShiftKey.onDown.add(function() {PlayerUtils.phaseShift(player)}, this);
         this.pauseKey.onDown.add(GameUtils.pauseGame, this);
+
+        // Add listener for menubutton press
+        game.input.onDown.add(GameUtils.pauseMenuHandler, self);
     }
     
 };

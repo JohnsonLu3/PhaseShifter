@@ -19,7 +19,10 @@ var enemyGroup;
 
 var Level_1 = function() {};
 Level_1.prototype = {
-    // Load all images for the level
+
+    /**
+     * This function loads all the images to render for this level.
+     */
     loadImages: function() {
         game.load.tilemap('mapdata', 'assets/levels/level0.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.image('tiles', 'assets/levels/tilesheet.png');
@@ -31,7 +34,9 @@ Level_1.prototype = {
         game.load.spritesheet('platform', "assets/platform.png", 64, 32);
     },
 
-    // Load all the scripts
+    /**
+     * This function loads all the JS files for the objects in this level.
+     */
     loadScripts: function() {
         game.load.script('customSprite_script', 'js/characters/customSprite.js');
         game.load.script('functs', 'js/lib/functions.js');
@@ -43,10 +48,12 @@ Level_1.prototype = {
         this.w = 2560;                      // size of level W and H 
         this.h = 640;                   
     },
+
     preload: function() {
         this.loadImages();
         this.loadScripts();
     },
+
     create: function() {
         // Create a group for all enemy bullets, this will greatly simplify the collision detections
         game.enemyBullets = game.add.group();
@@ -97,8 +104,6 @@ Level_1.prototype = {
         // Set up cursors
         ControlKeys.setControls(this.player);
 
-        // Add lisitener for menubutton press
-        game.input.onDown.add(GameUtils.pauseMenuHandler, self);
 
         // Stop the music!
         music.stop();
@@ -148,7 +153,7 @@ Level_1.prototype = {
         }
 
         //Deal with player movement after checking for platform collision.
-        this.playerMovement();
+        PlayerUtils.handlePlayerMovement(this.player);
 
         if(this.player.y > this.h - 70){                  // Player loses all their health if they touch the bottom of the screen
             this.player.health = 0;
@@ -185,83 +190,6 @@ Level_1.prototype = {
             game.world.height = gameH;                      // because the camera messes with it
             game.state.start('gameWin_state');
         }
-    },
-    
-    /**
-     *  playerMovement
-     *      Update the player movements based on the
-     *      the controls that are pressed. Also players
-     *      the correct animation / facing / shift state
-     */
-    playerMovement: function() {
-
-        if(ControlKeys.shootKey.isDown || ControlKeys.shootKey2.isDown){
-            this.player.fire();
-        }
-
-        if((ControlKeys.jumpKey.isDown || ControlKeys.jumpKey2.isDown) && this.player.isAlive && (this.player.body.blocked.down || onPlatform ) ) {
-            // player jump
-            
-            this.player.jumping = true;
-
-            this.player.body.velocity.y = this.player.jumpHeight;
-        }
-
-        if((ControlKeys.leftKey.isDown || ControlKeys.leftKey2.isDown ) && this.player.isAlive) {
-            // player move left
-
-            this.updateFacing(false);
-
-            this.player.body.velocity.x = -this.player.walkingSpeed;
-
-        } else if((ControlKeys.rightKey.isDown || ControlKeys.rightKey2.isDown )  && this.player.isAlive) {
-            // player move right
-
-            this.updateFacing(true);
-
-            this.player.body.velocity.x = this.player.walkingSpeed;
-        
-        } else if(this.player.isAlive && !this.player.jumping){
-            // reset velocity
-            this.player.body.velocity.x = 0;
-        
-        }else{
-            this.player.body.velocity.x = 0;
-        }
-
-        //Play the proper animation, uninterruptable
-        if (this.player.body.velocity.y != 0 && !onPlatform && this.player.isAlive){
-            //console.log(this.player.body.velocity.y);
-            PlayerUtils.stopWalkSound();
-            this.player.playAnimation("jump");
-        }
-        else if (this.player.body.velocity.x != 0 && this.player.isAlive)
-        {
-            PlayerUtils.playWalkSound();
-            this.player.playAnimation("walk");
-        }
-        else if (this.player.isAlive)
-        {
-            PlayerUtils.stopWalkSound();
-            this.player.playAnimation("idle");
-        }
-    },
-
-
-    /**
-     *  updateFacing
-     *      update the player's sprite's facing position
-     */
-    updateFacing: function(facingFlag){
-
-        if(this.player.facing === facingFlag){
-            // player is already facing the same direction
-        } else {
-            this.player.scale.x *= -1;
-            this.player.facing  =  facingFlag;   
-        }
-
-        return;
     },
 
     spawnLifeBar: function(){

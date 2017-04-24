@@ -20,32 +20,44 @@ var droneGroup;
 
 var Level_3 = function() {};
 Level_3.prototype = {
-    init: function() {
-        this.w = 5120;                      // size of level W and H 
-        this.h = 2400;                   
-    },
-    preload: function() {
-        // Load images
+    
+    /**
+     * This function loads all the images to render for this level.
+     */
+    loadImages: function() {
         game.load.tilemap('mapdata', 'assets/levels/SpikesAndFalls.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.image('collisionTiles', 'assets/levels/tilesheet2.png');
         game.load.image('hazardTiles', 'assets/levels/hazards.png');
+        game.load.image('exitDoor' , 'assets/exitDoor.png', 64, 64);
         game.load.spritesheet('player', "assets/phaser.png", 64,64);
         game.load.spritesheet('bullet', "assets/bullets.png", 16,16);
-        game.load.image('exitDoor' , 'assets/exitDoor.png', 64, 64);
-
         game.load.spritesheet("drone", "assets/Drone.png", 32, 32);
         game.load.spritesheet('turret', "assets/turret.png", 64,64);
-
         game.load.spritesheet('heart', "assets/battery_32x32.png", 32, 32);
         game.load.spritesheet('platform', "assets/platform.png", 64, 32);
+    },
 
-        // Load necessary JS files
+    /**
+     * This function loads all the JS files for the objects in this level.
+     */
+    loadScripts: function() {
         game.load.script('customSprite_script', 'js/characters/customSprite.js');
         game.load.script('functs', 'js/lib/functions.js');
         game.load.script('playerSprite_script', 'js/characters/playerSprite.js');
         game.load.script('platforms', 'js/characters/platforms.js');
         game.load.script('drone', 'js/characters/drone.js');
     },
+    
+    init: function() {
+        this.w = 5120;                      // size of level W and H 
+        this.h = 2400;                   
+    },
+
+    preload: function() {
+        this.loadImages();
+        this.loadScripts();
+    },
+
     create: function() {
         // Create a group for all enemy bullets, this will greatly simplify the collision detections
         game.enemyBullets = game.add.group();
@@ -72,9 +84,6 @@ Level_3.prototype = {
         droneGroup = game.add.group();
         // Start physics
         game.physics.startSystem(Phaser.Physics.ARCADE);
-        
-        // Set up cursors
-        this.setControls();
 
         // make an exitDoor
         exitDoor = game.add.sprite(32, (31 * 32), 'exitDoor');
@@ -114,16 +123,18 @@ Level_3.prototype = {
         // Spawn Platforms that can shift phases
         this.createLevelPlatforms();
 
-        // Add lisitener for menubutton press
-        game.input.onDown.add(GameUtils.pauseMenuHandler, self);
-        
+        // Set up controls
+        ControlKeys.setControls(this.player);
+
         // Stop the music!
         music.stop();
         if(musicFlag === true) {
             // Change music
             music = game.add.audio('level1');
             music.loop = true;
-            music.play();
+            // Note that the 3rd parameter is the volume, between 0 and 1.
+            // The music is too loud, so we are compensating for that here.
+            music.play('', 0, 0.4);
         }
     },
 
@@ -133,7 +144,9 @@ Level_3.prototype = {
         game.physics.arcade.collide(this.player, this.hazard, this.takeDamage, null, this);
 
         this.checkWinCondition();
-        this.checkCheats();
+        
+        // Check for cheats
+        GameUtils.checkCheats(this.player);
 
         //Collisions.
         //Kill all bullets that hit solid ground.
@@ -174,7 +187,7 @@ Level_3.prototype = {
             }
         }
         //Deal with player movement after checking for platform collision.
-        this.playerMovement();
+        PlayerUtils.handlePlayerMovement(this.player);
 
         if(this.player.y > this.h - 70){          // Player loses all their health if they touch the bottom of the screen
             this.player.health = 0;
@@ -213,9 +226,7 @@ Level_3.prototype = {
 
     },
 
-    render: function() {
-        //game.debug.spriteInfo(this.player, 32, 32);
-    },
+    render: function() {},
 
     checkWinCondition: function () {
         if (this.player.overlap(exitDoor)){
@@ -242,107 +253,7 @@ Level_3.prototype = {
         }
 
     },
-
-    /**
-     * This sets all the key mappings
-     */
-    setControls: function() {
-        ShiftKey  = ControlKeys.phaseShiftKey.onDown.add(this.flipShiftFlag, this);  // shift ability
-        shootKey  = ControlKeys.shootKey;                                            // Shoot Button
-        shootKey2 = ControlKeys.shootKey2;                                            // Shoot Button
-        jumpKey   = ControlKeys.jumpKey;                                              // Jump  Button
-        jumpKey2  = ControlKeys.jumpKey2;                                              // Jump  Button
-        LeftKey   = ControlKeys.leftKey;                                             // Walk  Left
-        RightKey  = ControlKeys.rightKey;                                            // Walk  Right
-        LeftKey2  = ControlKeys.leftKey2;                                            // Walk  Left
-        RightKey2 = ControlKeys.rightKey2;                                           // Walk  Right
-        EscKey    = ControlKeys.pauseKey.onDown.add(GameUtils.pauseGame, this);      // Pause menu
-
-        // Cheat Keys
-        Cheat1Key = ControlKeys.oneKey;
-        Cheat2Key = ControlKeys.twoKey;
-        Cheat3Key = ControlKeys.threeKey;
-        CheatIKey = ControlKeys.invincibilityKey;
-    },
-
-    flipShiftFlag: function() {
-        this.player.changePhase();
-    },
     
-
-    /**
-     *  playerMovement
-     *      Update the player movements based on the
-     *      the controls that are pressed. Also players
-     *      the correct animation / facing / shift state
-     */
-    playerMovement: function() {
-
-        if(shootKey.isDown || shootKey2.isDown){
-            this.player.fire();
-        }
-
-        if((jumpKey.isDown || jumpKey2.isDown) && this.player.isAlive && (this.player.body.blocked.down || onPlatform ) ) {
-            // player jump
-            
-            this.player.jumping = true;
-
-            this.player.body.velocity.y = this.player.jumpHeight;
-        }
-
-        if((LeftKey.isDown || LeftKey2.isDown ) && this.player.isAlive) {
-            // player move left
-
-            this.updateFacing(false);
-
-            this.player.body.velocity.x = -this.player.walkingSpeed;
-
-        } else if((RightKey.isDown || RightKey2.isDown )  && this.player.isAlive) {
-            // player move right
-
-            this.updateFacing(true);
-
-            this.player.body.velocity.x = this.player.walkingSpeed;
-        
-        } else if(this.player.isAlive && !this.player.jumping){
-            // reset velocity
-            this.player.body.velocity.x = 0;
-        
-        }else{
-            this.player.body.velocity.x = 0;
-        }
-
-        //Play the proper animation, uninterruptable
-        if (this.player.body.velocity.y != 0 && !onPlatform && this.player.isAlive){
-            //console.log(this.player.body.velocity.y);
-            this.player.playAnimation("jump");
-        }
-        else if (this.player.body.velocity.x != 0 && this.player.isAlive)
-        {
-            this.player.playAnimation("walk");
-        }
-        else if (this.player.isAlive)
-        {
-            this.player.playAnimation("idle");
-        }
-    },
-
-
-    /**
-     *  updateFacing
-     *      update the player's sprite's facing position
-     */
-    updateFacing: function(facingFlag){
-
-        if(this.player.facing === facingFlag){
-            // player is already facing the same direction
-        } else {
-            this.player.scale.x *= -1;
-            this.player.facing  =  facingFlag;   
-        }
-
-        return;
-    },
 
     spawnLifeBar: function(){
             // create health;

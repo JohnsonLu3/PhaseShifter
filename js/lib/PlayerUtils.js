@@ -15,7 +15,6 @@ var PlayerUtils = {
         this.deathSound = game.add.audio('phaser_death');
     },
 
-    
     /**
      * This function changes the player's phase and plays the phase shift sound.
      */
@@ -50,5 +49,78 @@ var PlayerUtils = {
         if(soundFlag === true) {
             this.deathSound.play();
         }  
-    }
+    },
+
+    /**
+     *  playerMovement
+     *      Update the player movements based on the
+     *      the controls that are pressed. Also players
+     *      the correct animation / facing / shift state
+     */
+    handlePlayerMovement: function(player) {
+
+        if(ControlKeys.shootKey.isDown || ControlKeys.shootKey2.isDown){
+            player.fire();
+        }
+
+        if((ControlKeys.jumpKey.isDown || ControlKeys.jumpKey2.isDown) && player.isAlive && (player.body.blocked.down || onPlatform ) ) {
+            // player jump
+            
+            player.jumping = true;
+
+            player.body.velocity.y = player.jumpHeight;
+        }
+
+        if((ControlKeys.leftKey.isDown || ControlKeys.leftKey2.isDown ) && player.isAlive) {
+            // player move left
+
+            this.updateFacing(false, player);
+
+            player.body.velocity.x = -player.walkingSpeed;
+
+        } else if((ControlKeys.rightKey.isDown || ControlKeys.rightKey2.isDown )  && player.isAlive) {
+            // player move right
+
+            this.updateFacing(true, player);
+
+            player.body.velocity.x = player.walkingSpeed;
+        
+        } else if(player.isAlive && !player.jumping){
+            // reset velocity
+            player.body.velocity.x = 0;
+        
+        }else{
+            player.body.velocity.x = 0;
+        }
+
+        //Play the proper animation, uninterruptable
+        if (player.body.velocity.y != 0 && !onPlatform && player.isAlive){
+            PlayerUtils.stopWalkSound();
+            player.playAnimation("jump");
+        }
+        else if (player.body.velocity.x != 0 && player.isAlive)
+        {
+            PlayerUtils.playWalkSound();
+            player.playAnimation("walk");
+        }
+        else if (player.isAlive)
+        {
+            PlayerUtils.stopWalkSound();
+            player.playAnimation("idle");
+        }
+    },
+
+    /**
+     *  updateFacing
+     *      update the player's sprite's facing position
+     */
+    updateFacing: function(facingFlag, player){
+
+        if(player.facing === facingFlag){
+            // player is already facing the same direction
+        } else {
+            player.scale.x *= -1;
+            player.facing  =  facingFlag;   
+        }
+    },
 }
