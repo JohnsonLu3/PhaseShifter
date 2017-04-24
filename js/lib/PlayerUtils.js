@@ -12,6 +12,7 @@ var PlayerUtils = {
         this.damageSound = game.add.audio('phaser_damage');
         this.walkSound = game.add.audio('phaser_walking');
         this.deathSound = game.add.audio('phaser_death');
+        this.attackSound = game.add.audio('phaser_attack');
     },
 
     /**
@@ -48,6 +49,12 @@ var PlayerUtils = {
         if(soundFlag === true) {
             this.deathSound.play();
         }  
+    },
+
+    playAttackSound: function() {
+        if(soundFlag === true) {
+            this.attackSound.play();
+        }
     },
 
     /**
@@ -93,6 +100,8 @@ var PlayerUtils = {
     handlePlayerMovement: function(player) {
 
         if(ControlKeys.shootKey.isDown || ControlKeys.shootKey2.isDown) {
+            //this.playAttackSound();
+            this.attackSound.play();
             player.fire();
         }
 
@@ -128,15 +137,15 @@ var PlayerUtils = {
 
         //Play the proper animation, uninterruptable
         if (player.body.velocity.y != 0 && !onPlatform && player.isAlive) {
-            PlayerUtils.stopWalkSound();
+            this.stopWalkSound();
             player.playAnimation("jump");
         }
         else if (player.body.velocity.x != 0 && player.isAlive) {
-            PlayerUtils.playWalkSound();
+            this.playWalkSound();
             player.playAnimation("walk");
         }
         else if (player.isAlive) {
-            PlayerUtils.stopWalkSound();
+            this.stopWalkSound();
             player.playAnimation("idle");
         }
     },
