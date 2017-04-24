@@ -1,8 +1,13 @@
+
+
+// These labels are global because JavaScript is weird
+var musicButton_label;
+var soundButton_label;
+
 /**
  * The game state object for the settings screen.
  * This is called when the user clicks on the settings button in the main menu screen.
  */
-var musicButton_label;
 var SettingsState = {
 
     preload: function() {
@@ -76,6 +81,11 @@ var SettingsState = {
     },
 
     getSoundFlag: function() {
-        return "Yes";
+        if(soundFlag === true) {
+            return "Yes";
+        }
+        else {
+            return "No";
+        }
     }
 };

@@ -166,6 +166,7 @@ Level_1.prototype = {
         if(this.player.health === 0 && this.player.isAlive){                     // Kill player
             this.player.isAlive = false;                   
             this.player.animations.play('die');
+            game.add.audio('phaser_death').play();
             this.player.animations.currentAnim.onComplete.add(function () { 
                 game.world.width = gameW;                       // Reset game world cords
                 game.world.height = gameH;                      // because the camera messes with it
@@ -231,7 +232,9 @@ Level_1.prototype = {
 
     flipShiftFlag: function() {
         this.player.changePhase();
-        shiftSound.play();
+        if(soundFlag === true) {
+            shiftSound.play();
+        }
     },
     
 
@@ -358,18 +361,5 @@ Level_1.prototype = {
         phaseObjects.push(newTurret);
         enemyGroup.add(newTurret);
 
-    },
-
-    /**
-     * This function checks for whether or not sounds should be played
-     */
-
-    checkSounds: function() {
-        if(this.player.body.velocity.x != 0 && this.player.body.blocked.down && !walkSound.isPlaying) {
-            walkSound.play('', 0, 1, false, false);
-        }
-        else {
-            walkSound.stop();
-        }
     }
 };

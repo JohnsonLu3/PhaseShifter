@@ -25,6 +25,7 @@ SplashState.prototype = {
     loadSFX: function () {
         game.load.audio('phaser_walking', 'assets/sfx/phaser_walking.mp3');
         game.load.audio('shift', 'assets/sfx/shift.mp3');
+        game.load.audio('phaser_death', 'assets/sfx/phaser_death.mp3');
     },
 
     loadFonts: function () {},
