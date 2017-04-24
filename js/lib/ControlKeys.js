@@ -31,5 +31,15 @@ var ControlKeys = {
                 return k;
         }
         return;
+    },
+
+    /**
+     * This function initializes the keys whose callback functions must only be called once.
+     */
+    setControls: function(player) {
+        this.invincibilityKey.onDown.add(function() {GameUtils.handleInvulnerability(player)}, this);
+        this.phaseShiftKey.onDown.add(function() {PlayerUtils.phaseShift(player)}, this);
+        this.pauseKey.onDown.add(GameUtils.pauseGame, this);
     }
+    
 };

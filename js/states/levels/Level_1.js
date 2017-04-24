@@ -17,10 +17,6 @@ var healthBar = [];
 var onPlatform = false;
 var enemyGroup;
 
-// This is for walking
-var walkSound;
-var shiftSound;
-
 var Level_1 = function() {};
 Level_1.prototype = {
     // Load all images for the level
@@ -71,9 +67,6 @@ Level_1.prototype = {
         enemyGroup = game.add.group();
         // Start physics
         game.physics.startSystem(Phaser.Physics.ARCADE);
-        
-        // Set up cursors
-        this.setControls();
 
         // make an exitDoor
         exitDoor = game.add.sprite(2500, 323, 'exitDoor');
@@ -101,13 +94,11 @@ Level_1.prototype = {
         this.spawnPlatforms(49, 12 ,((Math.random()/2) + 0.5), 0);
         this.spawnPlatforms(52, 12 ,((Math.random()/2) + 0.5), 1);
 
+        // Set up cursors
+        ControlKeys.setControls(this.player);
+
         // Add lisitener for menubutton press
         game.input.onDown.add(GameUtils.pauseMenuHandler, self);
-
-        // Foot steps
-        walkSound = game.add.audio('phaser_walking');
-        // Phase Shift sound
-        shiftSound = game.add.audio('shift');
 
         // Stop the music!
         music.stop();
@@ -115,7 +106,9 @@ Level_1.prototype = {
             // Change music
             music = game.add.audio('level1');
             music.loop = true;
-            music.play();
+            // Note that the 3rd parameter is the volume, between 0 and 1.
+            // The music is too loud, so we are compensating for that here.
+            music.play('', 0, 0.4);
         }
     },
 
@@ -125,7 +118,9 @@ Level_1.prototype = {
 
         // Check for win condition (ends game)
         this.checkWinCondition();
-        this.checkCheats();
+
+        // Check for cheats
+        GameUtils.checkCheats(this.player);
 
         //Collisions.
         //Kill all bullets that hit solid ground.
@@ -166,7 +161,7 @@ Level_1.prototype = {
         if(this.player.health === 0 && this.player.isAlive){                     // Kill player
             this.player.isAlive = false;                   
             this.player.animations.play('die');
-            game.add.audio('phaser_death').play();
+            PlayerUtils.playDeathSound();
             this.player.animations.currentAnim.onComplete.add(function () { 
                 game.world.width = gameW;                       // Reset game world cords
                 game.world.height = gameH;                      // because the camera messes with it
@@ -191,53 +186,7 @@ Level_1.prototype = {
             game.state.start('gameWin_state');
         }
     },
-
-    checkCheats: function() {
-        if(Cheat1Key.isDown) {
-            game.state.start('level_1_state');
-        }
-        else if(Cheat2Key.isDown) {
-            game.state.start('level_2_state');
-        }
-        else if (Cheat3Key.isDown) {
-            game.state.start('level_3_state');
-        }        // Toggle invincibility
-        else if (CheatIKey.isDown) {
-            this.player.invulnerable = !this.player.invulnerable;
-        }
-
-    },
-
-    /**
-     * This sets all the key mappings
-     */
-    setControls: function() {
-        ShiftKey  = ControlKeys.phaseShiftKey.onDown.add(this.flipShiftFlag, this);  // shift ability
-        shootKey  = ControlKeys.shootKey;                                            // Shoot Button
-        shootKey2 = ControlKeys.shootKey2;                                           // Shoot Button
-        jumpKey   = ControlKeys.jumpKey;                                             // Jump  Button
-        jumpKey2  = ControlKeys.jumpKey2;                                            // Jump  Button
-        LeftKey   = ControlKeys.leftKey;                                             // Walk  Left
-        RightKey  = ControlKeys.rightKey;                                            // Walk  Right
-        LeftKey2  = ControlKeys.leftKey2;                                            // Walk  Left
-        RightKey2 = ControlKeys.rightKey2;                                           // Walk  Right
-        EscKey    = ControlKeys.pauseKey.onDown.add(GameUtils.pauseGame, this);      // Pause menu
-
-        // Cheat Keys
-        Cheat1Key = ControlKeys.oneKey;
-        Cheat2Key = ControlKeys.twoKey;
-        Cheat3Key = ControlKeys.threeKey;
-        CheatIKey = ControlKeys.invincibilityKey;
-    },
-
-    flipShiftFlag: function() {
-        this.player.changePhase();
-        if(soundFlag === true) {
-            shiftSound.play();
-        }
-    },
     
-
     /**
      *  playerMovement
      *      Update the player movements based on the
@@ -246,11 +195,11 @@ Level_1.prototype = {
      */
     playerMovement: function() {
 
-        if(shootKey.isDown || shootKey2.isDown){
+        if(ControlKeys.shootKey.isDown || ControlKeys.shootKey2.isDown){
             this.player.fire();
         }
 
-        if((jumpKey.isDown || jumpKey2.isDown) && this.player.isAlive && (this.player.body.blocked.down || onPlatform ) ) {
+        if((ControlKeys.jumpKey.isDown || ControlKeys.jumpKey2.isDown) && this.player.isAlive && (this.player.body.blocked.down || onPlatform ) ) {
             // player jump
             
             this.player.jumping = true;
@@ -258,14 +207,14 @@ Level_1.prototype = {
             this.player.body.velocity.y = this.player.jumpHeight;
         }
 
-        if((LeftKey.isDown || LeftKey2.isDown ) && this.player.isAlive) {
+        if((ControlKeys.leftKey.isDown || ControlKeys.leftKey2.isDown ) && this.player.isAlive) {
             // player move left
 
             this.updateFacing(false);
 
             this.player.body.velocity.x = -this.player.walkingSpeed;
 
-        } else if((RightKey.isDown || RightKey2.isDown )  && this.player.isAlive) {
+        } else if((ControlKeys.rightKey.isDown || ControlKeys.rightKey2.isDown )  && this.player.isAlive) {
             // player move right
 
             this.updateFacing(true);
@@ -283,17 +232,17 @@ Level_1.prototype = {
         //Play the proper animation, uninterruptable
         if (this.player.body.velocity.y != 0 && !onPlatform && this.player.isAlive){
             //console.log(this.player.body.velocity.y);
-            walkSound.stop();
+            PlayerUtils.stopWalkSound();
             this.player.playAnimation("jump");
         }
         else if (this.player.body.velocity.x != 0 && this.player.isAlive)
         {
-            walkSound.play('', 0, 1, false, false);
+            PlayerUtils.playWalkSound();
             this.player.playAnimation("walk");
         }
         else if (this.player.isAlive)
         {
-            walkSound.stop();
+            PlayerUtils.stopWalkSound();
             this.player.playAnimation("idle");
         }
     },

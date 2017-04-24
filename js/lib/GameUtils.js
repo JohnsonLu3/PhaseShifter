@@ -1,5 +1,5 @@
 /**
- * This object contains various functions that affect the game or objects in it, except the player.
+ * This object contains various functions that affect the game or objects in it.
  */
 var GameUtils = {
     
@@ -35,13 +35,13 @@ var GameUtils = {
     },
 
     makePauseMenu: function() {
-        PauseText = game.make.text(game.camera.x + gameW/2, 20, 'Paused', { font: '30px Arial', fill: '#fff' });
+        PauseText = game.make.text(0, 0, 'Paused', { font: '30px Arial', fill: '#fff' });
         PauseText.anchor.setTo(0.5, 0.5);
 
-        menubutton = game.make.sprite(game.camera.x + gameW/2, gameH/2, 'menu');
+        menubutton = game.make.sprite(0, 0, 'menu');
         menubutton.anchor.setTo(0.5, 0.5);
             
-        menuText = game.make.text(game.camera.x + gameW/2, gameH/2, 'Level Select', {font: '24px Arial', fill: 'white'});
+        menuText = game.make.text(0, 0, 'Level Select', {font: '24px Arial', fill: 'white'});
         menuText.anchor.setTo(0.5, 0.5);
     },
 
@@ -101,6 +101,43 @@ var GameUtils = {
                 game.state.start('levelSelect_state');
                 
             }
+        }
+    },
+
+    /**
+     * This function checks for, and handles, any cheats that we may include, except for invulnerability.
+     */
+    checkCheats: function(player) {
+        if(ControlKeys.oneKey.isDown) {
+            game.state.start('level_1_state');
+        }
+        else if(ControlKeys.twoKey.isDown) {
+            game.state.start('level_2_state');
+        }
+        else if (ControlKeys.threeKey.isDown) {
+            game.state.start('level_3_state');
+        }
+    },
+
+    /**
+     * This function is called when the invulnerability key is pressed.
+     */
+    handleInvulnerability: function(player) {
+        // Make invulnerability text if needed
+        if(this.invulnerability_label === undefined) {
+            this.invulnerability_label = game.make.text(0, 0, "Phaser is INVULNERABLE (to bullets at least)", {font: '18px Arial', fill: 'white'});
+            this.invulnerability_label.fixedToCamera = true;
+        }
+        // Toggle invincibility
+        player.invulnerable = !player.invulnerable;
+
+        // Display or remove text
+        if (player.invulnerable === true) {
+            // Update text location
+            game.add.existing(this.invulnerability_label);
+        }
+        else {
+            game.world.remove(this.invulnerability_label);
         }
     }
 }

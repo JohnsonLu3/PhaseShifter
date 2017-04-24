@@ -33,9 +33,9 @@ var SettingsState = {
         this.music_label = game.make.text(this.col1, this.row2, 'Music', this.textProp);
         GameUtils.setAnchorToCenter([this.sound_label, this.music_label]);
 
-        this.soundButton_label = game.make.text(this.col2, this.row1, this.getSoundFlag(), this.textProp);
+        soundButton_label = game.make.text(this.col2, this.row1, this.getSoundFlag(), this.textProp);
         musicButton_label = game.make.text(this.col2, this.row2, this.getMusicFlag() , this.textProp);
-        GameUtils.setAnchorToCenter([this.soundButton_label, musicButton_label]);
+        GameUtils.setAnchorToCenter([soundButton_label, musicButton_label]);
     },
     
     makeButtons: function() {
@@ -51,11 +51,19 @@ var SettingsState = {
         game.add.existing(this.sound_button);
         game.add.existing(this.music_button);
 
-        game.add.existing(this.soundButton_label);
+        game.add.existing(soundButton_label);
         game.add.existing(musicButton_label);
     },
 
     handleSoundButton: function() {
+        if(soundFlag === true) {
+            soundFlag = false;
+            soundButton_label.setText("No");
+        }
+        else {
+            soundFlag = true;
+            soundButton_label.setText("Yes");
+        }
     },
 
     handleMusicButton: function() {
