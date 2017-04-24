@@ -98,43 +98,31 @@ var PlayerUtils = {
      *      the correct animation / facing / shift state
      */
     handlePlayerMovement: function(player) {
-/*
-        if(ControlKeys.shootKey.isDown || ControlKeys.shootKey2.isDown) {
-            this.playAttackSound();
-            player.fire();
-        }
-*/
-        if((ControlKeys.jumpKey.isDown || ControlKeys.jumpKey2.isDown) && player.isAlive && (player.body.blocked.down || onPlatform ) ) {
-            // player jump
-            
-            player.jumping = true;
 
+        // Jump
+        if((ControlKeys.jumpKey.isDown || ControlKeys.jumpKey2.isDown) && player.isAlive && (player.body.blocked.down || onPlatform ) ) {
+            player.jumping = true;
             player.body.velocity.y = player.jumpHeight;
         }
 
+        // Move left
         if((ControlKeys.leftKey.isDown || ControlKeys.leftKey2.isDown ) && player.isAlive) {
-            // player move left
-
             this.updateFacing(false, player);
-
             player.body.velocity.x = -player.walkingSpeed;
-
-        } else if((ControlKeys.rightKey.isDown || ControlKeys.rightKey2.isDown )  && player.isAlive) {
-            // player move right
-
+        } 
+        
+        // Move right
+        else if((ControlKeys.rightKey.isDown || ControlKeys.rightKey2.isDown )  && player.isAlive) {
             this.updateFacing(true, player);
-
             player.body.velocity.x = player.walkingSpeed;
-        
-        } else if(player.isAlive && !player.jumping) {
-            // reset velocity
-            player.body.velocity.x = 0;
-        
-        } else {
+        }
+
+        // Stop moving
+        else {
             player.body.velocity.x = 0;
         }
 
-        //Play the proper animation, uninterruptable
+        // Play the proper animation and sounds(uninterruptable)
         if (player.body.velocity.y != 0 && !onPlatform && player.isAlive) {
             this.stopWalkSound();
             player.playAnimation("jump");
@@ -160,6 +148,19 @@ var PlayerUtils = {
         } else {
             player.scale.x *= -1;
             player.facing  =  facingFlag;   
+        }
+    },
+
+    /**
+     * This function checks to see if the player touches the bottom of the game world.
+     */
+    checkFallOffWorld: function(player, h, healthBar) {
+        if(player.y > h - 70){                  // Player loses all their health if they touch the bottom of the screen
+            player.health = 0;
+
+            for(heart in healthBar){             // kill all heart sprites in healthbar
+                healthBar[heart].kill();
+            }
         }
     },
 

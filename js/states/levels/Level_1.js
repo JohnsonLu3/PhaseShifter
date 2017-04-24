@@ -149,13 +149,8 @@ Level_1.prototype = {
         //Deal with player movement after checking for platform collision.
         PlayerUtils.handlePlayerMovement(this.player);
 
-        if(this.player.y > this.h - 70){                  // Player loses all their health if they touch the bottom of the screen
-            this.player.health = 0;
-
-            for(heart in this.healthBar){             // kill all heart sprites in healthbar
-                this.healthBar[heart].kill();
-            }
-        }
+        // Check for, and handle, the player falling to the bottom of the map.
+        PlayerUtils.checkFallOffWorld(this.player, this.h, this.healthBar);
 
         // Check for, and handle, player death
         PlayerUtils.checkPlayerDeath(this.player);
