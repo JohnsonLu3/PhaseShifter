@@ -15,8 +15,6 @@ var exitDoor;
 // Number of invincibility frames player has
 var iFrames = 0;
 
-var healthBar = [];
-
 var onPlatform = false;
 var enemyGroup;
 //Group consisting of all drones.
@@ -95,6 +93,7 @@ Level_2.prototype = {
         this.player = new Player(game, 32, this.h-1400, 'player', 0, 5);
         phaseObjects.push(this.player);
         game.camera.follow(this.player);
+        this.healthBar = PlayerUtils.spawnLifeBar(this.player);
 
         this.addTurret(800,1455,this.player);
         this.addTurret(1000, 1455, this.player);
@@ -110,8 +109,6 @@ Level_2.prototype = {
         this.addDrone(800, 1400, this.player);
         this.addDrone(1500, 1400, this.player);
         this.addDrone(2200, 1400, this.player);
-
-        this.spawnLifeBar();
 
         // Spawn Platforms that can shift phases
         this.createLevelPlatforms();
@@ -156,7 +153,7 @@ Level_2.prototype = {
         //Resolve interactions between playerBullets and enemies and between enemyBullets and players.
         game.physics.arcade.overlap(enemyGroup, this.player.playerBullets, recieveDamage, null, this);
         game.physics.arcade.overlap(droneGroup, this.player.playerBullets, recieveDamageD, null, this);
-        game.physics.arcade.overlap(this.player, game.enemyBullets, this.recieveDamageP, null, this);
+        game.physics.arcade.overlap(this.player, game.enemyBullets, function(p, b) {PlayerUtils.receiveDamage(p, b, this.healthBar)}, null, this);
 
         //Drone overlaps with player logic. Only take damage if states are the same.
         game.physics.arcade.overlap(this.player,droneGroup, function(player,drone)
@@ -185,20 +182,13 @@ Level_2.prototype = {
             this.player.health = 0;
 
 
-            for(heart in healthBar){             // kill all heart sprites in healthbar
-                healthBar[heart].kill();
+            for(heart in this.healthBar){             // kill all heart sprites in healthbar
+                this.healthBar[heart].kill();
             }
         }
 
-        if(this.player.health === 0 && this.player.isAlive){                     // Kill player
-            this.player.isAlive = false;                   
-            this.player.animations.play('die');
-            this.player.animations.currentAnim.onComplete.add(function () { 
-                game.world.width = gameW;                       // Reset game world cords
-                game.world.height = gameH;                      // because the camera messes with it
-                game.state.start('gameLose_state');
-            });
-        }
+        // Check for, and handle, player death
+        PlayerUtils.checkPlayerDeath(this.player);
 
         onPlatform = false;
 
@@ -233,17 +223,6 @@ Level_2.prototype = {
         }
     },
 
-    spawnLifeBar: function(){
-            // create health;
-        for(var x = 0; x < 10; x++){
-                heart = game.add.sprite((x*32) + 8, 16, 'heart');
-                heart.hit = false;
-                heart.fixedToCamera = true;
-
-                healthBar.push(heart);
-        }
-    },
-
     spawnPlatforms: function(x, y, interval, state){
         platform = new Platform(game,x*32, y*32,  interval, state);
         phasePlatforms.push(platform);
@@ -268,28 +247,13 @@ Level_2.prototype = {
  
 
     },
-    
-/**
- * This function is called when an enemy bullet is in contact with a player.
- * @param {*} turret The player, which was just in contact with the bullet.
- * @param {*} bullet The bullet, which is in contact with the player.
- */
-    recieveDamageP: function (player, bullet)
-    {
-        if(player.invulnerable === false) {
-            if (player.shiftState === bullet.phase) {
-                bullet.kill()
-                this.takeDamage(player);
-            }
-        }
-    },
 
     takeDamage: function(player)
     {
         if (iFrames == 0){
             player.health--;
-            if (healthBar[player.health] != null) {
-                healthBar[player.health].kill();
+            if (this.healthBar[player.health] != null) {
+                this.healthBar[player.health].kill();
             }
             iFrames = 30;   
         }

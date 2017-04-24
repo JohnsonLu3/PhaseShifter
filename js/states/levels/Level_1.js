@@ -13,7 +13,6 @@ var phaseObjects = new Array();
 var phasePlatform = new Array();
 var exitDoor;
 
-var healthBar = [];
 var onPlatform = false;
 var enemyGroup;
 
@@ -82,19 +81,15 @@ Level_1.prototype = {
         this.player = new Player(game, 32, game.world.height - 300, 'player', 0, 5);
         phaseObjects.push(this.player);
         game.camera.follow(this.player);
+        this.healthBar = PlayerUtils.spawnLifeBar(this.player);
 
         this.addTurret(750,332,this.player);
         this.addTurret(1150, 332, this.player);
 
-        
         //Create a platform.
         platform = new Platform(game,400,400, 200);
         phaseObjects.push(platform);
         phasePlatforms.push(platform);
-        //console.log(phasePlatforms);
-        //console.log(this.platform);
-
-        this.spawnLifeBar();
 
         // Spawn Platforms that can shift phases
         this.spawnPlatforms(46, 12 ,((Math.random()/2) + 0.5), 1);
@@ -103,7 +98,6 @@ Level_1.prototype = {
 
         // Set up cursors
         ControlKeys.setControls(this.player);
-
 
         // Stop the music!
         music.stop();
@@ -139,7 +133,7 @@ Level_1.prototype = {
         },null,this);
         //Resolve interactions between playerBullets and enemies and between enemyBullets and players.
         game.physics.arcade.overlap(enemyGroup, this.player.playerBullets, recieveDamage, null, this);
-        game.physics.arcade.overlap(this.player, game.enemyBullets, this.recieveDamageP, null, this);
+        game.physics.arcade.overlap(this.player, game.enemyBullets, function(p, b) {PlayerUtils.receiveDamage(p, b, this.healthBar)}, null, this);
         //Collide player with phase platforms if they are in the same phase.
         for (var i = 0; i < phasePlatforms.length; i++)
         {
@@ -158,21 +152,13 @@ Level_1.prototype = {
         if(this.player.y > this.h - 70){                  // Player loses all their health if they touch the bottom of the screen
             this.player.health = 0;
 
-            for(heart in healthBar){             // kill all heart sprites in healthbar
-                healthBar[heart].kill();
+            for(heart in this.healthBar){             // kill all heart sprites in healthbar
+                this.healthBar[heart].kill();
             }
         }
 
-        if(this.player.health === 0 && this.player.isAlive){                     // Kill player
-            this.player.isAlive = false;                   
-            this.player.animations.play('die');
-            PlayerUtils.playDeathSound();
-            this.player.animations.currentAnim.onComplete.add(function () { 
-                game.world.width = gameW;                       // Reset game world cords
-                game.world.height = gameH;                      // because the camera messes with it
-                game.state.start('gameLose_state');
-            });
-        }
+        // Check for, and handle, player death
+        PlayerUtils.checkPlayerDeath(this.player);
 
         onPlatform = false;
         
@@ -192,41 +178,12 @@ Level_1.prototype = {
         }
     },
 
-    spawnLifeBar: function(){
-            // create health;
-        for(var x = 0; x < 10; x++){
-                heart = game.add.sprite((x*32) + 8, 16, 'heart');
-                heart.hit = false;
-                heart.fixedToCamera = true;
-
-                healthBar.push(heart);
-        }
-    },
-
     spawnPlatforms: function(x, y, interval ,state){
         platform = new Platform(game,x*32, y*32, interval, state);
         phasePlatforms.push(platform);
         phaseObjects.push(platform);
     },
     
-/**
- * This function is called when an enemy bullet is in contact with a player.
- * @param {*} turret The player, which was just in contact with the bullet.
- * @param {*} bullet The bullet, which is in contact with the player.
- */
-    recieveDamageP: function (player, bullet)
-    {
-        if(player.invulnerable === false) {
-            if (player.shiftState === bullet.phase) {
-                bullet.kill()
-                player.health--;
-                if (healthBar[player.health] != null) {
-                    healthBar[player.health].kill();
-                }
-                PlayerUtils.playDamageSound();
-            }
-        }
-    },
     /**
      * This function adds a turret to the current game world.
      * @param {*} x The x position of the turret to be added.

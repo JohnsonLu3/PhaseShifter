@@ -12,7 +12,6 @@ var phaseObjects = new Array();
 // Create a game group which will contain all special phase platforms.
 var phasePlatform = new Array();
 var exitDoor;
-var healthBar = [];
 var onPlatform = false;
 var enemyGroup;
 //Group consisting of all drones.
@@ -93,6 +92,7 @@ Level_3.prototype = {
         this.player = new Player(game, 32, this.h - (16 * 32), 'player', 0, 5);
         phaseObjects.push(this.player);
         game.camera.follow(this.player);
+        this.healthBar = PlayerUtils.spawnLifeBar(this.player);
 
 
         this.addDrone( 1970, 900, this.player);
@@ -108,8 +108,6 @@ Level_3.prototype = {
         this.addTurret(3862, 1010, this.player);
         this.addTurret(3170, 1010, this.player);
 
-        this.spawnLifeBar();
-        
         if (iFrames > 0){
             iFrames--;
             
@@ -163,7 +161,7 @@ Level_3.prototype = {
         //Resolve interactions between playerBullets and enemies and between enemyBullets and players.
         game.physics.arcade.overlap(enemyGroup, this.player.playerBullets, recieveDamage, null, this);
         game.physics.arcade.overlap(droneGroup, this.player.playerBullets, recieveDamageD, null, this);
-        game.physics.arcade.overlap(this.player, game.enemyBullets, this.recieveDamageP, null, this);
+        game.physics.arcade.overlap(this.player, game.enemyBullets, function(p, b) {PlayerUtils.receiveDamage(p, b, this.healthBar)}, null, this);
 
         //Drone overlaps with player logic. Only take damage if states are the same.
         game.physics.arcade.overlap(this.player,droneGroup, function(player,drone)
@@ -193,20 +191,13 @@ Level_3.prototype = {
             this.player.health = 0;
 
 
-            for(heart in healthBar){             // kill all heart sprites in healthbar
-                healthBar[heart].kill();
+            for(heart in this.healthBar){             // kill all heart sprites in healthbar
+                this.healthBar[heart].kill();
             }
         }
 
-        if(this.player.health === 0 && this.player.isAlive){                     // Kill player
-            this.player.isAlive = false;                   
-            this.player.animations.play('die');
-            this.player.animations.currentAnim.onComplete.add(function () { 
-                game.world.width = gameW;                       // Reset game world cords
-                game.world.height = gameH;                      // because the camera messes with it
-                game.state.start('gameLose_state');
-            });
-        }
+        // Check for, and handle, player death
+        PlayerUtils.checkPlayerDeath(this.player);
 
         onPlatform = false;
 
@@ -233,36 +224,6 @@ Level_3.prototype = {
             game.world.width = gameW;                       // Reset game world cords
             game.world.height = gameH;                      // because the camera messes with it
             game.state.start('gameWin_state');
-        }
-    },
-
-    // Cheat handler
-    checkCheats: function() {
-        if(Cheat1Key.isDown) {
-            game.state.start('level_1_state');
-        }
-        else if(Cheat2Key.isDown) {
-            game.state.start('level_2_state');
-        }
-        else if (Cheat3Key.isDown) {
-            game.state.start('level_3_state');
-        }
-        // Toggle invincibility
-        else if (CheatIKey.isDown) {
-            this.player.invulnerable = !this.player.invulnerable;
-        }
-
-    },
-    
-
-    spawnLifeBar: function(){
-            // create health;
-        for(var x = 0; x < 10; x++){
-                heart = game.add.sprite((x*32) + 8, 16, 'heart');
-                heart.hit = false;
-                heart.fixedToCamera = true;
-
-                healthBar.push(heart);
         }
     },
 
@@ -300,31 +261,13 @@ Level_3.prototype = {
         this.spawnPlatforms(42, 27, 0, 1 );
         this.spawnPlatforms(32, 27, 0, 0 );
     },
-    
-/**
- * This function is called when an enemy bullet is in contact with a player.
- * @param {*} turret The player, which was just in contact with the bullet.
- * @param {*} bullet The bullet, which is in contact with the player.
- */
-    recieveDamageP: function (player, bullet)
-    {
-        if (player.shiftState === bullet.phase && player.invulnerable === false) {
-            bullet.kill()
-            player.health--;
-            if (healthBar[player.health] != null)
-            {
-                healthBar[player.health].kill();
-            }
-
-        }
-    },
 
     takeDamage: function(player)
     {
         if (iFrames == 0){
             player.health--;
-            if (healthBar[player.health] != null) {
-                healthBar[player.health].kill();
+            if (this.healthBar[player.health] != null) {
+                this.healthBar[player.health].kill();
             }
             iFrames = 30;   
         }
