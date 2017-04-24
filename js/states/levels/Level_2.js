@@ -86,7 +86,6 @@ Level_2.prototype = {
         phaseObjects.push(this.player);
         game.camera.follow(this.player);
 
-
         this.addTurret(800,1455,this.player);
         this.addTurret(1000, 1455, this.player);
         this.addTurret(1200,1455,this.player);
@@ -97,7 +96,10 @@ Level_2.prototype = {
         this.addTurret(2200,1455,this.player);
         this.addTurret(2400,1455,this.player);
 
-        this.addDrone(300, 950, this.player);
+        this.addDrone(600,900,this.player);
+        this.addDrone(800, 1400, this.player);
+        this.addDrone(1500, 1400, this.player);
+        this.addDrone(2200, 1400, this.player);
 
         this.spawnLifeBar();
 
@@ -138,10 +140,17 @@ Level_2.prototype = {
         },null,this);
         //Resolve interactions between playerBullets and enemies and between enemyBullets and players.
         game.physics.arcade.overlap(enemyGroup, this.player.playerBullets, recieveDamage, null, this);
+        game.physics.arcade.overlap(droneGroup, this.player.playerBullets, recieveDamageD, null, this);
         game.physics.arcade.overlap(this.player, game.enemyBullets, this.recieveDamageP, null, this);
+
+        //Drone overlaps with player logic. Only take damage if states are the same.
         game.physics.arcade.overlap(this.player,droneGroup, function(player,drone)
         {
-            drone.kill();
+            if (drone.shiftState === player.shiftState)
+            {
+                this.takeDamage(player);
+                drone.explode();
+            }
         }, null, this);
         //Collide player with phase platforms if they are in the same phase.
         for (var i = 0; i < phasePlatforms.length; i++)
@@ -177,8 +186,21 @@ Level_2.prototype = {
         }
 
         onPlatform = false;
-        if (iFrames > 0)
+
+        if (iFrames > 0){
             iFrames--;
+
+            if(iFrames % 5 === 0){
+                    this.player.visible = 0;
+                }else{
+                    if(iFrames % 2 === 0){
+                        this.player.visible = 1;
+                    }
+                }
+            }else{
+                this.player.visible = 1;
+            }
+
         
     },
 

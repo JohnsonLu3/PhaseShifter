@@ -15,7 +15,8 @@ var exitDoor;
 var healthBar = [];
 var onPlatform = false;
 var enemyGroup;
-
+//Group consisting of all drones.
+var droneGroup;
 
 var Level_3 = function() {};
 Level_3.prototype = {
@@ -32,6 +33,7 @@ Level_3.prototype = {
         game.load.spritesheet('bullet', "assets/bullets.png", 16,16);
         game.load.image('exitDoor' , 'assets/exitDoor.png', 64, 64);
 
+        game.load.spritesheet("drone", "assets/Drone.png", 32, 32);
         game.load.spritesheet('turret', "assets/turret.png", 64,64);
 
         game.load.spritesheet('heart', "assets/battery_32x32.png", 32, 32);
@@ -42,6 +44,7 @@ Level_3.prototype = {
         game.load.script('functs', 'js/lib/functions.js');
         game.load.script('playerSprite_script', 'js/characters/playerSprite.js');
         game.load.script('platforms', 'js/characters/platforms.js');
+        game.load.script('drone', 'js/characters/drone.js');
     },
     create: function() {
         // Create a group for all enemy bullets, this will greatly simplify the collision detections
@@ -66,6 +69,7 @@ Level_3.prototype = {
 
         //Add group above the tile layer.
         enemyGroup = game.add.group();
+        droneGroup = game.add.group();
         // Start physics
         game.physics.startSystem(Phaser.Physics.ARCADE);
         
@@ -82,6 +86,10 @@ Level_3.prototype = {
         game.camera.follow(this.player);
 
 
+        this.addDrone( 1970, 900, this.player);
+        this.addDrone( 2350, 950, this.player);
+        this.addDrone( 2620, 850, this.player);
+
         this.addTurret(2280, 1938, this.player);
         this.addTurret(3080, 1906, this.player);
         this.addTurret(4293, 2002, this.player);
@@ -93,8 +101,15 @@ Level_3.prototype = {
 
         this.spawnLifeBar();
         
-        if (iFrames > 0)
+        if (iFrames > 0){
             iFrames--;
+            
+            if(iFrames % 2 === 0){
+                    this.player.visible = 0;
+                }else{
+                    //this.player.visible = 1;
+                }
+            }
 
         // Spawn Platforms that can shift phases
         this.createLevelPlatforms();
@@ -134,7 +149,19 @@ Level_3.prototype = {
 
         //Resolve interactions between playerBullets and enemies and between enemyBullets and players.
         game.physics.arcade.overlap(enemyGroup, this.player.playerBullets, recieveDamage, null, this);
+        game.physics.arcade.overlap(droneGroup, this.player.playerBullets, recieveDamageD, null, this);
         game.physics.arcade.overlap(this.player, game.enemyBullets, this.recieveDamageP, null, this);
+
+        //Drone overlaps with player logic. Only take damage if states are the same.
+        game.physics.arcade.overlap(this.player,droneGroup, function(player,drone)
+        {
+            if (drone.shiftState === player.shiftState)
+            {
+                this.takeDamage(player);
+                drone.explode();
+            }
+        }, null, this);
+
         //Collide player with phase platforms if they are in the same phase.
         for (var i = 0; i < phasePlatforms.length; i++)
         {
@@ -169,8 +196,20 @@ Level_3.prototype = {
         }
 
         onPlatform = false;
-        if (iFrames > 0)
+
+        if (iFrames > 0){
             iFrames--;
+
+            if(iFrames % 5 === 0){
+                    this.player.visible = 0;
+                }else{
+                    if(iFrames % 2 === 0){
+                        this.player.visible = 1;
+                    }
+                }
+            }else{
+                this.player.visible = 1;
+            }
 
     },
 
@@ -393,6 +432,18 @@ Level_3.prototype = {
 
     },
 
+    /**
+     * This function adds a drone to the world.
+     * @param {*} x The x position of the drone.
+     * @param {*} y The y position of the drone.
+     * @parmam {*} player A reference to the player character.
+     */
+    addDrone : function(x,y,player)
+    {
+        var newDrone = new Drone(game, x, y, player);
+        phaseObjects.push(newDrone);
+        droneGroup.add(newDrone)
+    }
 };
 
 
