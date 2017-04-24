@@ -346,6 +346,7 @@ Level_1.prototype = {
                 if (healthBar[player.health] != null) {
                     healthBar[player.health].kill();
                 }
+                PlayerUtils.playDamageSound();
             }
         }
     },

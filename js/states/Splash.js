@@ -26,6 +26,7 @@ SplashState.prototype = {
         game.load.audio('phaser_walking', 'assets/sfx/phaser_walking.mp3');
         game.load.audio('shift', 'assets/sfx/shift.mp3');
         game.load.audio('phaser_death', 'assets/sfx/phaser_death.mp3');
+        game.load.audio('phaser_damage', 'assets/sfx/phaser_damage.mp3');
     },
 
     loadFonts: function () {},
@@ -96,5 +97,8 @@ SplashState.prototype = {
         // Make sure the music and sound flags are true
         musicFlag = true;
         soundFlag = true;
+
+        // Make sure to initialize SFX objects!
+        PlayerUtils.initSFX();
     }
 };
