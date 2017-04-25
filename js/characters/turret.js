@@ -52,11 +52,11 @@ Turret.prototype.attack = function () {
         bullet.phase = this.shiftState;
         if (bullet.phase)
         {
-            bullet.loadTexture('bullet', 0);
+            bullet.loadTexture('enemyBullet', 0);
         }
         else
         {
-            bullet.loadTexture('bullet', 1);
+            bullet.loadTexture('enemyBullet', 1);
         }
         //Move the bullet towards the player
         game.physics.arcade.moveToXY(bullet, this.player.x + 0.5 * this.player.width, this.player.y - 5, this.bulletSpeed);

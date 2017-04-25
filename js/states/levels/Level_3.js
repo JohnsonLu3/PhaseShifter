@@ -27,9 +27,11 @@ Level_3.prototype = {
         game.load.tilemap('mapdata', 'assets/levels/SpikesAndFalls.json', null, Phaser.Tilemap.TILED_JSON);
         game.load.image('collisionTiles', 'assets/levels/tilesheet2.png');
         game.load.image('hazardTiles', 'assets/levels/hazards.png');
+        game.load.image('backgroundTiles', 'assets/levels/backgrounds.png');
         game.load.image('exitDoor' , 'assets/exitDoor.png', 64, 64);
         game.load.spritesheet('player', "assets/phaser.png", 64,64);
         game.load.spritesheet('bullet', "assets/bullets.png", 16,16);
+        game.load.spritesheet('enemyBullet', "assets/enemyBullets.png", 16,16);
         game.load.spritesheet("drone", "assets/Drone.png", 32, 32);
         game.load.spritesheet('turret', "assets/turret.png", 64,64);
         game.load.spritesheet('heart', "assets/battery_32x32.png", 32, 32);
@@ -58,25 +60,30 @@ Level_3.prototype = {
     },
 
     create: function() {
+
+        // Map Stuff
+        this.map = game.add.tilemap('mapdata');
+        this.map.addTilesetImage('hazards', 'hazardTiles');
+        this.map.addTilesetImage('tilesheet2', 'collisionTiles');
+        this.map.addTilesetImage('backgrounds', 'backgroundTiles');
+        game.world.setBounds(0, 0, this.w, this.h);
+        this.map.createLayer('background');
+        this.hazard = this.map.createLayer('hazards');
+        this.layer = this.map.createLayer('Collisions');
+        
+        this.map.setCollisionBetween(0, 400, true, this.layer);
+        this.map.setCollisionBetween(0, 400, true, this.hazard);
+
         // Create a group for all enemy bullets, this will greatly simplify the collision detections
         game.enemyBullets = game.add.group();
         game.enemyBullets.enableBody = true;
         game.enemyBullets.physicsBodyType = Phaser.Physics.ARCADE;
         //Add a max of 100 bullets that all enemies can shoot.
-        game.enemyBullets.createMultiple(100, 'bullet');
+        game.enemyBullets.createMultiple(100, 'enemyBullet');
         game.enemyBullets.setAll('checkWorldBounds', true);
         game.enemyBullets.setAll('outOfBoundsKill', true);            
 
         // Load level from mapdata
-        this.map = game.add.tilemap('mapdata');
-        this.map.addTilesetImage('hazards', 'hazardTiles');
-        this.map.addTilesetImage('tilesheet2', 'collisionTiles');
-        game.world.setBounds(0, 0, this.w, this.h);
-        this.hazard = this.map.createLayer('hazards');
-        this.layer = this.map.createLayer('Collisions');
-        this.map.setCollisionBetween(0, 400, true, this.layer);
-        this.map.setCollisionBetween(0, 400, true, this.hazard);
-
 
         //Add group above the tile layer.
         enemyGroup = game.add.group();
