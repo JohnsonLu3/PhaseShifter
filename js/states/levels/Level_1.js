@@ -134,6 +134,7 @@ Level_1.prototype = {
         //Resolve interactions between playerBullets and enemies and between enemyBullets and players.
         game.physics.arcade.overlap(enemyGroup, this.player.playerBullets, recieveDamage, null, this);
         game.physics.arcade.overlap(this.player, game.enemyBullets, function(p, b) {PlayerUtils.receiveDamage(p, b, this.healthBar)}, null, this);
+        
         //Collide player with phase platforms if they are in the same phase.
         for (var i = 0; i < phasePlatforms.length; i++)
         {
@@ -191,6 +192,5 @@ Level_1.prototype = {
         var newTurret = new Turret(game, x,y,player);
         phaseObjects.push(newTurret);
         enemyGroup.add(newTurret);
-
     }
 };

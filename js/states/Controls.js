@@ -35,11 +35,11 @@ ControlsState.prototype = {
         GameUtils.setAnchorToCenter([this.left_label, this.right_label, this.phaseShift_label, this.jump_label, this.shoot_label]);
 
         // Labels for the buttons
-        this.leftButton_label =         game.make.text(this.col1_button, this.row1, ControlKeys.getKeyMapping('leftKey'), this.textProp);
-        this.rightButton_label =        game.make.text(this.col1_button, this.row2, ControlKeys.getKeyMapping('rightKey'), this.textProp);
+        this.leftButton_label =         game.make.text(this.col1_button, this.row1, ControlKeys.getKeyMapping('leftKey2'), this.textProp);
+        this.rightButton_label =        game.make.text(this.col1_button, this.row2, ControlKeys.getKeyMapping('rightKey2'), this.textProp);
         this.phaseShiftButton_label =   game.make.text(this.col1_button, this.row3, ControlKeys.getKeyMapping('phaseShiftKey'), this.textProp);
-        this.jumpButton_label =         game.make.text(this.col2_button, this.row1, ControlKeys.getKeyMapping('jumpKey'), this.textProp);
-        this.shootButton_label =        game.make.text(this.col2_button, this.row2, ControlKeys.getKeyMapping('shootKey'), this.textProp);
+        this.jumpButton_label =         game.make.text(this.col2_button, this.row1, ControlKeys.getKeyMapping('jumpKey2'), this.textProp);
+        this.shootButton_label =        game.make.text(this.col2_button, this.row2, ControlKeys.getKeyMapping('shootKey2'), this.textProp);
         GameUtils.setAnchorToCenter([this.leftButton_label, this.rightButton_label, this.phaseShiftButton_label, this.jumpButton_label, this.shootButton_label]);
 
         // Label for a hint
