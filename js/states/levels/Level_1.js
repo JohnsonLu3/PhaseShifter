@@ -92,9 +92,9 @@ Level_1.prototype = {
         phasePlatforms.push(platform);
 
         // Spawn Platforms that can shift phases
-        this.spawnPlatforms(46, 12 ,((Math.random()/2) + 0.5) * 1000, 1);
-        this.spawnPlatforms(49, 12 ,((Math.random()/2) + 0.5) * 1000, 0);
-        this.spawnPlatforms(52, 12 ,((Math.random()/2) + 0.5) * 1000, 1);
+        this.spawnPlatforms(46, 12 ,0, 1);
+        this.spawnPlatforms(49, 12 ,0 * 1000, 0);
+        this.spawnPlatforms(52, 12 ,0, 1);
 
         // Set up cursors
         ControlKeys.setControls(this.player);
