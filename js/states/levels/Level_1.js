@@ -157,7 +157,6 @@ Level_1.prototype = {
         PlayerUtils.checkPlayerDeath(this.player);
 
         onPlatform = false;
-        
     },
 
     render: function() {

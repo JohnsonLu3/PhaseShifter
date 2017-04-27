@@ -65,6 +65,7 @@ var Player = function(game, x, y, asset, interval, hp) {
 
     // Cheats
     this.invulnerable = false;
+    this.flying = false;
 }
 
 /**

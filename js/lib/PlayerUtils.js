@@ -99,11 +99,30 @@ var PlayerUtils = {
      */
     handlePlayerMovement: function(player) {
 
-        // Jump
-        if((ControlKeys.jumpKey.isDown || ControlKeys.jumpKey2.isDown) && player.isAlive && (player.body.blocked.down || onPlatform ) ) {
-            player.jumping = true;
-            player.body.velocity.y = player.jumpHeight;
+        // Stop player movement
+        player.body.velocity.x = 0;
+        if(player.flying === true) {
+            player.body.velocity.y = 0;
         }
+
+        // Check for flying flag
+        if(player.flying === false) {
+            // Jump
+            if((ControlKeys.jumpKey.isDown || ControlKeys.jumpKey2.isDown) && player.isAlive && (player.body.blocked.down || onPlatform ) ) {
+                player.jumping = true;
+                player.body.velocity.y = player.jumpHeight;
+            }
+        } else {
+            // Fly up
+            if((ControlKeys.upKey.isDown || ControlKeys.upKey2.isDown) && player.isAlive) {
+                player.body.velocity.y = -player.walkingSpeed;
+            }
+        
+            // Fly down
+            else if((ControlKeys.downKey.isDown || ControlKeys.downKey2.isDown) && player.isAlive) {
+                player.body.velocity.y = player.walkingSpeed;
+            }
+       }
 
         // Move left
         if((ControlKeys.leftKey.isDown || ControlKeys.leftKey2.isDown ) && player.isAlive) {
@@ -115,11 +134,6 @@ var PlayerUtils = {
         else if((ControlKeys.rightKey.isDown || ControlKeys.rightKey2.isDown )  && player.isAlive) {
             this.updateFacing(true, player);
             player.body.velocity.x = player.walkingSpeed;
-        }
-
-        // Stop moving
-        else {
-            player.body.velocity.x = 0;
         }
 
         // Play the proper animation and sounds(uninterruptable)

@@ -141,5 +141,41 @@ var GameUtils = {
         else {
             game.world.remove(this.invulnerability_label);
         }
+    },
+
+    /**
+     * This funtion is called when the flying key is pressed.
+     */
+    handleFlying: function(player) {
+        if(this.flying_label === undefined) {
+            this.flying_label = game.make.text(0, 50, "Phaser is FLYING", {font: '18px Arial', fill: 'white'});
+            this.flying_label.fixedToCamera = true;
+        }
+
+        // Toggle flying
+        player.flying = !player.flying;
+        
+
+        // Display or remove text
+        if(player.flying === true) {
+            game.add.existing(this.flying_label);
+            
+            // Stop moving
+            player.body.velocity.x = 0;
+            player.body.velocity.y = 0;
+
+            // Remove gravity
+            player.body.gravity.y = 0;
+        }
+        else {
+            game.world.remove(this.flying_label);
+
+            // Stop moving
+            player.body.velocity.x = 0;
+            player.body.velocity.y = 0;
+
+            // Reset gravity
+            player.body.gravity.y = 600;
+        }
     }
 }
