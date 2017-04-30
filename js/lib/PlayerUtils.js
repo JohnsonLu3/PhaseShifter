@@ -2,7 +2,7 @@
  * This object contains several functions that affect the player.
  */
 var PlayerUtils = {
-
+    
     /**
      * This function initializes the Phaser.Sound objects for the player sounds.
      * This must be called before calling any of the other sound effect functions!
@@ -109,9 +109,23 @@ var PlayerUtils = {
         if(player.flying === false) {
             // Jump
             if((ControlKeys.jumpKey.isDown || ControlKeys.jumpKey2.isDown) && player.isAlive && (player.body.blocked.down || onPlatform ) ) {
+                player.body.gravity.y = 800;
                 player.jumping = true;
-                player.body.velocity.y = player.jumpHeight;
+                jumpTimer -= 75;
+                if(jumpTimer >  (player.jumpHeight)){
+                     player.body.velocity.y  =  jumpTimer;
+                }
+            }else if((ControlKeys.jumpKey.isDown || ControlKeys.jumpKey2.isDown) && player.isAlive && player.jumping){
+                jumpTimer -= 75;
+                if(jumpTimer >  (player.jumpHeight)){
+                     player.body.velocity.y  =  jumpTimer;
+                }
+            }else{
+                player.jumping = false;
+                jumpTimer = 0;
+                player.body.gravity.y = 1000;
             }
+
         } else {
             // Fly up
             if((ControlKeys.upKey.isDown || ControlKeys.upKey2.isDown) && player.isAlive) {

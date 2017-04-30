@@ -9,3 +9,5 @@ var phaseObjects = new Array();
 
 var phasePlatform = new Array();
 
+// For a better jump
+var jumpTimer = 0;

@@ -29,7 +29,7 @@ var Player = function(game, x, y, asset, interval, hp) {
     this.cooldownAmt = 20;
     this.bulletSpeed = 600;
     this.walkingSpeed = 250;
-    this.jumpHeight  = -400;
+    this.jumpHeight  = -525;
     //Set various convenience methods that don't need to be specified in the actual game.
         // Add instance variables
     this.health = 10;         
@@ -45,7 +45,7 @@ var Player = function(game, x, y, asset, interval, hp) {
     this.body.setSize(24, 48, 16, 10);
 
     //  Player physics properties
-    this.body.gravity.y = 600;
+    this.body.gravity.y = 1000;
     this.body.collideWorldBounds = true;
 
     // Idle
