@@ -28,7 +28,7 @@ var Player = function(game, x, y, asset, interval, hp) {
     this.facing = 1;     // 1 = right, 0 = left
     this.cooldownAmt = 20;
     this.bulletSpeed = 600;
-    this.walkingSpeed = 250;
+    this.walkingSpeed = 300;
     this.jumpHeight  = -525;
     //Set various convenience methods that don't need to be specified in the actual game.
         // Add instance variables
