@@ -76,15 +76,15 @@ Level_4.prototype = {
         //this.map.addTilesetImage('backgrounds', 'backgroundTiles');
 
         // Create tile layers
-        //this.background_layer = this.map.createLayer('background');
         this.layer = this.map.createLayer('world_layer');
         this.hazard = this.map.createLayer('hazards_layer');
+        //this.background_layer = this.map.createLayer('background');
         
         // Set the tiles in the map to be collidable
         this.map.setCollisionBetween(0, 400, true, this.layer);
         this.map.setCollisionBetween(0, 400, true, this.hazard);
 
-        /*
+        
         // Create a group for all enemy bullets, this will greatly simplify the collision detections
         game.enemyBullets = game.add.group();
         game.enemyBullets.enableBody = true;
@@ -98,16 +98,16 @@ Level_4.prototype = {
         //Add group above the tile layer.
         enemyGroup = game.add.group();
         droneGroup = game.add.group();
-
+        
         // Start physics
         game.physics.startSystem(Phaser.Physics.ARCADE);
-        */
+        
         // Add an exitDoor
         this.exitDoor = game.add.sprite((2 * 32), (19 * 32), 'exitDoor');
         
 
         // Create player
-        this.player = new Player(game, (1 * 32), (73 * 32), 'player', 0, 5);
+        this.player = new Player(game, (1 * 32), (74 * 32), 'player', 0, 5);
         phaseObjects.push(this.player);
         game.camera.follow(this.player);
         this.healthBar = PlayerUtils.spawnLifeBar(this.player);
@@ -138,7 +138,7 @@ Level_4.prototype = {
         globalTimer++;
         game.physics.arcade.collide(this.player, this.layer);
 
-        /*
+        
         //game.physics.arcade.collide(this.player, this.hazard, this.takeDamage, null, this);
 
         this.checkWinCondition();
@@ -173,7 +173,7 @@ Level_4.prototype = {
                 }
             }
         }
-        */
+        
         //Deal with player movement after checking for platform collision.
         PlayerUtils.handlePlayerMovement(this.player);
 
@@ -259,6 +259,10 @@ Level_4.prototype = {
      * This function adds turrets to the map.
      */
     createTurrets: function() {
+        // Initial ascent
+        EnemyFactory.makeTurret(game, (39 * 32), (53 * 32) + 13, this.player, phaseObjects, enemyGroup);
+        EnemyFactory.makeTurret(game, (39 * 32), (58 * 32) + 13, this.player, phaseObjects, enemyGroup);
+        EnemyFactory.makeTurret(game, (39 * 32), (63 * 32) + 13, this.player, phaseObjects, enemyGroup);
 
     },
 
@@ -273,32 +277,6 @@ Level_4.prototype = {
             PlayerUtils.playDamageSound();
         }
     },
-    /**
-     * This function adds a turret to the current game world.
-     * @param {*} x The x position of the turret to be added.
-     * @param {*} y The y position of the turret to be added.
-     * @param {*} player A reference to the player character.
-     */
-    addTurret : function (x, y, player)
-    {
-        var newTurret = new Turret(game, x,y,player);
-        phaseObjects.push(newTurret);
-        enemyGroup.add(newTurret);
-
-    },
-
-    /**
-     * This function adds a drone to the world.
-     * @param {*} x The x position of the drone.
-     * @param {*} y The y position of the drone.
-     * @parmam {*} player A reference to the player character.
-     */
-    addDrone : function(x, y, player)
-    {
-        var newDrone = new Drone(game, x, y, player);
-        phaseObjects.push(newDrone);
-        droneGroup.add(newDrone)
-    }
 };
 
 

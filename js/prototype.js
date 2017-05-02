@@ -54,6 +54,7 @@ Main.prototype = {
         game.load.script('functions_script', 'js/lib/functions.js');
         game.load.script('buttonHandlers_script', 'js/lib/ButtonHandlers.js');
         game.load.script('controlKeys_script', 'js/lib/ControlKeys.js');
+        game.load.script('enemyFactory_script', 'js/lib/EnemyFactory.js');
     }
 }
 
