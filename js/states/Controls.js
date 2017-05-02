@@ -38,12 +38,12 @@ ControlsState.prototype = {
         this.leftButton_label =         game.make.text(this.col1_button, this.row1, ControlKeys.getKeyMapping('leftKey2'), this.textProp);
         this.rightButton_label =        game.make.text(this.col1_button, this.row2, ControlKeys.getKeyMapping('rightKey2'), this.textProp);
         this.phaseShiftButton_label =   game.make.text(this.col1_button, this.row3, ControlKeys.getKeyMapping('phaseShiftKey'), this.textProp);
-        this.jumpButton_label =         game.make.text(this.col2_button, this.row1, ControlKeys.getKeyMapping('jumpKey2'), this.textProp);
+        this.jumpButton_label =         game.make.text(this.col2_button, this.row1, ControlKeys.getKeyMapping('jumpKey'), this.textProp);
         this.shootButton_label =        game.make.text(this.col2_button, this.row2, ControlKeys.getKeyMapping('shootKey2'), this.textProp);
         GameUtils.setAnchorToCenter([this.leftButton_label, this.rightButton_label, this.phaseShiftButton_label, this.jumpButton_label, this.shootButton_label]);
 
         // Label for a hint
-        this.hint_label = game.make.text(game.world.centerX, 500, 'Hint: Use your left hand to control movement and your right hand to shoot and phase shift', this.textProp);
+        this.hint_label = game.make.text(game.world.centerX, 500, 'Hint: Use your one hand to control movement and the other hand to shoot and phase shift!', this.textProp);
         GameUtils.setAnchorToCenter([this.hint_label]);
     },
 

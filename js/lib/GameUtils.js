@@ -34,6 +34,11 @@ var GameUtils = {
         );
     },
 
+    makeControlsHint: function() {
+        var shootHintText = game.make.text();
+        var phaseShiftText = game.make.text();
+    },
+
     makePauseMenu: function() {
         PauseText = game.make.text(0, 0, 'Paused', { font: '30px Arial', fill: '#fff' });
         PauseText.anchor.setTo(0.5, 0.5);
@@ -43,6 +48,8 @@ var GameUtils = {
             
         menuText = game.make.text(0, 0, 'Level Select', {font: '24px Arial', fill: 'white'});
         menuText.anchor.setTo(0.5, 0.5);
+
+        //GameUtils.setAnchorToCenter([PauseText, menuButton, menuText]);
     },
 
     /**
