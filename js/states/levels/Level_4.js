@@ -106,11 +106,11 @@ Level_4.prototype = {
         game.physics.arcade.collide(game.enemyBullets, this.layer, function(bullet,layer) { bullet.kill() }, null, this);
         game.physics.arcade.collide(this.player.playerBullets, this.layer, function(bullet,layer) { bullet.kill() }, null, this);
 
-        // Resolve interactions between playerBullets and enemies and between enemyBullets and players.
+        // Resolve overlap interactions
         game.physics.arcade.overlap(this.turretGroup, this.player.playerBullets, recieveDamage, null, this);
         game.physics.arcade.overlap(this.droneGroup, this.player.playerBullets, recieveDamageD, null, this);
         game.physics.arcade.overlap(this.player, game.enemyBullets, function(p, b) {PlayerUtils.receiveDamage(p, b, this.healthBar)}, null, this);
-        game.physics.arcade.overlap(this.player, this.jumpPlatformGroup, function(p, jp) {p.jumpBoost == true; p.jumpHeight = jp.newJumpHeight;});
+        game.physics.arcade.overlap(this.player, this.jumpPlatformGroup, function(p, jp) {jp.handleJumpBoost(p)});
         
         //Drone overlaps with player logic. Only take damage if states are the same.
         game.physics.arcade.overlap(this.player, droneGroup, function(player,drone) {

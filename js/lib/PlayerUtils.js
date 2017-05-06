@@ -105,35 +105,34 @@ var PlayerUtils = {
             player.body.velocity.y = 0;
         }
 
-        
+        // Make sure to reset the player's jump height to the original
+        if(player.jumpBoost === false) {
+            player.jumpHeight = player.JUMP_HEIGHT;
+        }
 
         // Check for flying flag
         if(player.flying === false) {
 
-            
-
-            // Jump
+            // The player is touching the ground or a platform
             if((ControlKeys.jumpKey.isDown || ControlKeys.jumpKey2.isDown) && player.isAlive && (player.body.blocked.down || onPlatform )) {
-                if(player.jumpBoost === true) {
-                    
-                }
-
-                else {
-
-                }
                 player.body.gravity.y = 800;
                 player.jumping = true;
                 jumpTimer -= 75;
                 if(jumpTimer >  (player.jumpHeight)){
                      player.body.velocity.y  =  jumpTimer;
                 }
-            } else if((ControlKeys.jumpKey.isDown || ControlKeys.jumpKey2.isDown) && player.isAlive && player.jumping) {
+            }
+            // The player is jumping and holding down the jump key 
+            else if((ControlKeys.jumpKey.isDown || ControlKeys.jumpKey2.isDown) && player.isAlive && player.jumping) {
                 jumpTimer -= 75;
                 if(jumpTimer >  (player.jumpHeight)) {
                      player.body.velocity.y  =  jumpTimer;
                 }
-            } else {
+            } 
+            // The player is not jumping
+            else {
                 player.jumping = false;
+                player.jumpBoost = false;
                 jumpTimer = 0;
                 player.body.gravity.y = 1000;
             }
@@ -162,7 +161,7 @@ var PlayerUtils = {
             player.body.velocity.x = player.walkingSpeed;
         }
 
-        // Play the proper animation and sounds(uninterruptable)
+        // Play the proper animation and sounds (uninterruptable)
         if (player.body.velocity.y != 0 && !onPlatform && player.isAlive) {
             this.stopWalkSound();
             player.playAnimation("jump");

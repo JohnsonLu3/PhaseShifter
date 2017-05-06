@@ -30,4 +30,9 @@ var JumpPlatform = function (game, x, y, newJumpHeight) {
 JumpPlatform.prototype = Object.create(Phaser.Sprite.prototype);
 JumpPlatform.prototype.constructor = JumpPlatform;
 
+JumpPlatform.prototype.handleJumpBoost = function(player) {
+    player.jumpBoost = true;
+    player.jumpHeight = this.newJumpHeight;
+}
+
 
