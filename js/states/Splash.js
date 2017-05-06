@@ -63,15 +63,15 @@ SplashState.prototype = {
     // Called before preload and create
     init: function () {
         this.loadingBar = game.make.sprite(game.world.centerX - (387 / 2), 510, 'loadingBar');
-        this.gameLogo   = game.make.sprite(game.world.centerX, 250, 'gameLogo');
+        this.background = game.make.sprite(game.world.centerX, game.world.centerY, 'splashScreenBackground');
         this.status     = game.make.text(game.world.centerX, 550, 'Loading', {fill: 'white'});
-        GameUtils.setAnchorToCenter([this.gameLogo, this.status]);
+        GameUtils.setAnchorToCenter([this.background, this.status]);
     },
 
     // Called before create
     preload: function () {
         // Add assets to the screen
-        game.add.existing(this.gameLogo);
+        game.add.existing(this.background);
         game.add.existing(this.loadingBar);
         game.add.existing(this.status);
 

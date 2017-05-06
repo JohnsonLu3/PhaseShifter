@@ -10,11 +10,35 @@
  */
 var Player = function(game, x, y, asset, interval, hp) {
 
-
     // Call CustomSprite's constructor
     CustomSprite.call(this, game, x, y, asset, interval);
+
+    /**
+     * SPRITE CONSTANTS
+     */
+    this.JUMP_HEIGHT = -525;
+
+    /**
+     * INSTANCE VARIABLES
+     */
     this.health = hp;
     this.cooldown = 0;
+    //Remember the last direction we ran, we will fire bullets in that direction.
+    this.facing = 1;     // 1 = right, 0 = left
+    this.cooldownAmt = 20;
+    this.bulletSpeed = 600;
+    this.walkingSpeed = 300;
+    this.jumpHeight  = -525;
+    this.shiftState = false;       // Player shiftState    0 = Blue    1 = Red
+    this.facing = true;            
+    this.anchor.setTo(.5,.5);
+    this.isAlive = true; 
+    this.jumping = false;
+    this.jumpBoost = false;
+
+    /**
+     * BULLETS
+     */
     // Set up the player bullets, allow physics and convenience methods for them
     this.playerBullets = game.add.group();
     this.playerBullets.enableBody = true;
@@ -24,20 +48,9 @@ var Player = function(game, x, y, asset, interval, hp) {
     this.playerBullets.setAll('checkWorldBounds', true);
     this.playerBullets.setAll('outOfBoundsKill', true);    
 
-    //Remember the last direction we ran, we will fire bullets in that direction.
-    this.facing = 1;     // 1 = right, 0 = left
-    this.cooldownAmt = 20;
-    this.bulletSpeed = 600;
-    this.walkingSpeed = 300;
-    this.jumpHeight  = -525;
-    //Set various convenience methods that don't need to be specified in the actual game.
-        // Add instance variables
-    this.health = 10;         
-    this.shiftState = false;       // Player shiftState    0 = Blue    1 = Red
-    this.facing = true;            
-    this.anchor.setTo(.5,.5);
-    this.isAlive = true; 
-    this.jumping = false;
+    /**
+     * PHYSICS
+     */
     //  We need to enable physics on the player
     game.physics.arcade.enable(this);
 
@@ -48,6 +61,9 @@ var Player = function(game, x, y, asset, interval, hp) {
     this.body.gravity.y = 1000;
     this.body.collideWorldBounds = true;
 
+    /**
+     * ANIMATIONS
+     */
     // Idle
     this.animations.add('idle_B', [0, 1, 2, 3, 4, 5, 6], 10, true);
     this.animations.add('idle_R', [7, 8, 9, 10, 11, 12, 13], 10, true);

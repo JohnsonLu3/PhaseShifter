@@ -1,9 +1,9 @@
 /**
  * Platform will represent a phase platform, you will only be allowed to stand on these platforms when your phase is equal to the phase of the platform.
- * @param {*} game The game instance for where to add the platform to.
- * @param {*} x X position of the platform.
- * @param {*} y Y position of the platform
- * @param {*} interval The interval of the platform, the amount of frames that must pass before changing phase.
+ * @param {Phaser.Game} game The game instance for where to add the platform to.
+ * @param {number} x X position of the platform.
+ * @param {number} y Y position of the platform
+ * @param {number} interval The interval of the platform, the amount of frames that must pass before changing phase.
  */
 var Platform = function (game, x, y, interval, state) {
     CustomSprite.call(this, game, x, y, 'platform', interval, state);
@@ -12,7 +12,6 @@ var Platform = function (game, x, y, interval, state) {
     this.body.setSize(60, 8, 2, 12);
     this.flicker = false;
     this.animations.add("flicker", [0,1], 30, true);
-    
 }
 
 Platform.prototype = Object.create(CustomSprite.prototype);

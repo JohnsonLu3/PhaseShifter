@@ -97,7 +97,7 @@ var PlayerUtils = {
      *      the controls that are pressed. Also players
      *      the correct animation / facing / shift state
      */
-    handlePlayerMovement: function(player) {
+    handlePlayerMovement: function(player, jumpPlatformGroup) {
 
         // Stop player movement
         player.body.velocity.x = 0;
@@ -105,22 +105,34 @@ var PlayerUtils = {
             player.body.velocity.y = 0;
         }
 
+        
+
         // Check for flying flag
         if(player.flying === false) {
+
+            
+
             // Jump
-            if((ControlKeys.jumpKey.isDown || ControlKeys.jumpKey2.isDown) && player.isAlive && (player.body.blocked.down || onPlatform ) ) {
+            if((ControlKeys.jumpKey.isDown || ControlKeys.jumpKey2.isDown) && player.isAlive && (player.body.blocked.down || onPlatform )) {
+                if(player.jumpBoost === true) {
+                    
+                }
+
+                else {
+
+                }
                 player.body.gravity.y = 800;
                 player.jumping = true;
                 jumpTimer -= 75;
                 if(jumpTimer >  (player.jumpHeight)){
                      player.body.velocity.y  =  jumpTimer;
                 }
-            }else if((ControlKeys.jumpKey.isDown || ControlKeys.jumpKey2.isDown) && player.isAlive && player.jumping){
+            } else if((ControlKeys.jumpKey.isDown || ControlKeys.jumpKey2.isDown) && player.isAlive && player.jumping) {
                 jumpTimer -= 75;
-                if(jumpTimer >  (player.jumpHeight)){
+                if(jumpTimer >  (player.jumpHeight)) {
                      player.body.velocity.y  =  jumpTimer;
                 }
-            }else{
+            } else {
                 player.jumping = false;
                 jumpTimer = 0;
                 player.body.gravity.y = 1000;

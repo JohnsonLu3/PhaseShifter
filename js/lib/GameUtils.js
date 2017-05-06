@@ -34,9 +34,10 @@ var GameUtils = {
         );
     },
 
-    makeControlsHint: function() {
-        var shootHintText = game.make.text();
-        var phaseShiftText = game.make.text();
+    makeUIFrame: function() {
+        var uiFrame = game.add.sprite(0, 0, 'UI_frame');
+        uiFrame.fixedToCamera = true;
+        return uiFrame;
     },
 
     makePauseMenu: function() {

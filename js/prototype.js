@@ -33,7 +33,7 @@ Main.prototype = {
         game.load.script('splash_script', 'js/states/Splash.js');
 
         // Load splash screen assets
-        game.load.image('gameLogo', 'assets/gameLogo.png', 500, 500);
+        game.load.image('splashScreenBackground', 'assets/splash_screen.png', 1140, 640);
         game.load.image('loadingBar', 'assets/loading.png', 387, 23);
 
         this.loadUtils();
@@ -54,7 +54,7 @@ Main.prototype = {
         game.load.script('functions_script', 'js/lib/functions.js');
         game.load.script('buttonHandlers_script', 'js/lib/ButtonHandlers.js');
         game.load.script('controlKeys_script', 'js/lib/ControlKeys.js');
-        game.load.script('enemyFactory_script', 'js/lib/EnemyFactory.js');
+        game.load.script('spriteFactory_script', 'js/lib/SpriteFactory.js');
     }
 }
 

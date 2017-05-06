@@ -322,7 +322,7 @@ Level_2.prototype = {
      * This function adds a drone to the world.
      * @param {*} x The x position of the drone.
      * @param {*} y The y position of the drone.
-     * @parmam {*} player A reference to the player character.
+     * @param {*} player A reference to the player character.
      */
     addDrone : function(x,y,player)
     {

@@ -34,12 +34,10 @@ var CustomSprite = function(game, x, y, asset, interval, state) {
  */
 CustomSprite.prototype = Object.create(Phaser.Sprite.prototype);
 CustomSprite.prototype.constructor = CustomSprite;
-CustomSprite.prototype.setPhase = function(phase)
-{
+CustomSprite.prototype.setPhase = function(phase) {
     this.shiftState = phase;
 }
-CustomSprite.prototype.changePhase = function()
-{
+CustomSprite.prototype.changePhase = function() {
     if (this.interval != 0) {
         if (globalTimer % this.interval == 0 && globalTimer != this.lastShift) {
             this.shiftState = !this.shiftState;
@@ -48,13 +46,11 @@ CustomSprite.prototype.changePhase = function()
     }
 }
 //The most basic form of update, simply check if its time to change phase.
-CustomSprite.prototype.update = function()
-{
+CustomSprite.prototype.update = function() {
     this.changePhase();
 }
 
-CustomSprite.prototype.setInterval = function(num)
-{
+CustomSprite.prototype.setInterval = function(num) {
     this.interval = num;
 }
 
