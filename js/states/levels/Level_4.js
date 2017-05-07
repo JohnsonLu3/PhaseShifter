@@ -1,6 +1,7 @@
 /**
  * The game state for level 4.
  * This is called by the levelSelectState when the user clicks on the level 4 icon.
+ * Alternatively, this is called when the user completes the previous level and continues to play.
  */
 
 // A global timer, this is used in order to keep track of things such as intervals for enemy phase changes.
@@ -61,7 +62,6 @@ Level_4.prototype = {
         game.camera.follow(this.player);
         this.healthBar = PlayerUtils.spawnLifeBar(this.player);
 
-
         // Create other level sprites
         this.createLevelPlatforms();
         this.createDrones();
@@ -104,7 +104,7 @@ Level_4.prototype = {
         game.physics.arcade.overlap(this.player, game.enemyBullets, function(p, b) {PlayerUtils.receiveDamage(p, b, this.healthBar)}, null, this);
         game.physics.arcade.overlap(this.player, this.jumpPlatformGroup, function(p, jp) {jp.handleJumpBoost(p)});
         
-        //Drone overlaps with player logic. Only take damage if states are the same.
+        // Drone overlaps with player logic. Only take damage if states are the same.
         game.physics.arcade.overlap(this.player, this.droneGroup, function(player, drone) {
             if (drone.shiftState === player.shiftState) {
                 this.takeDamage(player);

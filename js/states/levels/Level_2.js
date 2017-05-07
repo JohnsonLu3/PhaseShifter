@@ -1,21 +1,10 @@
 /**
- * The game state for level 1.
- * This is called by the levelSelectState when the user clicks on the first level icon.
+ * The game state for level 2.
+ * This is called by the levelSelectState when the user clicks on the level 2 icon.
+ * Alternatively, this is called when the user completes level 1 and continues to play.
  */
-
-var platform;
-
 // A global timer, this is used in order to keep track of things such as intervals for enemy phase changes.
 var globalTimer = 0;
-// Collection of all phase objects in the game, used for calling update each frame.
-var phaseObjects = new Array();
-// Create a game group which will contain all special phase platforms.
-var phasePlatform = new Array();
-var exitDoor;
-var onPlatform = false;
-var enemyGroup;
-//Group consisting of all drones.
-var droneGroup;
 
 var Level_2 = function() {};
 Level_2.prototype = {
@@ -28,109 +17,62 @@ Level_2.prototype = {
         game.load.image('collisionTiles', 'assets/levels/tilesheet2.png');
         game.load.image('hazardTiles', 'assets/levels/hazards.png');
         game.load.image('backgroundTiles', 'assets/levels/backgrounds.png');
-        game.load.image('exitDoor' , 'assets/exitDoor.png', 64, 64);
         game.load.spritesheet('player', "assets/phaser.png", 64,64);
         game.load.spritesheet('bullet', "assets/bullets.png", 16,16);
         game.load.spritesheet('enemyBullet', "assets/enemyBullets.png", 16,16);
-        game.load.spritesheet("drone", "assets/Drone.png", 32, 32);
-        game.load.spritesheet('turret', "assets/turret.png", 64,64);
         game.load.spritesheet('heart', "assets/battery_32x32.png", 32, 32);
-        game.load.spritesheet('platform', "assets/platform.png", 64, 32);
-    },
-
-    /**
-     * This function loads all the JS files for the objects in this level.
-     */
-    loadScripts: function() {
-        game.load.script('customSprite_script', 'js/characters/customSprite.js');
-        game.load.script('functs', 'js/lib/functions.js');
-        game.load.script('playerSprite_script', 'js/characters/playerSprite.js');
-        game.load.script('platforms', 'js/characters/platforms.js');
-        game.load.script('drone', 'js/characters/drone.js');
     },
     
     init: function() {
-        this.w = 5120;                      // size of level W and H 
+        this.w = 5120;
         this.h = 2400;                   
     },
 
     preload: function() {
         this.loadImages();
-        this.loadScripts();
+        
+        // Initialize the SpriteFactory
+        SpriteFactory.initFactory();
     },
 
     create: function() {
 
-        // Map Stuff
+        // Set the world dimensions
+        game.world.setBounds(0, 0, this.w, this.h);
+
+        // Add the tilemap and the tilesets
         this.map = game.add.tilemap('mapdata');
         this.map.addTilesetImage('hazards', 'hazardTiles');
         this.map.addTilesetImage('tilesheet2', 'collisionTiles');
         this.map.addTilesetImage('backgrounds', 'backgroundTiles');
-        game.world.setBounds(0, 0, this.w, this.h);
+
+        // Create tile layers
         this.map.createLayer('background');
         this.hazard = this.map.createLayer('hazards');
         this.layer = this.map.createLayer('Collisions');
         
+        // Set all the tiles in the map to be collidable
         this.map.setCollisionBetween(0, 400, true, this.layer);
         this.map.setCollisionBetween(0, 400, true, this.hazard);
 
-        // Create a group for all enemy bullets, this will greatly simplify the collision detections
-        game.enemyBullets = game.add.group();
-        game.enemyBullets.enableBody = true;
-        game.enemyBullets.physicsBodyType = Phaser.Physics.ARCADE;
-        //Add a max of 100 bullets that all enemies can shoot.
-        game.enemyBullets.createMultiple(100, 'enemyBullet');
-        game.enemyBullets.setAll('checkWorldBounds', true);
-        game.enemyBullets.setAll('outOfBoundsKill', true);            
+        // Create all the groups for the level
+        this.createGroups();
 
-        // Load level from mapdata
-
-        //Add group above the tile layer.
-        enemyGroup = game.add.group();
-        droneGroup = game.add.group();
         // Start physics
         game.physics.startSystem(Phaser.Physics.ARCADE);
 
-        // make an exitDoor
-        exitDoor = game.add.sprite((157 * 32), (44 * 32), 'exitDoor');
+        // Create an exit door
+        this.exitDoor = SpriteFactory.makeExitDoor(game, (157 * 32), (44 * 32), true);
 
-
-        // Create player
+        // Create player and UI
         this.player = new Player(game, 32, this.h - (16 * 32), 'player', 0, 5);
         phaseObjects.push(this.player);
         game.camera.follow(this.player);
         this.healthBar = PlayerUtils.spawnLifeBar(this.player);
 
-
-        this.addDrone( 25, 55, this.player);
-        this.addDrone( 24, 42, this.player);
-        this.addDrone( 40, 46, this.player);
-
-        this.addDrone( 114, 33, this.player);
-        this.addDrone( 99, 22, this.player);
-        this.addDrone( 100, 4, this.player);
-        this.addDrone( 157, 5, this.player);
-        this.addDrone( 143, 29, this.player);
-
-        this.addTurret(51, 50, this.player);
-
-        this.addTurret(145, 7, this.player);
-        this.addTurret(130, 7, this.player);
-        this.addTurret(116, 7, this.player);
-
-
-        if (iFrames > 0){
-            iFrames--;
-            
-            if(iFrames % 2 === 0){
-                    this.player.visible = 0;
-                }else{
-                    //this.player.visible = 1;
-                }
-            }
-
-        // Spawn Platforms that can shift phases
+        // Create other level sprites
         this.createLevelPlatforms();
+        this.createEnemies();
 
         // Set up controls
         ControlKeys.setControls(this.player);
@@ -152,50 +94,40 @@ Level_2.prototype = {
         game.physics.arcade.collide(this.player, this.layer);
         game.physics.arcade.collide(this.player, this.hazard, this.takeDamage, null, this);
 
+        // Check for game win
         this.checkWinCondition();
         
         // Check for cheats
         GameUtils.checkCheats(this.player);
 
-        //Collisions.
+        //Collisions
         //Kill all bullets that hit solid ground.
-        game.physics.arcade.collide(game.enemyBullets, this.layer,function(bullet,layer)
-        {
-            bullet.kill()
-        },null,this);
-        
-        game.physics.arcade.collide(this.player.playerBullets, this.layer,function(bullet,layer)
-        {
-            bullet.kill()
-        },null,this);
+        game.physics.arcade.collide(game.enemyBullets, this.layer, function(bullet,layer) { bullet.kill() }, null, this);
+        game.physics.arcade.collide(this.player.playerBullets, this.layer, function(bullet,layer) { bullet.kill() }, null, this);
 
-        //Resolve interactions between playerBullets and enemies and between enemyBullets and players.
-        game.physics.arcade.overlap(enemyGroup, this.player.playerBullets, recieveDamage, null, this);
-        game.physics.arcade.overlap(droneGroup, this.player.playerBullets, recieveDamageD, null, this);
+        // Resolve overlap interactions
+        game.physics.arcade.overlap(this.turretGroup, this.player.playerBullets, recieveDamage, null, this);
+        game.physics.arcade.overlap(this.droneGroup, this.player.playerBullets, recieveDamageD, null, this);
         game.physics.arcade.overlap(this.player, game.enemyBullets, function(p, b) {PlayerUtils.receiveDamage(p, b, this.healthBar)}, null, this);
 
-        //Drone overlaps with player logic. Only take damage if states are the same.
-        game.physics.arcade.overlap(this.player,droneGroup, function(player,drone)
-        {
-            if (drone.shiftState === player.shiftState)
-            {
+        // Drone overlaps with player logic. Only take damage if states are the same.
+        game.physics.arcade.overlap(this.player, this.droneGroup, function(player, drone) {
+            if (drone.shiftState === player.shiftState) {
                 this.takeDamage(player);
                 drone.explode();
                 EnemyUtils.playDroneExplodeSound();
             }
         }, null, this);
 
-        //Collide player with phase platforms if they are in the same phase.
-        for (var i = 0; i < phasePlatforms.length; i++)
-        {
-            if (this.player.shiftState === phasePlatforms[i].shiftState)
-            {   
-                if (!onPlatform)
-                {
-                    onPlatform = game.physics.arcade.collide(this.player, phasePlatforms[i]);
+        // Collide player with phase platforms if they are in the same phase.
+        for (var i = 0; i < this.phasePlatforms.length; i++) {
+            if (this.player.shiftState === this.phasePlatforms[i].shiftState) {
+                if (!this.player.onPlatform) {
+                    this.player.onPlatform = game.physics.arcade.collide(this.player, this.phasePlatforms[i]);
                 }
             }
         }
+
         //Deal with player movement after checking for platform collision.
         PlayerUtils.handlePlayerMovement(this.player);
 
@@ -205,75 +137,93 @@ Level_2.prototype = {
         // Check for, and handle, player death
         PlayerUtils.checkPlayerDeath(this.player);
 
-        onPlatform = false;
+        this.player.onPlatform = false;
 
-        if (iFrames > 0){
+        if (iFrames > 0) {
             iFrames--;
-
-            if(iFrames % 5 === 0){
-                    this.player.visible = 0;
-                }else{
-                    if(iFrames % 2 === 0){
-                        this.player.visible = 1;
-                    }
-                }
-            }else{
+            if(iFrames % 5 === 0) {
+                this.player.visible = 0;
+            } else if(iFrames % 2 === 0){
                 this.player.visible = 1;
             }
-
+        } else {
+            this.player.visible = 1;
+        }
     },
 
     render: function() {},
 
+    /**
+     * This function creates all the Phaser.Group objects needed for the level.
+     */
+    createGroups: function() {
+        // Create a group for all enemy bullets, this will greatly simplify the collision detections
+        game.enemyBullets = game.add.group();
+        game.enemyBullets.enableBody = true;
+        game.enemyBullets.physicsBodyType = Phaser.Physics.ARCADE;
+
+        //Add a max of 100 bullets that all enemies can shoot.
+        game.enemyBullets.createMultiple(100, 'enemyBullet');
+        game.enemyBullets.setAll('checkWorldBounds', true);
+        game.enemyBullets.setAll('outOfBoundsKill', true);
+
+        //Add group above the tile layer.
+        this.turretGroup = game.add.group();
+        this.droneGroup = game.add.group();
+        this.jumpPlatformGroup = game.add.group();
+        
+        
+        // Collection of all phase objects in the game, used for calling update each frame.
+        this.phaseObjects = new Array();
+        // Create an array which will contain all special phase platforms.
+        this.phasePlatforms = new Array();
+    },
+
     checkWinCondition: function () {
-        if (this.player.overlap(exitDoor)){
+        if (game.physics.arcade.overlap(this.player, this.exitDoor)) {
             game.world.width = gameW;                       // Reset game world cords
             game.world.height = gameH;                      // because the camera messes with it
             game.state.start('gameWin_state');
         }
     },
 
-    spawnPlatforms: function(x, y, interval, state){
-        platform = new Platform(game,x*32, y*32,  interval, state);
-        phasePlatforms.push(platform);
-        phaseObjects.push(platform);
-    },
-
+    /**
+     * This function adds platforms to the map.
+     */
     createLevelPlatforms:function(){
         // starting area
-        this.spawnPlatforms(17, 54, 0, 1 );
-        this.spawnPlatforms(17, 58, 0, 0 );
+        SpriteFactory.makePlatform(game, (17 * 32), (54 * 32), 0, 1, this.phaseObjects, this.phasePlatforms);
+        SpriteFactory.makePlatform(game, (17 * 32), (58 * 32), 0, 0, this.phaseObjects, this.phasePlatforms);
         
         // large gap
-        var clr = 0;        
+        var clr = 0;
         for(var x = 17; x < 36; x+=4){
-            
-            this.spawnPlatforms(x, 50, 300, clr );
-            if(clr === 0){
+            SpriteFactory.makePlatform(game, (x * 32), (50 * 32), 300, clr, this.phaseObjects, this.phasePlatforms);
+            if(clr === 0) {
                 clr = 1;
-            }else{
+            } else {
                 clr = 0;
             }
         }
 
-        this.spawnPlatforms(61, 52, 0, 0 );
+        SpriteFactory.makePlatform(game, (61 * 32), (52 * 32), 0, 0, this.phaseObjects, this.phasePlatforms);
 
-        this.spawnPlatforms(71, 47, 0, 1 );
+        SpriteFactory.makePlatform(game, (71 * 32), (47 * 32), 0, 1, this.phaseObjects, this.phasePlatforms);
 
-        this.spawnPlatforms(69, 50, 0, 0 );
+        SpriteFactory.makePlatform(game, (69 * 32), (50 * 32), 0, 0, this.phaseObjects, this.phasePlatforms);
 
-        this.spawnPlatforms(81, 44, 0, 0 );
-        this.spawnPlatforms(79, 44, 0, 0 );
+        SpriteFactory.makePlatform(game, (81 * 32), (44 * 32), 0, 0, this.phaseObjects, this.phasePlatforms);
+        SpriteFactory.makePlatform(game, (79 * 32), (44 * 32), 0, 0, this.phaseObjects, this.phasePlatforms);
 
-        this.spawnPlatforms(97, 41, 0, 1 );
-        this.spawnPlatforms(91, 41, 0, 1 );
+        SpriteFactory.makePlatform(game, (97 * 32), (41 * 32), 0, 1, this.phaseObjects, this.phasePlatforms);
+        SpriteFactory.makePlatform(game, (91 * 32), (41 * 32), 0, 1, this.phaseObjects, this.phasePlatforms);
 
-        //rise
-        for(var y = 9; y < 40; y += 3){
-            this.spawnPlatforms(106, y, 300, clr );
-                if(clr === 0){
+        // rise
+        for(var y = 9; y < 40; y += 3) {
+            SpriteFactory.makePlatform(game, (106 * 32), (y * 32), 300, clr, this.phaseObjects, this.phasePlatforms);
+                if(clr === 0) {
                     clr = 1;
-                }else{
+                } else {
                     clr = 0;
                 }
         }
@@ -281,15 +231,35 @@ Level_2.prototype = {
         // fall        
         for(var y = 9; y < 36; y+=6){
             for(var x = 150; x < 160; x+=2){
-                this.spawnPlatforms(x, y, 500, clr );
+                SpriteFactory.makePlatform(game, (x * 32), (y * 32), 500, clr, this.phaseObjects, this.phasePlatforms);
                 if(clr === 0){
                     clr = 1;
-                }else{
+                } else {
                     clr = 0;
                 }
             }
         }
+    },
 
+    /**
+     * This function adds all the enemies to the map.
+     */
+    createEnemies: function() {
+        SpriteFactory.makeDrone(game, (25 * 32), (55 * 32), this.player, this.phaseObjects, this.droneGroup);
+        SpriteFactory.makeDrone(game, (24 * 32), (42 * 32), this.player, this.phaseObjects, this.droneGroup);
+        SpriteFactory.makeDrone(game, (40 * 32), (46 * 32), this.player, this.phaseObjects, this.droneGroup);
+
+        SpriteFactory.makeDrone(game, (114 * 32), (33 * 32), this.player, this.phaseObjects, this.droneGroup);
+        SpriteFactory.makeDrone(game, (99 * 32), (22 * 32), this.player, this.phaseObjects, this.droneGroup);
+        SpriteFactory.makeDrone(game, (100 * 32), (4 * 32), this.player, this.phaseObjects, this.droneGroup);
+        SpriteFactory.makeDrone(game, (157 * 32), (5 * 32), this.player, this.phaseObjects, this.droneGroup);
+        SpriteFactory.makeDrone(game, (143 * 32), (29 * 32), this.player, this.phaseObjects, this.droneGroup);
+
+        SpriteFactory.makeTurret(game, (51 * 32) + 10, (50 * 32) + 12, this.player, this.phaseObjects, this.turretGroup);
+
+        SpriteFactory.makeTurret(game, (145 * 32) + 10, (7 * 32) + 12, this.player, this.phaseObjects, this.turretGroup);
+        SpriteFactory.makeTurret(game, (130 * 32) + 10, (7 * 32) + 12, this.player, this.phaseObjects, this.turretGroup);
+        SpriteFactory.makeTurret(game, (116 * 32) + 10, (7 * 32) + 12, this.player, this.phaseObjects, this.turretGroup);
 
     },
 
@@ -303,32 +273,6 @@ Level_2.prototype = {
             iFrames = 30;
             PlayerUtils.playDamageSound();
         }
-    },
-    /**
-     * This function adds a turret to the current game world.
-     * @param {*} x The x position of the turret to be added.
-     * @param {*} y The y position of the turret to be added.
-     * @param {*} player A reference to the player character.
-     */
-    addTurret : function (x, y, player)
-    {
-        var newTurret = new Turret(game, ( x * 32) + 10, (y * 32) + 12,player);
-        phaseObjects.push(newTurret);
-        enemyGroup.add(newTurret);
-
-    },
-
-    /**
-     * This function adds a drone to the world.
-     * @param {*} x The x position of the drone.
-     * @param {*} y The y position of the drone.
-     * @param {*} player A reference to the player character.
-     */
-    addDrone : function(x,y,player)
-    {
-        var newDrone = new Drone(game, x*32, (y*32 ), player);
-        phaseObjects.push(newDrone);
-        droneGroup.add(newDrone)
     }
 };
 
