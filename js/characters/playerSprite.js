@@ -24,17 +24,17 @@ var Player = function(game, x, y, asset, interval, hp) {
     this.health = hp;
     this.cooldown = 0;
     //Remember the last direction we ran, we will fire bullets in that direction.
-    this.facing = 1;     // 1 = right, 0 = left
+    this.facing = true;     // 1 = right, 0 = left
     this.cooldownAmt = 20;
     this.bulletSpeed = 600;
     this.walkingSpeed = 300;
     this.jumpHeight  = -525;
     this.shiftState = false;       // Player shiftState    0 = Blue    1 = Red
-    this.facing = true;            
     this.anchor.setTo(.5,.5);
-    this.isAlive = true; 
+    this.isAlive = true;
     this.jumping = false;
     this.jumpBoost = false;
+    this.onPlatform = false;
 
     /**
      * BULLETS
@@ -89,42 +89,32 @@ var Player = function(game, x, y, asset, interval, hp) {
  */
 Player.prototype = Object.create(CustomSprite.prototype);
 Player.prototype.constructor = Player;
-Player.prototype.setCoolDown = function(cooldown)
-{
-    if (cooldown > 0)
-    {
+Player.prototype.setCoolDown = function(cooldown) {
+    if (cooldown > 0) {
         this.cooldownAmt = cooldown;
     }
 }
-Player.prototype.setSpeed = function(speed)
-{
+Player.prototype.setSpeed = function(speed) {
     this.bulletSpeed = speed;
 }
-Player.prototype.setWalkSpeed = function(speed)
-{
+Player.prototype.setWalkSpeed = function(speed) {
     this.walkingSpeed = speed;
 }
-Player.prototype.changePhase = function()
-{
+Player.prototype.changePhase = function() {
     this.shiftState = !this.shiftState;
 }
-Player.prototype.setHealth = function(health)
-{
-    if (health > 0)
-    {
+Player.prototype.setHealth = function(health) {
+    if (health > 0) {
         this.health = health;
     }
 }
 
 //Player's play animation method.
-Player.prototype.playAnimation = function(name)
-{
-    if (name === "die")
-    {
+Player.prototype.playAnimation = function(name) {
+    if (name === "die") {
         this.animations.play("die");
     }
-    else
-    {
+    else {
         if (this.shiftState) {
             //We are in the red state, play red variation of animation.
             this.animations.play(name + "_R");
@@ -138,35 +128,27 @@ Player.prototype.playAnimation = function(name)
 
 //Player has an update metho to see if cooldown can be decreased., its all controlled by the player.
 Player.prototype.update = function(){
-    if (this.cooldown > 0)
-    {
+    if (this.cooldown > 0) {
         this.cooldown--;
     }
-
 };
 //Fire a bullet from the player
 Player.prototype.fire = function(){
     var bullet = this.playerBullets.getFirstDead();
-    if (this.cooldown == 0 && bullet != null && this.alive)
-    {
+    if (this.cooldown == 0 && bullet != null && this.alive) {
         //Setting back to being alive.
         bullet.reset(this.x + (0.5 * this.width),this.y-5);
         //Set the phase and color of this bullet.
         bullet.phase = this.shiftState;
-        if (bullet.phase)
-        {
+        if (bullet.phase) {
             bullet.loadTexture('bullet', 0);
-        }
-        else
-        {
+        } else {
             bullet.loadTexture('bullet', 1);
         }
-        if (this.facing)
-        {
+
+        if (this.facing) {
             bullet.body.velocity.x = this.bulletSpeed;
-        }
-        else
-        {
+        } else {
             bullet.body.velocity.x = -this.bulletSpeed;
         }
         this.cooldown = this.cooldownAmt;

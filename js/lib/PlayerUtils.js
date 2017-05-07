@@ -114,7 +114,7 @@ var PlayerUtils = {
         if(player.flying === false) {
 
             // The player is touching the ground or a platform
-            if((ControlKeys.jumpKey.isDown || ControlKeys.jumpKey2.isDown) && player.isAlive && (player.body.blocked.down || onPlatform )) {
+            if((ControlKeys.jumpKey.isDown || ControlKeys.jumpKey2.isDown) && player.isAlive && (player.body.blocked.down || player.onPlatform )) {
                 player.body.gravity.y = 800;
                 player.jumping = true;
                 jumpTimer -= 75;

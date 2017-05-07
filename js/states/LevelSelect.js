@@ -31,6 +31,7 @@ LevelSelectState.prototype = {
 
         // Create the pause menu so that it can be shown in game
         GameUtils.makePauseMenu();
+        GameUtils.makeCheatText();
     },
     
     // Manually make buttons for now

@@ -27,7 +27,7 @@ var GameUtils = {
         this.setAnchorToCenter([back_button, back_text]);
     },
 
-    makeHelpButton: function() {
+    makeHelpButton: function(x, y) {
         var buttonX, buttonY;
         var pause_button = game.add.button(buttonX, buttonY, 'helpButton',
             function() {game.state.start(helpScreen)}
@@ -41,16 +41,25 @@ var GameUtils = {
     },
 
     makePauseMenu: function() {
-        PauseText = game.make.text(0, 0, 'Paused', { font: '30px Arial', fill: '#fff' });
-        PauseText.anchor.setTo(0.5, 0.5);
+        pauseText = game.make.text(0, 0, 'Paused', { font: '30px Arial', fill: '#fff' });
+        pauseText.anchor.setTo(0.5, 0.5);
 
-        menubutton = game.make.sprite(0, 0, 'menu');
-        menubutton.anchor.setTo(0.5, 0.5);
+        menuButton = game.make.sprite(0, 0, 'menu');
+        menuButton.anchor.setTo(0.5, 0.5);
             
         menuText = game.make.text(0, 0, 'Level Select', {font: '24px Arial', fill: 'white'});
         menuText.anchor.setTo(0.5, 0.5);
+    },
 
-        //GameUtils.setAnchorToCenter([PauseText, menuButton, menuText]);
+    /**
+     * This function creates the text labels to indicate that cheats are active.
+     */
+    makeCheatText: function() {
+        invulnerability_label = game.make.text(0, 45, "Phaser is INVULNERABLE (to bullets at least)", {font: '18px Arial', fill: 'white'});
+        invulnerability_label.fixedToCamera = true;
+
+        flying_label = game.make.text(0, 65, "Phaser is FLYING", {font: '18px Arial', fill: 'white'});
+        flying_label.fixedToCamera = true;
     },
 
     /**
@@ -63,21 +72,21 @@ var GameUtils = {
         // NEED TO SHOW A PAUSE MENU WHERE YOU CAN GO BACK TO THE MAIN MAIN
         if(game.paused === true){
             game.paused = false;                            // unpause game
-            game.world.remove(PauseText);
+            game.world.remove(pauseText);
             game.world.remove(menuText);
-            game.world.remove(menubutton);
+            game.world.remove(menuButton);
 
         } else {
             // Update the positions of the menu elements
-            PauseText.x = game.camera.x + gameW/2;
-            PauseText.y = game.camera.y + 20;
-            menubutton.x = game.camera.x + gameW/2;
-            menubutton.y = game.camera.y + gameH/2;
+            pauseText.x = game.camera.x + gameW/2;
+            pauseText.y = game.camera.y + 20;
+            menuButton.x = game.camera.x + gameW/2;
+            menuButton.y = game.camera.y + gameH/2;
             menuText.x = game.camera.x + gameW/2;
             menuText.y = game.camera.y + gameH/2;
             // Show the menu
-            game.add.existing(PauseText);
-            game.add.existing(menubutton);
+            game.add.existing(pauseText);
+            game.add.existing(menuButton);
             game.add.existing(menuText);
             game.paused = true;
         }
@@ -92,8 +101,8 @@ var GameUtils = {
             var mouseX = event.x + 65;          // add weird offset
             var mouseY = event.y + 24;
 
-            if( mouseX + game.camera.x >  menubutton.x && mouseX + game.camera.x < menubutton.x + 150
-                && mouseY + game.camera.y >  menubutton.y - 60 && mouseY + game.camera.y < menubutton.y + 60 ){
+            if( mouseX + game.camera.x >  menuButton.x && mouseX + game.camera.x < menuButton.x + 150
+                && mouseY + game.camera.y >  menuButton.y - 60 && mouseY + game.camera.y < menuButton.y + 60 ){
                 // CALL STATE SWITCH
                 game.paused = false;
                 // Revert music back to theme
@@ -133,21 +142,17 @@ var GameUtils = {
      * This function is called when the invulnerability key is pressed.
      */
     handleInvulnerability: function(player) {
-        // Make invulnerability text if needed
-        if(this.invulnerability_label === undefined) {
-            this.invulnerability_label = game.make.text(0, 0, "Phaser is INVULNERABLE (to bullets at least)", {font: '18px Arial', fill: 'white'});
-            this.invulnerability_label.fixedToCamera = true;
-        }
+        
         // Toggle invincibility
         player.invulnerable = !player.invulnerable;
 
         // Display or remove text
         if (player.invulnerable === true) {
             // Update text location
-            game.add.existing(this.invulnerability_label);
+            game.add.existing(invulnerability_label);
         }
         else {
-            game.world.remove(this.invulnerability_label);
+            game.world.remove(invulnerability_label);
         }
     },
 
@@ -155,18 +160,14 @@ var GameUtils = {
      * This funtion is called when the flying key is pressed.
      */
     handleFlying: function(player) {
-        if(this.flying_label === undefined) {
-            this.flying_label = game.make.text(0, 50, "Phaser is FLYING", {font: '18px Arial', fill: 'white'});
-            this.flying_label.fixedToCamera = true;
-        }
-
+        
         // Toggle flying
         player.flying = !player.flying;
         
 
         // Display or remove text
         if(player.flying === true) {
-            game.add.existing(this.flying_label);
+            game.add.existing(flying_label);
             
             // Stop moving
             player.body.velocity.x = 0;
@@ -176,7 +177,7 @@ var GameUtils = {
             player.body.gravity.y = 0;
         }
         else {
-            game.world.remove(this.flying_label);
+            game.world.remove(flying_label);
 
             // Stop moving
             player.body.velocity.x = 0;

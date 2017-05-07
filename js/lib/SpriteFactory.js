@@ -57,9 +57,10 @@ var SpriteFactory = {
      * @param {Player} player - Reference to the player
      * @param {Phaser.Group} jumpPlatformGroup - The group of jump platforms
      */
-    makeJumpPlatform: function(game, x, y, jumpHeight, player, jumpPlatformGroup) {
-        var newJumpPlatform = new JumpPlatform(game, x, y, jumpHeight, player);
+    makeJumpPlatform: function(game, x, y, jumpHeight, jumpPlatformGroup) {
+        var newJumpPlatform = new JumpPlatform(game, x, y, jumpHeight);
         jumpPlatformGroup.add(newJumpPlatform);
+        return newJumpPlatform;
     },
 
     /**
@@ -74,6 +75,7 @@ var SpriteFactory = {
         var newPlatform = new Platform(game, x, y, interval, state);
         phasePlatforms.push(newPlatform);
         phaseObjects.push(newPlatform);
+        return newPlatform;
     },
 
     /**
@@ -88,6 +90,7 @@ var SpriteFactory = {
         var newTurret = new Turret(game, x, y, player);
         phaseObjects.push(newTurret);
         turretGroup.add(newTurret);
+        return newTurret;
     },
     
 }
