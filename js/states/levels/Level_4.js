@@ -3,8 +3,6 @@
  * This is called by the levelSelectState when the user clicks on the level 4 icon.
  */
 
-var platform;
-
 // A global timer, this is used in order to keep track of things such as intervals for enemy phase changes.
 var globalTimer = 0;
 
@@ -54,16 +52,12 @@ Level_4.prototype = {
         // Start physics
         game.physics.startSystem(Phaser.Physics.ARCADE);
         
-        // Add an exitDoor
-        this.exitDoor = game.add.sprite((2 * 32), (19 * 32), 'exitDoor', 5);
-        game.physics.arcade.enableBody(this.exitDoor);
-        this.exitDoor.body.setSize(28, 46, 16, 18);
-        this.exitDoor.animations.add('open', [4, 3, 2, 1, 0], 5, false);
-        
+        // Add an exit door
+        this.exitDoor = SpriteFactory.makeExitDoor(game, (2 * 32), (19 * 32), false);
         
         // Create player and UI
         this.player = new Player(game, (1 * 32), (74 * 32), 'player', 0, 5);
-        phaseObjects.push(this.player);
+        this.phaseObjects.push(this.player);
         game.camera.follow(this.player);
         this.healthBar = PlayerUtils.spawnLifeBar(this.player);
 
@@ -111,7 +105,7 @@ Level_4.prototype = {
         game.physics.arcade.overlap(this.player, this.jumpPlatformGroup, function(p, jp) {jp.handleJumpBoost(p)});
         
         //Drone overlaps with player logic. Only take damage if states are the same.
-        game.physics.arcade.overlap(this.player, droneGroup, function(player,drone) {
+        game.physics.arcade.overlap(this.player, this.droneGroup, function(player, drone) {
             if (drone.shiftState === player.shiftState) {
                 this.takeDamage(player);
                 drone.explode();
@@ -128,8 +122,6 @@ Level_4.prototype = {
             }
         }
 
-        
-        
         //Deal with player movement after checking for platform collision.
         PlayerUtils.handlePlayerMovement(this.player);
 
@@ -143,7 +135,6 @@ Level_4.prototype = {
 
         if (iFrames > 0) {
             iFrames--;
-
             if(iFrames % 5 === 0) {
                 this.player.visible = 0;
             } else if(iFrames % 2 === 0){
@@ -155,7 +146,7 @@ Level_4.prototype = {
     },
 
     render: function() {
-        game.debug.text("game win: " + this.gameWin, 10, 100);
+        //game.debug.text("game win: " + this.gameWin, 10, 100);
         //game.debug.text(this.player.jumpHeight, 10, 100);
         //game.debug.text(game.physics.arcade.overlap(this.player, this.jumpPlatformGroup), 10, 120);
         //game.debug.text("onPlatform: " + onPlatform, 10, 140);
@@ -174,7 +165,6 @@ Level_4.prototype = {
         //game.load.image('backgroundTiles', 'assets/levels/backgrounds.png');
 
         // These are for the various objects and sprites
-        game.load.spritesheet('exitDoor' , 'assets/closingDoor.png', 64, 64);
         game.load.spritesheet('player', "assets/phaser.png", 64,64);
         game.load.spritesheet('bullet', "assets/bullets.png", 16,16);
         game.load.spritesheet('enemyBullet', "assets/enemyBullets.png", 16,16);
@@ -235,7 +225,7 @@ Level_4.prototype = {
     },
 
     /**
-     * This function adds phase changing platforms to the map.
+     * This function adds platforms to the map.
      */
     createLevelPlatforms:function(){
 

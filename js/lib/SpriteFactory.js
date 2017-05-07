@@ -19,6 +19,7 @@ var SpriteFactory = {
         game.load.spritesheet("drone", "assets/Drone.png", 32, 32);
         game.load.spritesheet('turret', "assets/turret.png", 64,64);
         game.load.spritesheet('platform', "assets/platform.png", 64, 32);
+        game.load.spritesheet('exitDoor' , 'assets/closingDoor.png', 64, 64);
         game.load.image('jumpPlatform', 'assets/jumpPlatform.png');
     },
 
@@ -45,8 +46,28 @@ var SpriteFactory = {
         var newDrone = new Drone(game, x, y, player);
         phaseObjects.push(newDrone);
         droneGroup.add(newDrone);
+        return newDrone;
     },
 
+    /**
+     * This function creates an exit door and places it in the game world.
+     * @param {Phaser.Game} game - Reference to the game object.
+     * @param {number} x - The x coordinate at which to create the door.
+     * @param {number} y - The y coordinate at which to create the door.
+     * @param {boolean} open - True if the door begins opened, or false if it begins closed.
+     */
+    makeExitDoor: function(game, x, y, open) {
+        var newExitDoor;
+        if(open === true) {
+            newExitDoor = game.add.sprite(x, y, 'exitDoor', 0);
+        } else {
+            newExitDoor = game.add.sprite(x, y, 'exitDoor', 5);
+        }
+        game.physics.arcade.enableBody(newExitDoor);
+        newExitDoor.body.setSize(28, 46, 16, 18);
+        newExitDoor.animations.add('open', [4, 3, 2, 1, 0], 5, false);
+        return newExitDoor;
+    },
     
     /**
      * This function creates a jump platform and places it in the game world.

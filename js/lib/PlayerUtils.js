@@ -74,9 +74,9 @@ var PlayerUtils = {
 
     /**
     * This function is called when an enemy bullet is in contact with a player.
-    * @param {*} turret The player, which was just in contact with the bullet.
-    * @param {*} bullet The bullet, which is in contact with the player.
-    * @param {*} healthBar The health bar array for the level
+    * @param {Player} player - The player, which was just in contact with the bullet.
+    * @param {Phaser.Sprite} bullet - The bullet, which is in contact with the player.
+    * @param {Phaser.Sprite[]} healthBar - The health bar array for the level
     */
     receiveDamage: function(player, bullet, healthBar) {
         if(player.invulnerable === false) {
@@ -89,6 +89,16 @@ var PlayerUtils = {
                 this.playDamageSound();
             }
         }
+    },
+
+    /**
+     * This function is called when the player heals any damage by touching a health pack.
+     * @param {Player} player - The player, who has just touched a health pack.
+     * @param {Phaser.Sprite} healthPack - The health pack that the player touched.
+     * @param {Phaser.Sprite[]} healthBar - The health bar array for the level.
+     */
+    healDamage: function(player, healthPack, healthBar) {
+        
     },
 
     /**
