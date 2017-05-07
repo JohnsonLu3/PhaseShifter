@@ -12,6 +12,7 @@ var Player = function(game, x, y, asset, interval, hp) {
 
     // Call CustomSprite's constructor
     CustomSprite.call(this, game, x, y, asset, interval);
+    this.anchor.setTo(.5,.5);
 
     /**
      * SPRITE CONSTANTS
@@ -29,8 +30,8 @@ var Player = function(game, x, y, asset, interval, hp) {
     this.bulletSpeed = 600;
     this.walkingSpeed = 300;
     this.jumpHeight  = -525;
+    this.iFrames = 0;
     this.shiftState = false;       // Player shiftState    0 = Blue    1 = Red
-    this.anchor.setTo(.5,.5);
     this.isAlive = true;
     this.jumping = false;
     this.jumpBoost = false;

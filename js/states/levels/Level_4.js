@@ -85,7 +85,7 @@ Level_4.prototype = {
     update: function() {
         globalTimer++;
         game.physics.arcade.collide(this.player, this.layer);
-        game.physics.arcade.collide(this.player, this.hazard, this.takeDamage, null, this);
+        game.physics.arcade.collide(this.player, this.hazard, function(p, h) {PlayerUtils.takeDamage(p, this.healthBar)}, null, this);
 
         // Check for game win
         this.checkWinCondition();
@@ -101,13 +101,13 @@ Level_4.prototype = {
         // Resolve overlap interactions
         game.physics.arcade.overlap(this.turretGroup, this.player.playerBullets, recieveDamage, null, this);
         game.physics.arcade.overlap(this.droneGroup, this.player.playerBullets, recieveDamageD, null, this);
-        game.physics.arcade.overlap(this.player, game.enemyBullets, function(p, b) {PlayerUtils.receiveDamage(p, b, this.healthBar)}, null, this);
+        game.physics.arcade.overlap(this.player, game.enemyBullets, function(p, b) {PlayerUtils.receiveBulletDamage(p, b, this.healthBar)}, null, this);
         game.physics.arcade.overlap(this.player, this.jumpPlatformGroup, function(p, jp) {jp.handleJumpBoost(p)});
         
         // Drone overlaps with player logic. Only take damage if states are the same.
         game.physics.arcade.overlap(this.player, this.droneGroup, function(player, drone) {
             if (drone.shiftState === player.shiftState) {
-                this.takeDamage(player);
+                PlayerUtils.takeDamage(player, this.healthBar);
                 drone.explode();
                 EnemyUtils.playDroneExplodeSound();
             }
@@ -133,11 +133,11 @@ Level_4.prototype = {
 
         this.player.onPlatform = false;
 
-        if (iFrames > 0) {
-            iFrames--;
-            if(iFrames % 5 === 0) {
+        if (this.player.iFrames > 0) {
+            this.player.iFrames--;
+            if(this.player.iFrames % 5 === 0) {
                 this.player.visible = 0;
-            } else if(iFrames % 2 === 0){
+            } else if(this.player.iFrames % 2 === 0){
                 this.player.visible = 1;
             }
         } else {
@@ -189,7 +189,6 @@ Level_4.prototype = {
         this.turretGroup = game.add.group();
         this.droneGroup = game.add.group();
         this.jumpPlatformGroup = game.add.group();
-        
         
         // Collection of all phase objects in the game, used for calling update each frame.
         this.phaseObjects = new Array();
@@ -281,19 +280,7 @@ Level_4.prototype = {
         this.finalRoomArray.push(SpriteFactory.makeTurret(game, (21 * 32), (19 * 32) + 13, this.player, this.phaseObjects, this.turretGroup));
         this.finalRoomArray.push(SpriteFactory.makeTurret(game, (8 * 32), (22 * 32) + 13, this.player, this.phaseObjects, this.turretGroup));
         this.finalRoomArray.push(SpriteFactory.makeTurret(game, (34 * 32), (22 * 32) + 13, this.player, this.phaseObjects, this.turretGroup));
-    },
-
-    takeDamage: function(player)
-    {
-        if (iFrames == 0){
-            player.health--;
-            if (this.healthBar[player.health] != null) {
-                this.healthBar[player.health].kill();
-            }
-            iFrames = 30;
-            PlayerUtils.playDamageSound();
-        }
-    },
+    }
 };
 
 

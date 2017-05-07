@@ -78,16 +78,26 @@ var PlayerUtils = {
     * @param {Phaser.Sprite} bullet - The bullet, which is in contact with the player.
     * @param {Phaser.Sprite[]} healthBar - The health bar array for the level
     */
-    receiveDamage: function(player, bullet, healthBar) {
+    receiveBulletDamage: function(player, bullet, healthBar) {
         if(player.invulnerable === false) {
             if (player.shiftState === bullet.phase) {
                 bullet.kill()
-                player.health--;
-                if (healthBar[player.health] != null) {
-                    healthBar[player.health].kill();
-                }
-                this.playDamageSound();
+                this.takeDamage(player, healthBar);
             }
+        }
+    },
+
+    /**
+     * This function is called whenever the player is damaged.
+     */
+    takeDamage: function(player, healthBar) {
+        if(player.iFrames === 0) {
+            player.health--;
+            if (healthBar[player.health] != null) {
+                healthBar[player.health].kill();
+            }
+            player.iFrames = 30;
+            this.playDamageSound();
         }
     },
 
@@ -98,7 +108,7 @@ var PlayerUtils = {
      * @param {Phaser.Sprite[]} healthBar - The health bar array for the level.
      */
     healDamage: function(player, healthPack, healthBar) {
-        
+
     },
 
     /**
@@ -172,7 +182,7 @@ var PlayerUtils = {
         }
 
         // Play the proper animation and sounds (uninterruptable)
-        if (player.body.velocity.y != 0 && !onPlatform && player.isAlive) {
+        if (player.body.velocity.y != 0 && !player.onPlatform && player.isAlive) {
             this.stopWalkSound();
             player.playAnimation("jump");
         }
