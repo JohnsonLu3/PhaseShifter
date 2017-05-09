@@ -7,12 +7,13 @@ var GameLoseState = {
     textProp : {
         fill: 'white',
         boundsAlignH: 'center',
+        boundsAlignV: 'center'
     },
 
     init: function() {},
 
     preload: function() {
-        this.lose_text = game.make.text(game.world.centerX, 300, "Oh no, you have lost.\nTry again?", this.textProp);
+        this.lose_text = game.make.text(game.world.centerX, 200, "Oh no, you have lost.\nTry again?", this.textProp);
         this.lose_text.anchor.setTo(0.5);
         this.makeRetryButtons();
     },

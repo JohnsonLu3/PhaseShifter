@@ -40,6 +40,10 @@ var GameUtils = {
         var menuFrame = game.add.sprite(0, 0, 'menu_frame');
     },
 
+    makeWideMenuFrame:function() {
+        var menuFrame = game.add.sprite(0, 0, 'menu_frame_wide');
+    },
+
     makeUIFrame: function() {
         var uiFrame = game.add.sprite(0, 0, 'UI_frame');
         uiFrame.fixedToCamera = true;

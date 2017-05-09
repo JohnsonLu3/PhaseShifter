@@ -8,7 +8,7 @@ var Turret = function(game,x,y,player)
     //Default bullet speed.
     this.bulletSpeed = 275;
     //Enable physics on turret enemies.
-    this.body.setSize(40, 40, 0, 0);
+    this.body.setSize(46, 40, 12, 24);
     //Add various animations to this sprite.
 
     //IDLE
