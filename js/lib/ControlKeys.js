@@ -10,7 +10,7 @@ var ControlKeys = {
     'downKey':          game.input.keyboard.addKey(Phaser.Keyboard.S),
     'phaseShiftKey':    game.input.keyboard.addKey(Phaser.Keyboard.SHIFT),
     'jumpKey':          game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR),
-    'shootKey':         game.input.keyboard.addKey(Phaser.Keyboard.CONTROL),
+    'shootKey':         game.input.keyboard.addKey(Phaser.Keyboard.M),
     'pauseKey':         game.input.keyboard.addKey(Phaser.Keyboard.ESC),
 
     // Secondary controls

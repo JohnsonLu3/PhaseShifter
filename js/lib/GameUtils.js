@@ -38,10 +38,14 @@ var GameUtils = {
 
     makeMenuFrame: function() {
         var menuFrame = game.add.sprite(0, 0, 'menu_frame');
+        // Make sure the background color is set
+        game.stage.backgroundColor = '#554455';
     },
 
     makeWideMenuFrame:function() {
         var menuFrame = game.add.sprite(0, 0, 'menu_frame_wide');
+        // Make sure the background color is set
+        game.stage.backgroundColor = '#554455';
     },
 
     makeUIFrame: function() {

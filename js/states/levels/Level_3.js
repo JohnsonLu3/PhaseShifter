@@ -43,6 +43,10 @@ Level_3.prototype = {
     },
 
     create: function() {
+
+        // Set background color
+        game.stage.backgroundColor = '#BFC8CC';
+
         // Set world dimensions
         game.world.setBounds(0, 0, this.w, this.h);      
 
