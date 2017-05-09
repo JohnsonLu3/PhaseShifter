@@ -9,24 +9,30 @@ MainMenuState.prototype = {
      * Declare stuff here that are only used once to keep things organized.
      */
     init: function() {
-        this.playButton =       game.make.button(game.world.centerX, 300, 'playButton', ButtonHandlers.playButtonHandler);
-        this.controlsButton =   game.make.button(game.world.centerX, 640 - 230, 'controlsButton', ButtonHandlers.controlsButtonHandler);
-        this.settingsButton =   game.make.button(game.world.centerX, 640 - 130, 'settingsButton', ButtonHandlers.settingsButtonHandler);
-        GameUtils.setAnchorToCenter([this.playButton, this.controlsButton, this.settingsButton]);
+        this.logo =             game.make.sprite(game.world.centerX, 170, 'logo');
+        //this.logo.scale.setTo(0.7);
+        this.playButton =       game.make.button(game.world.centerX, 400, 'playButton', ButtonHandlers.playButtonHandler);
+        this.controlsButton =   game.make.button(game.world.centerX - 100, 640 - 130, 'controlsButton', ButtonHandlers.controlsButtonHandler);
+        this.settingsButton =   game.make.button(game.world.centerX + 100, 640 - 130, 'settingsButton', ButtonHandlers.settingsButtonHandler);
+        GameUtils.setAnchorToCenter([this.logo, this.playButton, this.controlsButton, this.settingsButton]);
         this.helpButton = game.make.button(100, 550, 'helpButton', ButtonHandlers.helpButtonHandler);
     },
 
     // First* function called by Phaser
     preload: function() {
-        game.add.existing(this.playButton);
-        game.add.existing(this.controlsButton);
-        game.add.existing(this.settingsButton);
-        game.add.existing(this.helpButton);
     },
 
     // Called by Phaser when the game state is started
     create: function() {
+        GameUtils.makeMenuFrame();
         GameUtils.makeScreenTitle('Main Menu');
+        
+        game.add.existing(this.logo);
+        game.add.existing(this.playButton);
+        game.add.existing(this.controlsButton);
+        game.add.existing(this.settingsButton);
+        game.add.existing(this.helpButton);
+
 
         this.initMusic();
         

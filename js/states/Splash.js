@@ -15,6 +15,8 @@ SplashState.prototype = {
         game.load.image('settingsButton', 'assets/buttons/settings.png', 150, 60);
         game.load.image('largeButton', 'assets/buttons/LargeButton_250x100.png', 250, 100);
         game.load.image('smallButton', 'assets/buttons/smallButton_150x60.png', 150, 60);
+        game.load.image('menu_frame', 'assets/menu_frame.png', 1140, 640);
+        game.load.image('logo', 'assets/mainMenu_logo.png', 500, 170);
     },
 
     loadBGM: function () {
@@ -79,7 +81,8 @@ SplashState.prototype = {
         this.load.setPreloadSprite(this.loadingBar);
 
         // Change background color
-        game.stage.backgroundColor = '#787878';
+        //game.stage.backgroundColor = '#787878';
+        game.stage.backgroundColor = '#554455';
 
         // Load all assets
         this.loadScripts();

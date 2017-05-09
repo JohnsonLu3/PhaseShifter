@@ -25,7 +25,10 @@ Level_2.prototype = {
     
     init: function() {
         this.w = 5120;
-        this.h = 2400;                   
+        this.h = 2400;
+        
+        GameLoseState.setCurrentLevel(2);
+        GameUtils.makeCheatText();
     },
 
     preload: function() {
@@ -66,7 +69,7 @@ Level_2.prototype = {
 
         // Create player and UI
         this.player = new Player(game, 32, this.h - (16 * 32), 'player', 0, 5);
-        phaseObjects.push(this.player);
+        this.phaseObjects.push(this.player);
         game.camera.follow(this.player);
         this.healthBar = PlayerUtils.spawnLifeBar(this.player);
 
@@ -81,7 +84,7 @@ Level_2.prototype = {
         music.stop();
         if(musicFlag === true) {
             // Change music
-            music = game.add.audio('level3');
+            music = game.add.audio('level2');
             music.loop = true;
             // Note that the 3rd parameter is the volume, between 0 and 1.
             // The music is too loud, so we are compensating for that here.
@@ -185,7 +188,8 @@ Level_2.prototype = {
         if (game.physics.arcade.overlap(this.player, this.exitDoor)) {
             game.world.width = gameW;                       // Reset game world cords
             game.world.height = gameH;                      // because the camera messes with it
-            game.state.start('gameWin_state');
+            LevelTransitionState.setNextLevel(3);
+            game.state.start('levelTransition_state');
         }
     },
 

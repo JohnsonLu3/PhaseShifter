@@ -14,11 +14,13 @@ var GameUtils = {
 
     makeScreenTitle: function(screenName) {
         // Text that will indicate which screen the player is seeing
-        game.add.text(0, 0, screenName, {fill: 'white'});
+        var title_text = game.add.text(98, 24, screenName, {font: '26px Arial', fill: 'white'});
+        title_text.anchor.setTo(0.5);
+
     },
 
     makeBackButton: function(lastState) {
-        var buttonX = 75, buttonY = 75;
+        var buttonX = 100, buttonY = 80;
         // Back button at the top left corner that will take the player to the previous game state
         var back_button = game.add.button(buttonX, buttonY, 'smallButton',
             function() {game.state.start(lastState)}
@@ -32,6 +34,10 @@ var GameUtils = {
         var pause_button = game.add.button(buttonX, buttonY, 'helpButton',
             function() {game.state.start(helpScreen)}
         );
+    },
+
+    makeMenuFrame: function() {
+        var menuFrame = game.add.sprite(0, 0, 'menu_frame');
     },
 
     makeUIFrame: function() {
@@ -55,11 +61,10 @@ var GameUtils = {
      * This function creates the text labels to indicate that cheats are active.
      */
     makeCheatText: function() {
-        invulnerability_label = game.make.text(0, 45, "Phaser is INVULNERABLE (to bullets at least)", {font: '18px Arial', fill: 'white'});
-        invulnerability_label.fixedToCamera = true;
-
-        flying_label = game.make.text(0, 65, "Phaser is FLYING", {font: '18px Arial', fill: 'white'});
-        flying_label.fixedToCamera = true;
+        this.invulnerability_label = game.make.text(0, 45, "Phaser is INVULNERABLE (to bullets)", {font: '18px Arial', fill: 'white'});
+        this.invulnerability_label.fixedToCamera = true;
+        this.flying_label = game.make.text(0, 65, "Phaser is FLYING", {font: '18px Arial', fill: 'white'});
+        this.flying_label.fixedToCamera = true;
     },
 
     /**
@@ -136,6 +141,9 @@ var GameUtils = {
         else if (ControlKeys.threeKey.isDown) {
             game.state.start('level_3_state');
         }
+        else if (ControlKeys.fourKey.isDown) {
+            game.state.start('level_4_state');
+        }
     },
 
     /**
@@ -146,13 +154,11 @@ var GameUtils = {
         // Toggle invincibility
         player.invulnerable = !player.invulnerable;
 
-        // Display or remove text
-        if (player.invulnerable === true) {
-            // Update text location
-            game.add.existing(invulnerability_label);
+        if(player.invulnerable === true) {
+            game.add.existing(this.invulnerability_label);
         }
         else {
-            game.world.remove(invulnerability_label);
+            game.world.remove(this.invulnerability_label);
         }
     },
 
@@ -167,7 +173,7 @@ var GameUtils = {
 
         // Display or remove text
         if(player.flying === true) {
-            game.add.existing(flying_label);
+            game.add.existing(this.flying_label);
             
             // Stop moving
             player.body.velocity.x = 0;
@@ -175,9 +181,12 @@ var GameUtils = {
 
             // Remove gravity
             player.body.gravity.y = 0;
+
+            // Increase movement speed
+            player.walkingSpeed = player.FLY_SPEED;
         }
         else {
-            game.world.remove(flying_label);
+            game.world.remove(this.flying_label);
 
             // Stop moving
             player.body.velocity.x = 0;
@@ -185,6 +194,9 @@ var GameUtils = {
 
             // Reset gravity
             player.body.gravity.y = 600;
+
+            // Reset movement speed
+            player.walkingSpeed = player.WALK_SPEED;
         }
     }
 }

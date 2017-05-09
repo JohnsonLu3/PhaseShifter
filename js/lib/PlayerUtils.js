@@ -226,7 +226,7 @@ var PlayerUtils = {
     /**
      * This function checks to see if the player's health has been depleted.
      */
-    checkPlayerDeath: function(player) {
+    checkPlayerDeath: function(player, levelNumber) {
         if(player.health === 0 && player.isAlive){                     // Kill player
             player.isAlive = false;                   
             player.animations.play('die');

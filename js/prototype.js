@@ -10,12 +10,6 @@ var game = new Phaser.Game(gameW, gameH, Phaser.AUTO, 'game');
 // A global timer, this is used in order to keep track of things such as intervals for enemy phase changes.
 var globalTimer = 0;
 
-// Collection of all phase objects in the game, used for calling update each frame.
-var phaseObjects = new Array();
-
-// Create a game group which will contain all special phase platforms. Need to keep track in order to determine collision.
-var phasePlatforms = new Array();
-
 // This is the music object. We will need to change this variable when we switch levels.
 var music;
 

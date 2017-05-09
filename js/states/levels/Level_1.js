@@ -25,14 +25,16 @@ Level_1.prototype = {
     
     init: function() {
         this.w = 5120;
-        this.h = 2400;                   
+        this.h = 2400;
+        GameLoseState.setCurrentLevel(1);
+        GameUtils.makeCheatText();
     },
 
     preload: function() {
         this.loadImages();
         
         // Initialize the SpriteFactory
-        SpriteFactory.initFactory();
+        SpriteFactory.initFactory();  
     },
 
     create: function() {
@@ -66,7 +68,7 @@ Level_1.prototype = {
 
         // Create player and UI
         this.player = new Player(game, 32, this.h - (16 * 32), 'player', 0, 5);
-        phaseObjects.push(this.player);
+        this.phaseObjects.push(this.player);
         game.camera.follow(this.player);
         this.healthBar = PlayerUtils.spawnLifeBar(this.player);
 
@@ -81,7 +83,7 @@ Level_1.prototype = {
         music.stop();
         if(musicFlag === true) {
             // Change music
-            music = game.add.audio('level3');
+            music = game.add.audio('level1');
             music.loop = true;
             // Note that the 3rd parameter is the volume, between 0 and 1.
             // The music is too loud, so we are compensating for that here.
@@ -135,7 +137,7 @@ Level_1.prototype = {
         PlayerUtils.checkFallOffWorld(this.player, this.h, this.healthBar);
 
         // Check for, and handle, player death
-        PlayerUtils.checkPlayerDeath(this.player);
+        PlayerUtils.checkPlayerDeath(this.player, '1');
 
         this.player.onPlatform = false;
 
@@ -186,7 +188,8 @@ Level_1.prototype = {
         if (game.physics.arcade.overlap(this.player, this.exitDoor)) {
             game.world.width = gameW;                       // Reset game world cords
             game.world.height = gameH;                      // because the camera messes with it
-            game.state.start('gameWin_state');
+            LevelTransitionState.setNextLevel(2);
+            game.state.start('levelTransition_state');
         }
     },
 
@@ -214,12 +217,12 @@ Level_1.prototype = {
         SpriteFactory.makePlatform(game, (154 * 32), (32 * 32), 0, 0, this.phaseObjects, this.phasePlatforms);
 
         // spike pit
-        SpriteFactory.makePlatform(game, (77 * 32), (30 * 32), 0, 1, this.phaseObjects, this.phasePlatforms);
-        SpriteFactory.makePlatform(game, (72 * 32), (27 * 32), 0, 0, this.phaseObjects, this.phasePlatforms);
-        SpriteFactory.makePlatform(game, (62 * 32), (27 * 32), 0, 1, this.phaseObjects, this.phasePlatforms);
-        SpriteFactory.makePlatform(game, (52 * 32), (27 * 32), 0, 0, this.phaseObjects, this.phasePlatforms);
-        SpriteFactory.makePlatform(game, (42 * 32), (27 * 32), 0, 1, this.phaseObjects, this.phasePlatforms);
-        SpriteFactory.makePlatform(game, (32 * 32), (27 * 32), 0, 0, this.phaseObjects, this.phasePlatforms);
+        SpriteFactory.makePlatform(game, (77 * 32), (30 * 32) + 5, 0, 1, this.phaseObjects, this.phasePlatforms);
+        SpriteFactory.makePlatform(game, (72 * 32), (27 * 32) + 5, 0, 0, this.phaseObjects, this.phasePlatforms);
+        SpriteFactory.makePlatform(game, (62 * 32), (27 * 32) + 5, 0, 1, this.phaseObjects, this.phasePlatforms);
+        SpriteFactory.makePlatform(game, (52 * 32), (27 * 32) + 5, 0, 0, this.phaseObjects, this.phasePlatforms);
+        SpriteFactory.makePlatform(game, (42 * 32), (27 * 32) + 5, 0, 1, this.phaseObjects, this.phasePlatforms);
+        SpriteFactory.makePlatform(game, (32 * 32), (27 * 32) + 5, 0, 0, this.phaseObjects, this.phasePlatforms);
     },
 
     /**

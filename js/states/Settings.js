@@ -23,9 +23,11 @@ var SettingsState = {
     },
 
     create: function() {
-        this.addLabelsAndButtons();
+        GameUtils.makeMenuFrame();
         GameUtils.makeScreenTitle('Settings');
         GameUtils.makeBackButton('mainMenu_state');
+        
+        this.addLabelsAndButtons();
     },
     
     makeLabels: function() {

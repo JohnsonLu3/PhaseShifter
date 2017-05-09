@@ -18,6 +18,8 @@ var Player = function(game, x, y, asset, interval, hp) {
      * SPRITE CONSTANTS
      */
     this.JUMP_HEIGHT = -525;
+    this.WALK_SPEED = 300;
+    this.FLY_SPEED = 600;
 
     /**
      * INSTANCE VARIABLES
@@ -56,7 +58,7 @@ var Player = function(game, x, y, asset, interval, hp) {
     game.physics.arcade.enable(this);
 
     //  Adjust the player hit box
-    this.body.setSize(24, 48, 16, 10);
+    this.body.setSize(30, 48, 13, 10);
 
     //  Player physics properties
     this.body.gravity.y = 1000;
@@ -138,7 +140,7 @@ Player.prototype.fire = function(){
     var bullet = this.playerBullets.getFirstDead();
     if (this.cooldown == 0 && bullet != null && this.alive) {
         //Setting back to being alive.
-        bullet.reset(this.x + (0.5 * this.width),this.y-5);
+        bullet.reset(this.x  /*+ (0.5 * this.width)*/,this.y);
         //Set the phase and color of this bullet.
         bullet.phase = this.shiftState;
         if (bullet.phase) {

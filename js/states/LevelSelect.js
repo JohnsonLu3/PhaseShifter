@@ -17,6 +17,7 @@ LevelSelectState.prototype = {
     },
 
     create: function() {
+        GameUtils.makeMenuFrame();
         GameUtils.makeScreenTitle('Level Select');
         GameUtils.makeBackButton('mainMenu_state');
 
@@ -31,30 +32,34 @@ LevelSelectState.prototype = {
 
         // Create the pause menu so that it can be shown in game
         GameUtils.makePauseMenu();
-        GameUtils.makeCheatText();
     },
     
     // Manually make buttons for now
     makeButtons: function() {
-        this.level_1_button = game.make.button(game.world.centerX, 200, 'largeButton', 
+        var button1x = game.world.centerX, button1y = 114 + 14;
+        var button2x = game.world.centerX, button2y = 228 + 14;
+        var button3x = game.world.centerX, button3y = 342 + 14;
+        var button4x = game.world.centerX, button4y = 456 + 14;
+        
+        this.level_1_button = game.make.button(button1x, button1y, 'largeButton', 
             function() {game.state.start('level_1_state')}
         );
-        this.level_1_text = game.make.text(game.world.centerX, 200, 'Level 1', this.buttonTextProp);
+        this.level_1_text = game.make.text(button1x, button1y, 'Level 1', this.buttonTextProp);
         
-        this.level_2_button = game.make.button(game.world.centerX, 300, 'largeButton',
+        this.level_2_button = game.make.button(button2x, button2y, 'largeButton',
             function() {game.state.start('level_2_state')}
         );
-        this.level_2_text = game.make.text(game.world.centerX, 300, 'Level 2', this.buttonTextProp);
+        this.level_2_text = game.make.text(button2x, button2y, 'Level 2', this.buttonTextProp);
 
-        this.level_3_button = game.make.button(game.world.centerX, 400, 'largeButton', 
+        this.level_3_button = game.make.button(button3x, button3y, 'largeButton', 
             function() {game.state.start('level_3_state')}
         );
-        this.level_3_text = game.make.text(game.world.centerX, 400, 'Level 3', this.buttonTextProp);
+        this.level_3_text = game.make.text(button3x, button3y, 'Level 3', this.buttonTextProp);
 
-        this.level_4_button = game.make.button(game.world.centerX, 500, 'largeButton',
+        this.level_4_button = game.make.button(button4x, button4y, 'largeButton',
             function() {game.state.start('level_4_state')}
         );
-        this.level_4_text = game.make.text(game.world.centerX, 500, 'Level 4', this.buttonTextProp);
+        this.level_4_text = game.make.text(button4x, button4y, 'Level 4', this.buttonTextProp);
 
         // Center the game objects
         GameUtils.setAnchorToCenter([this.level_1_button, this.level_1_text,

@@ -23,6 +23,7 @@ var LevelTransitionState = {
     },
 
     create: function() {
+        GameUtils.makeMenuFrame();
         GameUtils.makeScreenTitle('Level Transition');
         GameUtils.makeBackButton('mainMenu_state')
 
@@ -43,7 +44,7 @@ var LevelTransitionState = {
      */
     makeLabels: function() {
             this.congratulations_label = game.make.text(game.world.centerX, 200, 'Level Complete!', this.textProp);
-            this.nextLevel_label = game.make.text(game.world.centerX, 250, 'Next Level:', this.textProp);
+            this.nextLevel_label =       game.make.text(game.world.centerX, 250, 'Next Level:', this.textProp);
             this.nextLevelButton_label = game.make.text(game.world.centerX, game.world.centerY, 'Level ' + this.nextLevel, this.textProp);
             GameUtils.setAnchorToCenter([this.congratulations_label, this.nextLevel_label, this.nextLevelButton_label]);
     },
@@ -52,7 +53,10 @@ var LevelTransitionState = {
      * This function creates buttons for the next level
      */
     makeNextButton: function() {
-        this.nextLevel_button = game.make.button(game.world.centerX, game.world.centerY, 'smallButton', function() {game.state.start(this.nextLevelID)}, this);
+        this.nextLevel_button = game.make.button(game.world.centerX, game.world.centerY, 'smallButton', function() {
+            music.stop();
+            game.state.start(this.nextLevelID);
+        }, this);
         this.nextLevel_button.anchor.setTo(0.5);
     },
 

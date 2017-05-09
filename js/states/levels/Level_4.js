@@ -17,6 +17,9 @@ Level_4.prototype = {
         this.w = 1600;
         this.h = 2720;
         this.gameWin = false;
+        
+        GameLoseState.setCurrentLevel(4);
+        GameUtils.makeCheatText();
     },
 
     preload: function() {

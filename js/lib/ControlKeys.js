@@ -25,6 +25,7 @@ var ControlKeys = {
     'oneKey':           game.input.keyboard.addKey(Phaser.Keyboard.ONE),
     'twoKey':           game.input.keyboard.addKey(Phaser.Keyboard.TWO),
     'threeKey':         game.input.keyboard.addKey(Phaser.Keyboard.THREE),
+    'fourKey':          game.input.keyboard.addKey(Phaser.Keyboard.FOUR),
     'invincibilityKey': game.input.keyboard.addKey(Phaser.Keyboard.I),
     'flyKey':           game.input.keyboard.addKey(Phaser.Keyboard.O),
 
