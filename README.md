@@ -1,3 +1,6 @@
+## Play it here
+https://johnsonlu3.github.io/PhaseShifter/
+
 BUGS
 **If you hold down the jump key underneath a platform you share colors with, you stick to the bottom of the platform. (My guess is the way we handle overlapping)**
 - There is a weird bug that causes the game to freeze occasionally when pressing the 'I' key to toggle invincibility
